@@ -1,0 +1,151 @@
+// Red Calendar - Sistem Pencatatan & Analisis Siklus Menstruasi
+// Database schema sesuai SRS document
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  email             String   @unique
+  name              String
+  phone             String?
+  birthDate         DateTime? // Tanggal lahir lengkap untuk akurasi
+  password          String
+  role              Role     @default(USER)
+  avgCycleLength    Int      @default(28) // Rata-rata panjang siklus
+  avgPeriodLength   Int      @default(6)  // Rata-rata durasi haid
+  theme             String?  // Tema personalisasi (kucing, gajah, unicorn)
+  isOnboarded       Boolean  @default(false) // Status onboarding
+  menstrualStatus   String?  // Status menstruasi (regular, irregular, pms, none)
+  lastPeriodDate    DateTime? // Tanggal haid terakhir
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  cycles            Cycle[]
+  dailyLogs         DailyLog[]
+  articles          Article[]
+
+  @@map("users")
+}
+
+model Cycle {
+  id          String    @id @default(cuid())
+  userId      String
+  startDate   DateTime  // Tanggal mulai haid
+  endDate     DateTime? // Tanggal selesai haid
+  isAbnormal  Boolean   @default(false) // Flag otomatis dari analisis
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("cycles")
+}
+
+model DailyLog {
+  id                     String    @id @default(cuid())
+  userId                 String
+  date                   DateTime
+  weight                 Decimal?  // Berat badan (kg)
+  temperature            Decimal?  // Suhu tubuh (celcius)
+  waterIntake            Int?      // Jumlah air minum (ml)
+  sleepHours             Decimal?  // Jam tidur
+  sexualActivity         String?   // Enum: none, unprotected, protected, masturbation
+  libido                 String?   // Enum: low, medium, high
+  orgasm                 Boolean?  // Orgasme atau tidak
+  cervixMucus            String?   // Enum: dry, sticky, creamy, watery, egg_white
+  cervixPosition         String?   // Enum: low, medium, high
+  ovulationTestResult    String?   // Enum: low, high, peak
+  pregnancyTestResult    String?   // Enum: positive, negative, faint_line
+  sadariResult           String?   // Enum: normal, lump, pain, other
+  notes                  String?   // Catatan pribadi (diary)
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  // Relations
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  logSymptoms            LogSymptom[]
+  logMoods               LogMood[]
+
+  @@unique([userId, date])
+  @@map("daily_logs")
+}
+
+model MasterSymptom {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  category    String   // Category: pain, skin, physical
+  createdAt   DateTime @default(now())
+
+  // Relations
+  logSymptoms LogSymptom[]
+
+  @@map("master_symptoms")
+}
+
+model MasterMood {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  createdAt   DateTime @default(now())
+
+  // Relations
+  logMoods    LogMood[]
+
+  @@map("master_moods")
+}
+
+model LogSymptom {
+  id         String @id @default(cuid())
+  dailyLogId String
+  symptomId  String
+
+  // Relations
+  dailyLog   DailyLog      @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  symptom    MasterSymptom @relation(fields: [symptomId], references: [id], onDelete: Cascade)
+
+  @@unique([dailyLogId, symptomId])
+  @@map("log_symptoms")
+}
+
+model LogMood {
+  id        String     @id @default(cuid())
+  dailyLogId String
+  moodId    String
+
+  // Relations
+  dailyLog  DailyLog   @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  mood      MasterMood @relation(fields: [moodId], references: [id], onDelete: Cascade)
+
+  @@unique([dailyLogId, moodId])
+  @@map("log_moods")
+}
+
+model Article {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   // Rich text content
+  thumbnail   String?  // Image URL
+  category    String   // Category: kesehatan_reproduksi, tips_pms, nutrisi
+  createdBy   String   // Admin user ID
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  author      User     @relation(fields: [createdBy], references: [id])
+
+  @@map("articles")
+}
+
+enum Role {
+  USER
+  ADMIN
+}

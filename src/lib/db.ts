@@ -43,9 +43,28 @@ try {
     host.includes("vercel-storage") ||
     host.includes("vercel-storage.com") ||
     host.includes("ephemeral.vercel");
-  if (!isVercel) {
+  const isSupabase =
+    host.includes("supabase") ||
+    host.endsWith(".supabase.co") ||
+    host.includes("supabase.co");
+
+  // Development override: set this to 'true' for local development only if you
+  // cannot access Vercel Postgres from your machine. This should NOT be used
+  // in CI or production environments. Prefer configuring local access to
+  // Vercel Postgres or using vercel dev for local testing.
+  const allowNonVercelDb =
+    process.env.ALLOW_NON_VERCEL_DB === "true" ||
+    process.env.PRISMA_ALLOW_LOCAL === "true";
+
+  if (!isVercel && !isSupabase && !allowNonVercelDb) {
     throw new Error(
-      `DATABASE_URL does not appear to be a Vercel-hosted Postgres (host: ${host}). Please use your Vercel Postgres DATABASE_URL in both local and production environments.`
+      `DATABASE_URL does not appear to be a Vercel-hosted Postgres or Supabase (host: ${host}). Please use your Vercel Postgres or Supabase DATABASE_URL in both local and production environments.`
+    );
+  }
+
+  if (!isVercel && !isSupabase && allowNonVercelDb) {
+    console.warn(
+      `⚠️ ALLOW_NON_VERCEL_DB is enabled. Using a non-Vercel/Supabase host (${host}) for database connections. This is intended for local development only.`
     );
   }
 } catch (err) {
@@ -90,5 +109,20 @@ export async function testDatabaseConnection() {
       (error as Error).message
     );
     return false;
+  }
+}
+
+// Helper to get non-sensitive DB information for diagnostics
+export function getDbInfo() {
+  if (!rawDbUrl) return null;
+  try {
+    const parsed = new URL(rawDbUrl);
+    return {
+      host: parsed.hostname,
+      port: parsed.port,
+      database: parsed.pathname?.replace(/^\//, "") || undefined,
+    };
+  } catch (err) {
+    return null;
   }
 }

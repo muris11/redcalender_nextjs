@@ -1,113 +1,152 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuthStore } from '@/store/authStore';
-import { Loader2 } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuthStore } from "@/store/authStore";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginForm() {
   const router = useRouter();
   const { login, isLoading } = useAuthStore();
-  
+
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setError('');
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const result = await login(formData.email, formData.password);
 
     if (result.success) {
-      // Check if user is onboarded
-      if (result.user.isOnboarded) {
-        router.push('/dashboard');
+      // Get user from auth store after successful login
+      const { user } = useAuthStore.getState();
+
+      // Check user role and onboarding status for redirection
+      if (user?.role === "ADMIN") {
+        router.push("/admin");
+      } else if (user?.isOnboarded) {
+        router.push("/dashboard");
       } else {
-        router.push('/onboarding');
+        router.push("/onboarding");
       }
     } else {
-      setError(result.error || 'Login gagal');
+      setError(result.error || "Login gagal");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-pink-600">
-            🌸 Red Calendar
+    <div className="min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md border-0 shadow-2xl overflow-hidden">
+        <div className="h-3 bg-linear-to-r from-pink-400 via-purple-400 to-pink-400"></div>
+        <CardHeader className="text-center space-y-3 pb-8 pt-8">
+          <div className="mx-auto h-16 w-16 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-lg">
+            <span className="text-3xl">🌸</span>
+          </div>
+          <CardTitle className="text-3xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+            Red Calendar
           </CardTitle>
-          <CardDescription>
-            Masuk ke akun Anda
+          <CardDescription className="text-base text-gray-600 font-medium">
+            🔑 Masuk ke akun Anda untuk melanjutkan
           </CardDescription>
         </CardHeader>
-        
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+
+        <CardContent className="px-8 pb-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-3">
+              <Label
+                htmlFor="email"
+                className="text-base font-semibold text-gray-700"
+              >
+                📧 Email
+              </Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
+                onChange={(e) => handleInputChange("email", e.target.value)}
                 required
                 placeholder="email@example.com"
+                className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
               />
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+
+            <div className="space-y-3">
+              <Label
+                htmlFor="password"
+                className="text-base font-semibold text-gray-700"
+              >
+                🔒 Password
+              </Label>
               <Input
                 id="password"
                 type="password"
                 value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
+                onChange={(e) => handleInputChange("password", e.target.value)}
                 required
                 placeholder="Masukkan password"
+                className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
               />
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                {error}
+              <div className="bg-red-50 border-2 border-red-200 text-red-600 p-4 rounded-xl text-sm font-medium">
+                ⚠️ {error}
               </div>
             )}
 
-            <Button 
-              type="submit" 
-              className="w-full bg-pink-600 hover:bg-pink-700" 
+            <Button
+              type="submit"
+              className="w-full bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all font-bold py-6 rounded-xl border-0 text-base"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Masuk...
                 </>
               ) : (
-                'Masuk'
+                "🚀 Masuk"
               )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center text-sm">
-            <span className="text-gray-600">Belum punya akun? </span>
-            <Link href="/register" className="text-pink-600 hover:underline font-medium">
-              Daftar di sini
+          <div className="mt-8 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500 font-medium">
+                  Belum punya akun?
+                </span>
+              </div>
+            </div>
+            <Link
+              href="/register"
+              className="mt-4 inline-block text-pink-600 hover:text-pink-700 font-bold text-base hover:underline transition-all"
+            >
+              ✨ Daftar di sini
             </Link>
           </div>
         </CardContent>

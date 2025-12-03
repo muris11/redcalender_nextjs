@@ -1,51 +1,57 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useAuthStore } from '@/store/authStore';
-import { Loader2 } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useAuthStore } from "@/store/authStore";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
   const router = useRouter();
   const { register, isLoading } = useAuthStore();
-  
+
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    confirmPassword: '',
-    avgCycleLength: '28',
-    avgPeriodLength: '6',
-    theme: 'kucing'
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+    avgCycleLength: "28",
+    avgPeriodLength: "6",
+    theme: "kucing",
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setError('');
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     // Validasi password
     if (formData.password !== formData.confirmPassword) {
-      setError('Password tidak cocok');
+      setError("Password tidak cocok");
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password minimal 6 karakter');
+      setError("Password minimal 6 karakter");
       return;
     }
 
@@ -56,13 +62,16 @@ export default function RegisterForm() {
       password: formData.password,
       avgCycleLength: parseInt(formData.avgCycleLength),
       avgPeriodLength: parseInt(formData.avgPeriodLength),
-      theme: formData.theme
+      theme: formData.theme,
     });
 
     if (result.success) {
-      router.push('/onboarding');
+      toast.success(
+        "Registrasi berhasil! Mengalihkan ke halaman onboarding..."
+      );
+      router.push("/onboarding");
     } else {
-      setError(result.error || 'Registrasi gagal');
+      setError(result.error || "Registrasi gagal");
     }
   };
 
@@ -70,56 +79,83 @@ export default function RegisterForm() {
   const years = Array.from({ length: 50 }, (_, i) => currentYear - 15 - i); // Usia 15-65 tahun
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-pink-600">
-            🌸 Red Calendar
+    <div className="min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md border-0 shadow-2xl overflow-hidden">
+        <div className="h-3 bg-linear-to-r from-pink-400 via-purple-400 to-pink-400"></div>
+        <CardHeader className="text-center space-y-3 pb-8 pt-8">
+          <div className="mx-auto h-16 w-16 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-lg">
+            <span className="text-3xl">🌸</span>
+          </div>
+          <CardTitle className="text-3xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+            Red Calendar
           </CardTitle>
-          <CardDescription>
-            Daftar untuk mulai mencatat siklus menstruasi Anda
+          <CardDescription className="text-base text-gray-600 font-medium">
+            ✨ Daftar untuk mulai mencatat siklus menstruasi Anda
           </CardDescription>
         </CardHeader>
-        
-        <CardContent>
+
+        <CardContent className="px-8 pb-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Informasi Pribadi */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-700">Informasi Pribadi</h3>
-              
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-pink-100">
+                <span className="text-xl">👤</span>
+                <h3 className="font-bold text-gray-800 text-lg">
+                  Informasi Pribadi
+                </h3>
+              </div>
+
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Nama Lengkap *</Label>
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="name"
+                    className="text-base font-semibold text-gray-700"
+                  >
+                    📝 Nama Lengkap *
+                  </Label>
                   <Input
                     id="name"
                     type="text"
                     value={formData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
                     required
                     placeholder="Masukkan nama lengkap"
+                    className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
                   />
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="email"
+                    className="text-base font-semibold text-gray-700"
+                  >
+                    📧 Email *
+                  </Label>
                   <Input
                     id="email"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     required
                     placeholder="email@example.com"
+                    className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Nomor Telepon</Label>
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="phone"
+                    className="text-base font-semibold text-gray-700"
+                  >
+                    📱 Nomor Telepon
+                  </Label>
                   <Input
                     id="phone"
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
                     placeholder="+62 812-3456-7890"
+                    className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
                   />
                 </div>
               </div>
@@ -127,30 +163,51 @@ export default function RegisterForm() {
 
             {/* Password */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-700">Keamanan Akun</h3>
-              
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-pink-100">
+                <span className="text-xl">🔐</span>
+                <h3 className="font-bold text-gray-800 text-lg">
+                  Keamanan Akun
+                </h3>
+              </div>
+
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password *</Label>
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="password"
+                    className="text-base font-semibold text-gray-700"
+                  >
+                    🔒 Password *
+                  </Label>
                   <Input
                     id="password"
                     type="password"
                     value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     required
                     placeholder="Minimal 6 karakter"
+                    className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
                   />
                 </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Konfirmasi Password *</Label>
+
+                <div className="space-y-3">
+                  <Label
+                    htmlFor="confirmPassword"
+                    className="text-base font-semibold text-gray-700"
+                  >
+                    ✅ Konfirmasi Password *
+                  </Label>
                   <Input
                     id="confirmPassword"
                     type="password"
                     value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("confirmPassword", e.target.value)
+                    }
                     required
                     placeholder="Ulangi password"
+                    className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
                   />
                 </div>
               </div>
@@ -158,52 +215,102 @@ export default function RegisterForm() {
 
             {/* Personalisasi Tema */}
             <div className="space-y-4">
-              <h3 className="font-semibold text-gray-700">Personalisasi Tema</h3>
-              <div className="space-y-2">
-                <Label>Pilih Tema Favorit Anda</Label>
-                <RadioGroup value={formData.theme} onValueChange={(value) => handleInputChange('theme', value)}>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="kucing" id="theme-kucing" />
-                    <Label htmlFor="theme-kucing">🐱 Kucing</Label>
+              <div className="flex items-center gap-2 pb-2 border-b-2 border-pink-100">
+                <span className="text-xl">🎨</span>
+                <h3 className="font-bold text-gray-800 text-lg">
+                  Personalisasi Tema
+                </h3>
+              </div>
+              <div className="space-y-3">
+                <Label className="text-base font-semibold text-gray-700">
+                  Pilih Tema Favorit Anda
+                </Label>
+                <RadioGroup
+                  value={formData.theme}
+                  onValueChange={(value) => handleInputChange("theme", value)}
+                  className="space-y-3"
+                >
+                  <div className="flex items-center space-x-3 p-4 border-2 rounded-xl hover:border-pink-300 hover:bg-pink-50 transition-all cursor-pointer">
+                    <RadioGroupItem
+                      value="kucing"
+                      id="theme-kucing"
+                      className="h-5 w-5"
+                    />
+                    <Label
+                      htmlFor="theme-kucing"
+                      className="text-base cursor-pointer flex-1"
+                    >
+                      🐱 Kucing
+                    </Label>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="gajah" id="theme-gajah" />
-                    <Label htmlFor="theme-gajah">🐘 Gajah</Label>
+                  <div className="flex items-center space-x-3 p-4 border-2 rounded-xl hover:border-pink-300 hover:bg-pink-50 transition-all cursor-pointer">
+                    <RadioGroupItem
+                      value="gajah"
+                      id="theme-gajah"
+                      className="h-5 w-5"
+                    />
+                    <Label
+                      htmlFor="theme-gajah"
+                      className="text-base cursor-pointer flex-1"
+                    >
+                      🐘 Gajah
+                    </Label>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="unicorn" id="theme-unicorn" />
-                    <Label htmlFor="theme-unicorn">🦄 Unicorn</Label>
+                  <div className="flex items-center space-x-3 p-4 border-2 rounded-xl hover:border-pink-300 hover:bg-pink-50 transition-all cursor-pointer">
+                    <RadioGroupItem
+                      value="unicorn"
+                      id="theme-unicorn"
+                      className="h-5 w-5"
+                    />
+                    <Label
+                      htmlFor="theme-unicorn"
+                      className="text-base cursor-pointer flex-1"
+                    >
+                      🦄 Unicorn
+                    </Label>
                   </div>
                 </RadioGroup>
               </div>
             </div>
 
             {error && (
-              <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">
-                {error}
+              <div className="bg-red-50 border-2 border-red-200 text-red-600 p-4 rounded-xl text-sm font-medium">
+                ⚠️ {error}
               </div>
             )}
 
-            <Button 
-              type="submit" 
-              className="w-full bg-pink-600 hover:bg-pink-700" 
+            <Button
+              type="submit"
+              className="w-full bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all font-bold py-6 rounded-xl border-0 text-base"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Mendaftar...
                 </>
               ) : (
-                'Daftar Sekarang'
+                "🚀 Daftar Sekarang"
               )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center text-sm">
-            <span className="text-gray-600">Sudah punya akun? </span>
-            <Link href="/login" className="text-pink-600 hover:underline font-medium">
-              Login di sini
+          <div className="mt-8 text-center">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-white text-gray-500 font-medium">
+                  Sudah punya akun?
+                </span>
+              </div>
+            </div>
+            <Link
+              href="/login"
+              className="mt-4 inline-block text-pink-600 hover:text-pink-700 font-bold text-base hover:underline transition-all"
+            >
+              🔑 Login di sini
             </Link>
           </div>
         </CardContent>

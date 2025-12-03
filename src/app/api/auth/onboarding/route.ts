@@ -1,8 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db';
+import { db } from "@/lib/db";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+  console.log("🔄 [ONBOARDING] API called at", new Date().toISOString());
   try {
+    const body = await request.json();
+    console.log("📝 [ONBOARDING] Received data:", {
+      userId: body.userId,
+      birthDate: body.birthDate,
+      menstrualStatus: body.menstrualStatus,
+      lastPeriodDate: body.lastPeriodDate,
+      periodDuration: body.periodDuration,
+      cycleLength: body.cycleLength,
+      commonSymptoms: body.commonSymptoms?.length,
+      severity: body.severity,
+      exerciseFrequency: body.exerciseFrequency,
+      stressLevel: body.stressLevel,
+      sleepQuality: body.sleepQuality,
+      diet: body.diet,
+    });
+
     const {
       userId,
       birthDate,
@@ -15,17 +32,27 @@ export async function POST(request: NextRequest) {
       exerciseFrequency,
       stressLevel,
       sleepQuality,
-      diet
-    } = await request.json();
+      diet,
+    } = body;
 
     if (!userId) {
       return NextResponse.json(
-        { error: 'User ID is required' },
+        { error: "User ID is required" },
         { status: 400 }
       );
     }
 
     // Update user with onboarding data
+    console.log("💾 [ONBOARDING] Updating user with data:", {
+      userId,
+      birthDate: birthDate ? new Date(birthDate) : null,
+      menstrualStatus,
+      lastPeriodDate: lastPeriodDate ? new Date(lastPeriodDate) : null,
+      avgPeriodLength: periodDuration ? parseInt(periodDuration) : 6,
+      avgCycleLength: cycleLength ? parseInt(cycleLength) : 28,
+      isOnboarded: true,
+    });
+
     const updatedUser = await db.user.update({
       where: { id: userId },
       data: {
@@ -35,8 +62,20 @@ export async function POST(request: NextRequest) {
         avgPeriodLength: periodDuration ? parseInt(periodDuration) : 6,
         avgCycleLength: cycleLength ? parseInt(cycleLength) : 28,
         isOnboarded: true,
-        updatedAt: new Date()
-      }
+        updatedAt: new Date(),
+      },
+    });
+
+    console.log("✅ [ONBOARDING] User updated successfully:", {
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      birthDate: updatedUser.birthDate,
+      menstrualStatus: updatedUser.menstrualStatus,
+      lastPeriodDate: updatedUser.lastPeriodDate,
+      avgCycleLength: updatedUser.avgCycleLength,
+      avgPeriodLength: updatedUser.avgPeriodLength,
+      isOnboarded: updatedUser.isOnboarded,
     });
 
     // Create initial cycle if last period date is provided
@@ -50,9 +89,9 @@ export async function POST(request: NextRequest) {
         where: {
           userId,
           startDate: {
-            gte: new Date(startDate.getFullYear(), startDate.getMonth(), 1)
-          }
-        }
+            gte: new Date(startDate.getFullYear(), startDate.getMonth(), 1),
+          },
+        },
       });
 
       if (!existingCycle) {
@@ -61,8 +100,9 @@ export async function POST(request: NextRequest) {
             userId,
             startDate,
             endDate,
-            isAbnormal: menstrualStatus === 'irregular' || menstrualStatus === 'pms'
-          }
+            isAbnormal:
+              menstrualStatus === "irregular" || menstrualStatus === "pms",
+          },
         });
       }
     }
@@ -74,14 +114,13 @@ export async function POST(request: NextRequest) {
     const { password: _, ...userWithoutPassword } = updatedUser;
 
     return NextResponse.json({
-      message: 'Onboarding completed successfully',
-      user: userWithoutPassword
+      message: "Onboarding completed successfully",
+      user: userWithoutPassword,
     });
-
   } catch (error) {
-    console.error('Onboarding error:', error);
+    console.error("Onboarding error:", error);
     return NextResponse.json(
-      { error: 'Failed to complete onboarding' },
+      { error: "Failed to complete onboarding" },
       { status: 500 }
     );
   }

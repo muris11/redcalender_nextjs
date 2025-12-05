@@ -34,7 +34,7 @@ export function GuestNavbar() {
             <img
               src="/logo.png"
               alt="Red Calendar Logo"
-              className="h-8 w-8 object-contain group-hover:scale-110 transition-transform duration-300"
+              className="h-10 w-10 object-contain group-hover:scale-110 transition-transform duration-300"
             />
             <h1 className="text-lg md:text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
               Red Calender
@@ -51,7 +51,7 @@ export function GuestNavbar() {
                     : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
                 }`}
               >
-                🏠 Home
+                Home
               </Button>
             </Link>
             <Link href="/login">
@@ -63,7 +63,7 @@ export function GuestNavbar() {
                     : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
                 }`}
               >
-                🔑 Masuk
+                Masuk
               </Button>
             </Link>
             <Link href="/register">
@@ -74,7 +74,7 @@ export function GuestNavbar() {
                     : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
                 }`}
               >
-                ✨ Daftar
+                Daftar
               </Button>
             </Link>
           </nav>
@@ -109,7 +109,7 @@ export function GuestNavbar() {
                         : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
                     }`}
                   >
-                    🏠 Home
+                    Home
                   </Button>
                 </Link>
                 <Link href="/login" onClick={() => setIsOpen(false)}>
@@ -121,7 +121,7 @@ export function GuestNavbar() {
                         : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
                     }`}
                   >
-                    🔑 Masuk
+                    Masuk
                   </Button>
                 </Link>
                 <Link href="/register" onClick={() => setIsOpen(false)}>
@@ -133,7 +133,7 @@ export function GuestNavbar() {
                         : "bg-linear-to-r from-pink-500 to-purple-600 text-white border-pink-500 hover:from-pink-600 hover:to-purple-700 hover:border-pink-600"
                     }`}
                   >
-                    ✨ Daftar
+                    Daftar
                   </Button>
                 </Link>
               </nav>

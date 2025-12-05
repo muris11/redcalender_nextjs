@@ -1,14 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,7 +27,7 @@ export function GuestNavbar() {
             <img
               src="/logo.png"
               alt="Red Calendar Logo"
-              className="h-10 w-10 object-contain group-hover:scale-110 transition-transform duration-300"
+              className="h-15 w-15 object-contain group-hover:scale-110 transition-transform duration-300"
             />
             <h1 className="text-lg md:text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
               Red Calender
@@ -79,66 +72,73 @@ export function GuestNavbar() {
             </Link>
           </nav>
 
-          <Sheet open={isOpen} onOpenChange={setIsOpen}>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden hover:bg-pink-50 rounded-md transition-colors"
-              >
-                <MenuIcon className="h-6 w-6 text-gray-700" />
-                <span className="sr-only">Toggle menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[280px] sm:w-[350px] bg-white/95 backdrop-blur-md border-l border-pink-200"
-            >
-              <SheetHeader className="border-b border-pink-100 pb-4 mb-4">
-                <SheetTitle className="text-pink-600 font-bold">
-                  Menu Navigasi
-                </SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col space-y-2">
-                <Link href="/" onClick={() => setIsOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start font-medium py-3 px-4 rounded-lg ${
-                      isActive("/")
-                        ? "bg-pink-50 text-pink-600 border border-pink-200"
-                        : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
-                    }`}
-                  >
-                    Home
-                  </Button>
-                </Link>
-                <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start font-medium py-3 px-4 rounded-lg ${
-                      isActive("/login")
-                        ? "bg-pink-50 text-pink-600 border border-pink-200"
-                        : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
-                    }`}
-                  >
-                    Masuk
-                  </Button>
-                </Link>
-                <Link href="/register" onClick={() => setIsOpen(false)}>
-                  <Button
-                    variant="outline"
-                    className={`w-full justify-start font-medium py-3 px-4 rounded-lg border-2 shadow-sm ${
-                      isActive("/register")
-                        ? "bg-linear-to-r from-pink-600 to-purple-700 text-white border-pink-600"
-                        : "bg-linear-to-r from-pink-500 to-purple-600 text-white border-pink-500 hover:from-pink-600 hover:to-purple-700 hover:border-pink-600"
-                    }`}
-                  >
-                    Daftar
-                  </Button>
-                </Link>
-              </nav>
-            </SheetContent>
-          </Sheet>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden hover:bg-pink-50 rounded-md transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? (
+              <XIcon className="h-6 w-6 text-gray-700" />
+            ) : (
+              <MenuIcon className="h-6 w-6 text-gray-700" />
+            )}
+            <span className="sr-only">Toggle menu</span>
+          </Button>
+
+          {/* Mobile Menu Dropdown */}
+          {isOpen && (
+            <>
+              {/* Overlay */}
+              <div
+                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-300"
+                onClick={() => setIsOpen(false)}
+              />
+              {/* Menu */}
+              <div className="absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-b border-pink-100 shadow-lg md:hidden animate-in slide-in-from-top-2 duration-300 z-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                  <nav className="flex flex-col space-y-2">
+                    <Link href="/" onClick={() => setIsOpen(false)}>
+                      <Button
+                        variant="ghost"
+                        className={`w-full justify-start font-medium py-3 px-4 rounded-lg transition-colors ${
+                          isActive("/")
+                            ? "bg-pink-50 text-pink-600 border border-pink-200"
+                            : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
+                        }`}
+                      >
+                        🏠 Home
+                      </Button>
+                    </Link>
+                    <Link href="/login" onClick={() => setIsOpen(false)}>
+                      <Button
+                        variant="ghost"
+                        className={`w-full justify-start font-medium py-3 px-4 rounded-lg transition-colors ${
+                          isActive("/login")
+                            ? "bg-pink-50 text-pink-600 border border-pink-200"
+                            : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
+                        }`}
+                      >
+                        🔑 Masuk
+                      </Button>
+                    </Link>
+                    <Link href="/register" onClick={() => setIsOpen(false)}>
+                      <Button
+                        variant="outline"
+                        className={`w-full justify-start font-medium py-3 px-4 rounded-lg border-2 shadow-sm transition-all ${
+                          isActive("/register")
+                            ? "bg-linear-to-r from-pink-600 to-purple-700 text-white border-pink-600"
+                            : "bg-linear-to-r from-pink-500 to-purple-600 text-white border-pink-500 hover:from-pink-600 hover:to-purple-700 hover:border-pink-600"
+                        }`}
+                      >
+                        ✨ Daftar
+                      </Button>
+                    </Link>
+                  </nav>
+                </div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>

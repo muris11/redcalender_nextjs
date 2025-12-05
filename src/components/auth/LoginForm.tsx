@@ -28,6 +28,8 @@ export default function LoginForm() {
 
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isRedirectLoading, setIsRedirectLoading] = useState(false);
+  const [redirectText, setRedirectText] = useState("");
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -44,13 +46,17 @@ export default function LoginForm() {
       // Get user from auth store after successful login
       const { user } = useAuthStore.getState();
 
-      // Check user role and onboarding status for redirection
+      // Show loading screen before redirect
+      setIsRedirectLoading(true);
       if (user?.role === "ADMIN") {
-        router.push("/admin");
+        setRedirectText("Memuat dashboard admin...");
+        setTimeout(() => router.push("/admin"), 1500);
       } else if (user?.isOnboarded) {
-        router.push("/dashboard");
+        setRedirectText("Memuat dashboard...");
+        setTimeout(() => router.push("/dashboard"), 1500);
       } else {
-        router.push("/onboarding");
+        setRedirectText("Memuat onboarding...");
+        setTimeout(() => router.push("/onboarding"), 1500);
       }
     } else {
       setError(result.error || "Login gagal");

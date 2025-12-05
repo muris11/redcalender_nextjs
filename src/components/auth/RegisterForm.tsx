@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loading } from "@/components/ui/loading";
+import { Loading, PageLoading } from "@/components/ui/loading";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuthStore } from "@/store/authStore";
 import { Eye, EyeOff } from "lucide-react";
@@ -37,6 +37,7 @@ export default function RegisterForm() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isRedirectLoading, setIsRedirectLoading] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -69,10 +70,14 @@ export default function RegisterForm() {
     });
 
     if (result.success) {
-      toast.success(
-        "Registrasi berhasil! Mengalihkan ke halaman onboarding..."
-      );
-      router.push("/onboarding");
+      // Show loading screen before redirect
+      setIsRedirectLoading(true);
+      setTimeout(() => {
+        toast.success(
+          "Registrasi berhasil! Mengalihkan ke halaman onboarding..."
+        );
+        router.push("/onboarding");
+      }, 1500);
     } else {
       setError(result.error || "Registrasi gagal");
     }
@@ -324,7 +329,7 @@ export default function RegisterForm() {
                   Mendaftar...
                 </div>
               ) : (
-                "🚀 Daftar Sekarang"
+                "Daftar Sekarang"
               )}
             </Button>
           </form>

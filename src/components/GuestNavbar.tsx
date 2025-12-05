@@ -31,7 +31,7 @@ export function GuestNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="h-10 w-10 rounded-xl bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
+            <div className="h-10 w-10 rounded-xl bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
               <span className="text-2xl">🌸</span>
             </div>
             <h1 className="text-lg md:text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
@@ -43,7 +43,7 @@ export function GuestNavbar() {
             <Link href="/">
               <Button
                 variant="ghost"
-                className={`font-semibold transition-all duration-300 ${
+                className={`font-semibold transition-colors duration-200 ${
                   isActive("/")
                     ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
                     : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
@@ -55,7 +55,7 @@ export function GuestNavbar() {
             <Link href="/login">
               <Button
                 variant="ghost"
-                className={`font-semibold transition-all duration-300 ${
+                className={`font-semibold transition-colors duration-200 ${
                   isActive("/login")
                     ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
                     : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
@@ -66,7 +66,7 @@ export function GuestNavbar() {
             </Link>
             <Link href="/register">
               <Button
-                className={`font-semibold transition-all duration-300 border-0 shadow-md hover:shadow-lg ${
+                className={`font-semibold transition-colors duration-200 border-0 shadow-md hover:shadow-lg ${
                   isActive("/register")
                     ? "bg-linear-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800"
                     : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
@@ -79,7 +79,11 @@ export function GuestNavbar() {
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden rounded-xl hover:bg-pink-50 hover:shadow-md transition-all duration-300 border border-pink-200/50 hover:border-pink-300">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden rounded-xl hover:bg-pink-50 transition-colors duration-200 border border-pink-200/50 hover:border-pink-300"
+              >
                 <MenuIcon className="h-6 w-6 text-pink-600" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
@@ -100,39 +104,33 @@ export function GuestNavbar() {
                 <Link href="/" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="ghost"
-                    className={`w-full justify-start font-semibold transition-all duration-300 rounded-xl py-4 px-4 h-auto text-left group ${
+                    className={`w-full justify-start font-semibold transition-colors duration-200 rounded-xl py-4 px-4 h-auto text-left group ${
                       isActive("/")
                         ? "bg-pink-100 text-pink-700 shadow-md border border-pink-200"
                         : "text-gray-700 hover:bg-pink-50 hover:text-pink-600 hover:shadow-sm hover:border hover:border-pink-100"
                     }`}
                   >
                     <div className="flex items-center gap-3 w-full">
-                      <span className="text-xl group-hover:scale-110 transition-transform duration-200">
-                        🏠
-                      </span>
+                      <span className="text-xl">🏠</span>
                       <span className="flex-1">Home</span>
-                      {isActive("/") && (
-                        <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
-                      )}
+                      {isActive("/") && <div className="w-2 h-2 bg-pink-500 rounded-full"></div>}
                     </div>
                   </Button>
                 </Link>
                 <Link href="/login" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="ghost"
-                    className={`w-full justify-start font-semibold transition-all duration-300 rounded-xl py-4 px-4 h-auto text-left group ${
+                    className={`w-full justify-start font-semibold transition-colors duration-200 rounded-xl py-4 px-4 h-auto text-left group ${
                       isActive("/login")
                         ? "bg-pink-100 text-pink-700 shadow-md border border-pink-200"
                         : "text-gray-700 hover:bg-pink-50 hover:text-pink-600 hover:shadow-sm hover:border hover:border-pink-100"
                     }`}
                   >
                     <div className="flex items-center gap-3 w-full">
-                      <span className="text-xl group-hover:scale-110 transition-transform duration-200">
-                        🔑
-                      </span>
+                      <span className="text-xl">🔑</span>
                       <span className="flex-1">Masuk</span>
                       {isActive("/login") && (
-                        <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
                       )}
                     </div>
                   </Button>
@@ -140,19 +138,17 @@ export function GuestNavbar() {
                 <Link href="/register" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="outline"
-                    className={`w-full justify-start font-semibold transition-all duration-300 rounded-xl py-4 px-4 h-auto text-left group border-2 shadow-lg hover:shadow-xl ${
+                    className={`w-full justify-start font-semibold transition-colors duration-200 rounded-xl py-4 px-4 h-auto text-left group border-2 shadow-lg hover:shadow-xl ${
                       isActive("/register")
                         ? "bg-linear-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800 text-white border-pink-600"
                         : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-pink-500 hover:border-pink-600"
                     }`}
                   >
                     <div className="flex items-center gap-3 w-full">
-                      <span className="text-xl group-hover:scale-110 transition-transform duration-200">
-                        ✨
-                      </span>
+                      <span className="text-xl">✨</span>
                       <span className="flex-1">Daftar</span>
                       {isActive("/register") && (
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
                       )}
                     </div>
                   </Button>

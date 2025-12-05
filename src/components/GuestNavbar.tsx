@@ -31,7 +31,7 @@ export function GuestNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="h-10 w-10 rounded-xl bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
+            <div className="h-10 w-10 rounded-xl bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
               <span className="text-2xl">🌸</span>
             </div>
             <h1 className="text-lg md:text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
@@ -43,7 +43,7 @@ export function GuestNavbar() {
             <Link href="/">
               <Button
                 variant="ghost"
-                className={`font-semibold transition-colors duration-200 ${
+                className={`font-semibold transition-all duration-300 ${
                   isActive("/")
                     ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
                     : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
@@ -55,7 +55,7 @@ export function GuestNavbar() {
             <Link href="/login">
               <Button
                 variant="ghost"
-                className={`font-semibold transition-colors duration-200 ${
+                className={`font-semibold transition-all duration-300 ${
                   isActive("/login")
                     ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
                     : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
@@ -66,7 +66,7 @@ export function GuestNavbar() {
             </Link>
             <Link href="/register">
               <Button
-                className={`font-semibold transition-colors duration-200 border-0 shadow-md hover:shadow-lg ${
+                className={`font-semibold transition-all duration-300 border-0 shadow-md hover:shadow-lg ${
                   isActive("/register")
                     ? "bg-linear-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800"
                     : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
@@ -79,86 +79,53 @@ export function GuestNavbar() {
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden rounded-xl hover:bg-pink-50 transition-colors duration-200 border border-pink-200/50 hover:border-pink-300"
-              >
-                <MenuIcon className="h-6 w-6 text-pink-600" />
+              <Button variant="ghost" size="icon" className="md:hidden hover:bg-pink-50 rounded-md transition-colors">
+                <MenuIcon className="h-6 w-6 text-gray-700" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-[320px] sm:w-[380px] bg-white/95 backdrop-blur-xl border-l border-pink-200 shadow-2xl"
-            >
-              <SheetHeader className="border-b border-pink-100 pb-4 mb-6">
-                <SheetTitle className="text-2xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-lg bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-md">
-                    <span className="text-lg">🌸</span>
-                  </div>
-                  Red Calendar
-                </SheetTitle>
+            <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-white/95 backdrop-blur-md border-l border-pink-200">
+              <SheetHeader className="border-b border-pink-100 pb-4 mb-4">
+                <SheetTitle className="text-pink-600 font-bold">Menu Navigasi</SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col space-y-2">
                 <Link href="/" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="ghost"
-                    className={`w-full justify-start font-semibold transition-colors duration-200 rounded-xl py-4 px-4 h-auto text-left group ${
+                    className={`w-full justify-start font-medium py-3 px-4 rounded-lg ${
                       isActive("/")
-                        ? "bg-pink-100 text-pink-700 shadow-md border border-pink-200"
-                        : "text-gray-700 hover:bg-pink-50 hover:text-pink-600 hover:shadow-sm hover:border hover:border-pink-100"
+                        ? "bg-pink-50 text-pink-600 border border-pink-200"
+                        : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
                     }`}
                   >
-                    <div className="flex items-center gap-3 w-full">
-                      <span className="text-xl">🏠</span>
-                      <span className="flex-1">Home</span>
-                      {isActive("/") && <div className="w-2 h-2 bg-pink-500 rounded-full"></div>}
-                    </div>
+                    🏠 Home
                   </Button>
                 </Link>
                 <Link href="/login" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="ghost"
-                    className={`w-full justify-start font-semibold transition-colors duration-200 rounded-xl py-4 px-4 h-auto text-left group ${
+                    className={`w-full justify-start font-medium py-3 px-4 rounded-lg ${
                       isActive("/login")
-                        ? "bg-pink-100 text-pink-700 shadow-md border border-pink-200"
-                        : "text-gray-700 hover:bg-pink-50 hover:text-pink-600 hover:shadow-sm hover:border hover:border-pink-100"
+                        ? "bg-pink-50 text-pink-600 border border-pink-200"
+                        : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
                     }`}
                   >
-                    <div className="flex items-center gap-3 w-full">
-                      <span className="text-xl">🔑</span>
-                      <span className="flex-1">Masuk</span>
-                      {isActive("/login") && (
-                        <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                      )}
-                    </div>
+                    🔑 Masuk
                   </Button>
                 </Link>
                 <Link href="/register" onClick={() => setIsOpen(false)}>
                   <Button
                     variant="outline"
-                    className={`w-full justify-start font-semibold transition-colors duration-200 rounded-xl py-4 px-4 h-auto text-left group border-2 shadow-lg hover:shadow-xl ${
+                    className={`w-full justify-start font-medium py-3 px-4 rounded-lg border-2 shadow-sm ${
                       isActive("/register")
-                        ? "bg-linear-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800 text-white border-pink-600"
-                        : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-pink-500 hover:border-pink-600"
+                        ? "bg-linear-to-r from-pink-600 to-purple-700 text-white border-pink-600"
+                        : "bg-linear-to-r from-pink-500 to-purple-600 text-white border-pink-500 hover:from-pink-600 hover:to-purple-700 hover:border-pink-600"
                     }`}
                   >
-                    <div className="flex items-center gap-3 w-full">
-                      <span className="text-xl">✨</span>
-                      <span className="flex-1">Daftar</span>
-                      {isActive("/register") && (
-                        <div className="w-2 h-2 bg-white rounded-full"></div>
-                      )}
-                    </div>
+                    ✨ Daftar
                   </Button>
                 </Link>
               </nav>
-              <div className="mt-8 pt-6 border-t border-pink-100">
-                <p className="text-sm text-gray-500 text-center">
-                  Selamat datang di Red Calendar 🌸
-                </p>
-              </div>
             </SheetContent>
           </Sheet>
         </div>

@@ -32,7 +32,11 @@ export function GuestNavbar() {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="h-10 w-10 rounded-xl bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-300 group-hover:scale-110">
-              <span className="text-2xl">🌸</span>
+              <img
+                src="/logo.png"
+                alt="Red Calendar Logo"
+                className="h-6 w-6 object-contain"
+              />
             </div>
             <h1 className="text-lg md:text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
               Red Calendar

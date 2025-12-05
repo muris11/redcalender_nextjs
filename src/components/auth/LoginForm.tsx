@@ -10,8 +10,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loading } from "@/components/ui/loading";
 import { useAuthStore } from "@/store/authStore";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -141,10 +142,10 @@ export default function LoginForm() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                <div className="flex items-center justify-center">
+                  <Loading size="sm" text="" className="mr-2" />
                   Masuk...
-                </>
+                </div>
               ) : (
                 "Masuk"
               )}

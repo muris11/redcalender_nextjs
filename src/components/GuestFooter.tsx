@@ -35,21 +35,21 @@ export default function GuestFooter() {
             </p>
             <div className="flex gap-4">
               <a
-                href="#"
+                href="https://www.facebook.com"
                 className="h-10 w-10 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5 text-blue-600" />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com"
                 className="h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 flex items-center justify-center transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5 text-pink-600" />
               </a>
               <a
-                href="#"
+                href="https://www.twitter.com"
                 className="h-10 w-10 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center transition-colors"
                 aria-label="Twitter"
               >

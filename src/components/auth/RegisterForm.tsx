@@ -10,9 +10,10 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loading } from "@/components/ui/loading";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuthStore } from "@/store/authStore";
-import { Loader2, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -213,7 +214,7 @@ export default function RegisterForm() {
                     htmlFor="confirmPassword"
                     className="text-base font-semibold text-gray-700"
                   >
-                    ✅ Konfirmasi Password *
+                    Konfirmasi Password
                   </Label>
                   <div className="relative">
                     <Input
@@ -232,7 +233,9 @@ export default function RegisterForm() {
                       variant="ghost"
                       size="sm"
                       className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-4 w-4 text-gray-500" />
@@ -248,7 +251,6 @@ export default function RegisterForm() {
             {/* Personalisasi Tema */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b-2 border-pink-100">
-                <span className="text-xl">🎨</span>
                 <h3 className="font-bold text-gray-800 text-lg">
                   Personalisasi Tema
                 </h3>
@@ -307,7 +309,7 @@ export default function RegisterForm() {
 
             {error && (
               <div className="bg-red-50 border-2 border-red-200 text-red-600 p-4 rounded-xl text-sm font-medium">
-                ⚠️ {error}
+                {error}
               </div>
             )}
 
@@ -317,10 +319,10 @@ export default function RegisterForm() {
               disabled={isLoading}
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                <div className="flex items-center justify-center">
+                  <Loading size="sm" text="" className="mr-2" />
                   Mendaftar...
-                </>
+                </div>
               ) : (
                 "🚀 Daftar Sekarang"
               )}
@@ -342,7 +344,7 @@ export default function RegisterForm() {
               href="/login"
               className="mt-4 inline-block text-pink-600 hover:text-pink-700 font-bold text-base hover:underline transition-all"
             >
-              🔑 Login di sini
+              Login di sini
             </Link>
           </div>
         </CardContent>

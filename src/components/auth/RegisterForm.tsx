@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuthStore } from "@/store/authStore";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -34,6 +34,8 @@ export default function RegisterForm() {
   });
 
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -83,14 +85,16 @@ export default function RegisterForm() {
       <Card className="w-full max-w-md border-0 shadow-2xl overflow-hidden">
         <div className="h-3 bg-linear-to-r from-pink-400 via-purple-400 to-pink-400"></div>
         <CardHeader className="text-center space-y-3 pb-8 pt-8">
-          <div className="mx-auto h-16 w-16 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-lg">
-            <span className="text-3xl">🌸</span>
-          </div>
+          <img
+            src="/logo.png"
+            alt="Red Calendar Logo"
+            className="mx-auto h-20 w-20 object-contain"
+          />
           <CardTitle className="text-3xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
             Red Calendar
           </CardTitle>
           <CardDescription className="text-base text-gray-600 font-medium">
-            ✨ Daftar untuk mulai mencatat siklus menstruasi Anda
+            Daftar untuk mulai mencatat siklus menstruasi Anda
           </CardDescription>
         </CardHeader>
 
@@ -99,7 +103,6 @@ export default function RegisterForm() {
             {/* Informasi Pribadi */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b-2 border-pink-100">
-                <span className="text-xl">👤</span>
                 <h3 className="font-bold text-gray-800 text-lg">
                   Informasi Pribadi
                 </h3>
@@ -111,7 +114,7 @@ export default function RegisterForm() {
                     htmlFor="name"
                     className="text-base font-semibold text-gray-700"
                   >
-                    📝 Nama Lengkap *
+                    Nama Lengkap
                   </Label>
                   <Input
                     id="name"
@@ -129,7 +132,7 @@ export default function RegisterForm() {
                     htmlFor="email"
                     className="text-base font-semibold text-gray-700"
                   >
-                    📧 Email *
+                    Email
                   </Label>
                   <Input
                     id="email"
@@ -147,7 +150,7 @@ export default function RegisterForm() {
                     htmlFor="phone"
                     className="text-base font-semibold text-gray-700"
                   >
-                    📱 Nomor Telepon
+                    Nomor Telepon
                   </Label>
                   <Input
                     id="phone"
@@ -164,7 +167,6 @@ export default function RegisterForm() {
             {/* Password */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 pb-2 border-b-2 border-pink-100">
-                <span className="text-xl">🔐</span>
                 <h3 className="font-bold text-gray-800 text-lg">
                   Keamanan Akun
                 </h3>
@@ -176,19 +178,34 @@ export default function RegisterForm() {
                     htmlFor="password"
                     className="text-base font-semibold text-gray-700"
                   >
-                    🔒 Password *
+                    Password
                   </Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={(e) =>
-                      handleInputChange("password", e.target.value)
-                    }
-                    required
-                    placeholder="Minimal 6 karakter"
-                    className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={(e) =>
+                        handleInputChange("password", e.target.value)
+                      }
+                      required
+                      placeholder="Minimal 6 karakter"
+                      className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl pr-12"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-500" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-500" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
 
                 <div className="space-y-3">
@@ -198,17 +215,32 @@ export default function RegisterForm() {
                   >
                     ✅ Konfirmasi Password *
                   </Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={(e) =>
-                      handleInputChange("confirmPassword", e.target.value)
-                    }
-                    required
-                    placeholder="Ulangi password"
-                    className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
+                      onChange={(e) =>
+                        handleInputChange("confirmPassword", e.target.value)
+                      }
+                      required
+                      placeholder="Ulangi password"
+                      className="h-12 border-2 focus:border-pink-500 transition-all rounded-xl pr-12"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-4 w-4 text-gray-500" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-gray-500" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

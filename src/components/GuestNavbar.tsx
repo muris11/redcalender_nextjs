@@ -107,7 +107,7 @@ export function GuestNavbar() {
                             : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
                         }`}
                       >
-                        🏠 Home
+                        Home
                       </Button>
                     </Link>
                     <Link href="/login" onClick={() => setIsOpen(false)}>
@@ -119,7 +119,7 @@ export function GuestNavbar() {
                             : "text-gray-700 hover:bg-pink-50 hover:text-pink-600"
                         }`}
                       >
-                        🔑 Masuk
+                        Masuk
                       </Button>
                     </Link>
                     <Link href="/register" onClick={() => setIsOpen(false)}>
@@ -131,7 +131,7 @@ export function GuestNavbar() {
                             : "bg-linear-to-r from-pink-500 to-purple-600 text-white border-pink-500 hover:from-pink-600 hover:to-purple-700 hover:border-pink-600"
                         }`}
                       >
-                        ✨ Daftar
+                        Daftar
                       </Button>
                     </Link>
                   </nav>

@@ -61,7 +61,11 @@ export default function LoginForm() {
         <div className="h-3 bg-linear-to-r from-pink-400 via-purple-400 to-pink-400"></div>
         <CardHeader className="text-center space-y-3 pb-8 pt-8">
           <div className="mx-auto h-16 w-16 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-lg">
-            <span className="text-3xl">🌸</span>
+            <img
+              src="/logo.png"
+              alt="Red Calendar Logo"
+              className="h-10 w-10 object-contain"
+            />
           </div>
           <CardTitle className="text-3xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
             Red Calendar

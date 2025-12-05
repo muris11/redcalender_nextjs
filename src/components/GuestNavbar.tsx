@@ -79,14 +79,23 @@ export function GuestNavbar() {
 
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden hover:bg-pink-50 rounded-md transition-colors">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden hover:bg-pink-50 rounded-md transition-colors"
+              >
                 <MenuIcon className="h-6 w-6 text-gray-700" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-white/95 backdrop-blur-md border-l border-pink-200">
+            <SheetContent
+              side="right"
+              className="w-[280px] sm:w-[350px] bg-white/95 backdrop-blur-md border-l border-pink-200"
+            >
               <SheetHeader className="border-b border-pink-100 pb-4 mb-4">
-                <SheetTitle className="text-pink-600 font-bold">Menu Navigasi</SheetTitle>
+                <SheetTitle className="text-pink-600 font-bold">
+                  Menu Navigasi
+                </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col space-y-2">
                 <Link href="/" onClick={() => setIsOpen(false)}>

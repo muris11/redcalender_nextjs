@@ -40,7 +40,7 @@ export default function GuestHome() {
         <div className="max-w-6xl mx-auto text-center">
           <div className="mb-8">
             <span className="inline-block px-6 py-3 bg-linear-to-r from-pink-100 to-purple-100 text-pink-700 font-bold rounded-full text-sm shadow-lg mb-6">
-              🎉 Platform Kesehatan Wanita Terpercaya
+              Platform Kesehatan Wanita Terpercaya
             </span>
           </div>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
@@ -60,7 +60,7 @@ export default function GuestHome() {
                 size="lg"
                 className="bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white text-lg px-10 py-7 shadow-xl hover:shadow-2xl transition-all duration-300 border-0 rounded-xl font-bold"
               >
-                ✨ Mulai Gratis Sekarang
+                Mulai Gratis Sekarang
               </Button>
             </Link>
             <Link href="#features">
@@ -69,7 +69,7 @@ export default function GuestHome() {
                 variant="outline"
                 className="text-lg px-10 py-7 border-2 border-pink-300 hover:border-pink-400 hover:bg-pink-50 text-pink-600 font-bold rounded-xl transition-all duration-300"
               >
-                📚 Pelajari Lebih Lanjut
+                Pelajari Lebih Lanjut
               </Button>
             </Link>
           </div>
@@ -81,7 +81,7 @@ export default function GuestHome() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <span className="inline-block px-6 py-3 bg-linear-to-r from-pink-100 to-purple-100 text-pink-700 font-bold rounded-full text-sm shadow-md mb-4">
-              ✨ Fitur Lengkap
+              Fitur Lengkap
             </span>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Fitur Unggulan{" "}
@@ -102,7 +102,7 @@ export default function GuestHome() {
                   <Calendar className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-xl">
-                  📅 Pencatatan Siklus Akurat
+                  Pencatatan Siklus Akurat
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -119,7 +119,7 @@ export default function GuestHome() {
                 <div className="h-16 w-16 rounded-full bg-linear-to-br from-red-400 to-red-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl">❤️ Analisis Kesehatan</CardTitle>
+                <CardTitle className="text-xl">Analisis Kesehatan</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 leading-relaxed">
@@ -136,7 +136,7 @@ export default function GuestHome() {
                   <TrendingUp className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-xl">
-                  📊 Grafik Tren Personal
+                  Grafik Tren Personal
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -153,7 +153,7 @@ export default function GuestHome() {
                 <div className="h-16 w-16 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <BookOpen className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl">📚 Edukasi Kesehatan</CardTitle>
+                <CardTitle className="text-xl">Edukasi Kesehatan</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 leading-relaxed">
@@ -169,7 +169,7 @@ export default function GuestHome() {
                 <div className="h-16 w-16 rounded-full bg-linear-to-br from-green-400 to-green-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Shield className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl">🔒 Privasi Terjamin</CardTitle>
+                <CardTitle className="text-xl">Privasi Terjamin</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 leading-relaxed">
@@ -186,7 +186,7 @@ export default function GuestHome() {
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-xl">
-                  🎨 Personalisasi Theme
+                  Personalisasi Theme
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -205,7 +205,7 @@ export default function GuestHome() {
         <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            🚀 Mulai Perjalanan Kesehatan Anda Hari Ini
+            Mulai Perjalanan Kesehatan Anda Hari Ini
           </h2>
           <p className="text-xl md:text-2xl text-pink-100 mb-10 leading-relaxed">
             Bergabung dengan ribuan wanita yang telah mempercayai kesehatan
@@ -216,7 +216,7 @@ export default function GuestHome() {
               size="lg"
               className="bg-white text-pink-600 hover:bg-pink-50 text-lg px-10 py-7 shadow-2xl hover:shadow-3xl transition-all duration-300 font-bold rounded-xl border-0"
             >
-              ✨ Daftar Sekarang - Gratis
+              Daftar Sekarang - Gratis
             </Button>
           </Link>
         </div>

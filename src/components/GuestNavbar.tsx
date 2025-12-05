@@ -1,15 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export function GuestNavbar() {
   const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     console.log("GuestNavbar mounted", pathname);
   }, [pathname]);
@@ -32,7 +33,7 @@ export function GuestNavbar() {
             </h1>
           </Link>
 
-          <nav className="hidden sm:flex items-center space-x-3">
+          <nav className="hidden md:flex items-center space-x-3">
             <Link href="/">
               <Button
                 variant="ghost"
@@ -70,64 +71,56 @@ export function GuestNavbar() {
             </Link>
           </nav>
 
-          <div className="flex items-center sm:hidden">
-            <Button
-              variant="ghost"
-              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-pink-600 hover:bg-pink-50 transition-all"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              <span className="sr-only">Open main menu</span>
-              {isMobileMenuOpen ? (
-                <X className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="block h-6 w-6" aria-hidden="true" />
-              )}
-            </Button>
-          </div>
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <MenuIcon className="h-6 w-6" />
+                <span className="sr-only">Toggle menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <nav className="flex flex-col space-y-4 mt-4">
+                <Link href="/" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start font-semibold transition-all duration-300 ${
+                      isActive("/")
+                        ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
+                        : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
+                    }`}
+                  >
+                    🏠 Home
+                  </Button>
+                </Link>
+                <Link href="/login" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    className={`w-full justify-start font-semibold transition-all duration-300 ${
+                      isActive("/login")
+                        ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
+                        : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
+                    }`}
+                  >
+                    🔑 Masuk
+                  </Button>
+                </Link>
+                <Link href="/register" onClick={() => setIsOpen(false)}>
+                  <Button
+                    variant="outline"
+                    className={`w-full justify-start font-semibold transition-all duration-300 border-0 shadow-md hover:shadow-lg ${
+                      isActive("/register")
+                        ? "bg-linear-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800"
+                        : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+                    }`}
+                  >
+                    ✨ Daftar
+                  </Button>
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-      {/* Mobile menu */}
-      {isMobileMenuOpen && (
-        <div className="sm:hidden bg-white/95 backdrop-blur-lg border-t border-pink-100 shadow-lg fixed inset-x-0 top-16 z-50">
-          <div className="pt-3 pb-4 px-4 space-y-2">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button
-                variant="ghost"
-                className={`w-full text-left font-semibold transition-all duration-300 ${
-                  isActive("/")
-                    ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
-                    : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
-                }`}
-              >
-                🏠 Home
-              </Button>
-            </Link>
-            <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button
-                variant="ghost"
-                className={`w-full text-left font-semibold transition-all duration-300 ${
-                  isActive("/login")
-                    ? "bg-pink-100 text-pink-600 hover:bg-pink-200"
-                    : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
-                }`}
-              >
-                🔑 Masuk
-              </Button>
-            </Link>
-            <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button
-                className={`w-full text-left font-semibold transition-all duration-300 border-0 shadow-md hover:shadow-lg ${
-                  isActive("/register")
-                    ? "bg-linear-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800"
-                    : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-                }`}
-              >
-                ✨ Daftar
-              </Button>
-            </Link>
-          </div>
-        </div>
-      )}
     </header>
   );
 }

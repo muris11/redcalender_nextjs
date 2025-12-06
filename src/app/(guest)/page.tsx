@@ -50,7 +50,7 @@ export default function GuestHome() {
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
-            Red Calendar adalah aplikasi pencatatan dan analisis siklus
+            Red Calender adalah aplikasi pencatatan dan analisis siklus
             menstruasi yang membantu Anda memahami tubuh, memprediksi masa
             subur, dan menjaga kesehatan reproduksi.
           </p>
@@ -86,7 +86,7 @@ export default function GuestHome() {
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
               Fitur Unggulan{" "}
               <span className="bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                Red Calendar
+                Red Calender
               </span>
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -135,9 +135,7 @@ export default function GuestHome() {
                 <div className="h-16 w-16 rounded-full bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <TrendingUp className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl">
-                  Grafik Tren Personal
-                </CardTitle>
+                <CardTitle className="text-xl">Grafik Tren Personal</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 leading-relaxed">
@@ -185,9 +183,7 @@ export default function GuestHome() {
                 <div className="h-16 w-16 rounded-full bg-linear-to-br from-orange-400 to-orange-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
                   <Users className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl">
-                  Personalisasi Theme
-                </CardTitle>
+                <CardTitle className="text-xl">Personalisasi Theme</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 leading-relaxed">
@@ -209,7 +205,7 @@ export default function GuestHome() {
           </h2>
           <p className="text-xl md:text-2xl text-pink-100 mb-10 leading-relaxed">
             Bergabung dengan ribuan wanita yang telah mempercayai kesehatan
-            reproduksinya pada Red Calendar
+            reproduksinya pada Red Calender
           </p>
           <Link href="/register">
             <Button

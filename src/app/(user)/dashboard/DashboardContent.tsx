@@ -2,7 +2,6 @@
 
 import { Navbar } from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLoading } from "@/components/ui/loading";
 import { Progress } from "@/components/ui/progress";
@@ -32,6 +31,9 @@ export default function DashboardContent() {
       isAuthenticated,
       userId: user?.id,
     });
+
+    // Set page title
+    document.title = "Dashboard";
 
     // Wait until auth state has initialized
     if (isLoading) {
@@ -140,28 +142,28 @@ export default function DashboardContent() {
       <Navbar />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
-        <div className="mb-8 animate-in fade-in slide-in-from-top duration-500">
-          <h1 className="text-4xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-3">
+        <div className="mb-6 md:mb-8 animate-in fade-in slide-in-from-top duration-500">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-3">
             Selamat datang kembali, {user?.name || "User"}! 👋
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-base md:text-lg">
             Pantau kesehatan reproduksi dan siklus menstruasi Anda di sini.
           </p>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-linear-to-br from-pink-500 to-pink-600">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+              <CardTitle className="text-xs md:text-sm font-medium text-white">
                 Total Siklus
               </CardTitle>
-              <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-                <Calendar className="h-5 w-5 text-white" />
+              <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white/20 flex items-center justify-center">
+                <Calendar className="h-4 w-4 md:h-5 md:w-5 text-white" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-white mb-1">
+            <CardContent className="px-4 pb-4">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                 {userStats?.totalCycles || 0}
               </div>
               <p className="text-xs text-pink-100">Siklus tercatat</p>
@@ -169,16 +171,16 @@ export default function DashboardContent() {
           </Card>
 
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-linear-to-br from-purple-500 to-purple-600">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+              <CardTitle className="text-xs md:text-sm font-medium text-white">
                 Rata-rata Durasi
               </CardTitle>
-              <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-                <Activity className="h-5 w-5 text-white" />
+              <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white/20 flex items-center justify-center">
+                <Activity className="h-4 w-4 md:h-5 md:w-5 text-white" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-white mb-1">
+            <CardContent className="px-4 pb-4">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                 {userStats?.averageCycleLength || 0}
               </div>
               <p className="text-xs text-purple-100">Hari per siklus</p>
@@ -186,16 +188,16 @@ export default function DashboardContent() {
           </Card>
 
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-linear-to-br from-rose-500 to-rose-600">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+              <CardTitle className="text-xs md:text-sm font-medium text-white">
                 Log Harian
               </CardTitle>
-              <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-                <Heart className="h-5 w-5 text-white" />
+              <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white/20 flex items-center justify-center">
+                <Heart className="h-4 w-4 md:h-5 md:w-5 text-white" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-white mb-1">
+            <CardContent className="px-4 pb-4">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                 {userStats?.totalLogs || 0}
               </div>
               <p className="text-xs text-rose-100">Entri tercatat</p>
@@ -203,16 +205,16 @@ export default function DashboardContent() {
           </Card>
 
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-linear-to-br from-indigo-500 to-indigo-600">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-4 pt-4">
+              <CardTitle className="text-xs md:text-sm font-medium text-white">
                 Status Saat Ini
               </CardTitle>
-              <div className="h-10 w-10 rounded-full bg-white/20 flex items-center justify-center">
-                <TrendingUp className="h-5 w-5 text-white" />
+              <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-white/20 flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 md:h-5 md:w-5 text-white" />
               </div>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-white mb-1 capitalize">
+            <CardContent className="px-4 pb-4">
+              <div className="text-lg md:text-2xl font-bold text-white mb-1 capitalize">
                 {healthMetrics?.currentPhase || "Tidak diketahui"}
               </div>
               <p className="text-xs text-indigo-100">Fase siklus</p>
@@ -222,21 +224,21 @@ export default function DashboardContent() {
 
         {/* Current Cycle Progress */}
         {recentCycles && recentCycles.length > 0 && (
-          <Card className="mb-8 border-0 shadow-lg overflow-hidden">
-            <div className="bg-linear-to-r from-pink-500 to-purple-500 p-6 text-white">
-              <CardTitle className="flex items-center text-xl">
-                <Target className="h-6 w-6 mr-2" />
+          <Card className="mb-6 md:mb-8 border-0 shadow-lg overflow-hidden">
+            <div className="bg-linear-to-r from-pink-500 to-purple-500 p-4 md:p-6 text-white">
+              <CardTitle className="flex items-center text-lg md:text-xl">
+                <Target className="h-5 w-5 md:h-6 md:w-6 mr-2" />
                 Siklus Saat Ini
               </CardTitle>
             </div>
-            <CardContent className="p-6">
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-gray-800">
+            <CardContent className="p-4 md:p-6">
+              <div className="space-y-4 md:space-y-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                  <span className="text-base md:text-lg font-semibold text-gray-800">
                     Hari ke-{recentCycles[0].currentDay || 0} dari{" "}
                     {recentCycles[0].cycleLength || 28}
                   </span>
-                  <span className="text-2xl font-bold text-pink-600">
+                  <span className="text-xl md:text-2xl font-bold text-pink-600">
                     {Math.round(
                       ((recentCycles[0].currentDay || 0) /
                         (recentCycles[0].cycleLength || 28)) *
@@ -252,13 +254,13 @@ export default function DashboardContent() {
                         (recentCycles[0].cycleLength || 28)) *
                       100
                     }
-                    className="h-4"
+                    className="h-3 md:h-4"
                   />
                 </div>
-                <div className="flex justify-between text-sm text-gray-600 pt-2">
+                <div className="flex flex-col sm:flex-row justify-between gap-4 text-sm text-gray-600 pt-2">
                   <div className="flex items-center gap-2">
                     <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                    <span>
+                    <span className="text-xs md:text-sm">
                       Mulai:{" "}
                       {recentCycles[0].startDate
                         ? new Date(
@@ -272,7 +274,7 @@ export default function DashboardContent() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span>
+                    <span className="text-xs md:text-sm">
                       {recentCycles[0].daysUntilNextPeriod || 0} hari lagi
                     </span>
                     <div className="h-3 w-3 rounded-full bg-pink-500"></div>
@@ -284,28 +286,28 @@ export default function DashboardContent() {
         )}
 
         {/* Recent Cycles & Upcoming Events */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8">
           {/* Recent Cycles */}
           <Card className="border-0 shadow-lg">
-            <CardHeader className="bg-gray-50">
-              <CardTitle className="flex items-center text-lg">
-                <Calendar className="h-5 w-5 mr-2 text-pink-600" />
+            <CardHeader className="bg-gray-50 px-4 py-4 md:px-6 md:py-6">
+              <CardTitle className="flex items-center text-base md:text-lg">
+                <Calendar className="h-4 w-4 md:h-5 md:w-5 mr-2 text-pink-600" />
                 Siklus Terbaru
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 md:pt-6 px-4 md:px-6">
               {recentCycles && recentCycles.length > 0 ? (
                 <div className="space-y-3">
                   {recentCycles.slice(0, 3).map((cycle: any, index: number) => (
                     <div
                       key={index}
-                      className="flex justify-between items-center p-4 bg-linear-to-r from-pink-50 to-purple-50 rounded-xl border border-pink-100 hover:shadow-md transition-shadow duration-200"
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 md:p-4 bg-linear-to-r from-pink-50 to-purple-50 rounded-xl border border-pink-100 hover:shadow-md transition-shadow duration-200 gap-2"
                     >
-                      <div>
-                        <p className="font-semibold text-gray-800">
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-800 text-sm md:text-base">
                           Siklus {cycle.cycleNumber || index + 1}
                         </p>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="text-xs md:text-sm text-gray-600 mt-1">
                           {cycle.startDate
                             ? new Date(cycle.startDate).toLocaleDateString(
                                 "id-ID",
@@ -323,7 +325,7 @@ export default function DashboardContent() {
                       </div>
                       <Badge
                         variant={cycle.isCompleted ? "default" : "secondary"}
-                        className="px-3 py-1"
+                        className="px-2 py-1 md:px-3 md:py-1 text-xs"
                       >
                         {cycle.isCompleted ? "Selesai" : "Berlangsung"}
                       </Badge>
@@ -331,9 +333,11 @@ export default function DashboardContent() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500">Belum ada data siklus</p>
+                <div className="text-center py-8 md:py-12">
+                  <Calendar className="h-12 w-12 md:h-16 md:w-16 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm md:text-base">
+                    Belum ada data siklus
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -341,13 +345,13 @@ export default function DashboardContent() {
 
           {/* Upcoming Events */}
           <Card className="border-0 shadow-lg">
-            <CardHeader className="bg-gray-50">
-              <CardTitle className="flex items-center text-lg">
-                <Zap className="h-5 w-5 mr-2 text-purple-600" />
+            <CardHeader className="bg-gray-50 px-4 py-4 md:px-6 md:py-6">
+              <CardTitle className="flex items-center text-base md:text-lg">
+                <Zap className="h-4 w-4 md:h-5 md:w-5 mr-2 text-purple-600" />
                 Event Mendatang
               </CardTitle>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent className="pt-4 md:pt-6 px-4 md:px-6">
               {upcomingEvents && upcomingEvents.length > 0 ? (
                 <div className="space-y-3">
                   {upcomingEvents
@@ -355,13 +359,13 @@ export default function DashboardContent() {
                     .map((event: any, index: number) => (
                       <div
                         key={index}
-                        className="flex justify-between items-center p-4 bg-linear-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100 hover:shadow-md transition-shadow duration-200"
+                        className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 md:p-4 bg-linear-to-r from-purple-50 to-pink-50 rounded-xl border border-purple-100 hover:shadow-md transition-shadow duration-200 gap-2"
                       >
-                        <div>
-                          <p className="font-semibold text-gray-800">
+                        <div className="flex-1">
+                          <p className="font-semibold text-gray-800 text-sm md:text-base">
                             {event.title || "Event"}
                           </p>
-                          <p className="text-sm text-gray-600 mt-1">
+                          <p className="text-xs md:text-sm text-gray-600 mt-1">
                             {event.date
                               ? new Date(event.date).toLocaleDateString(
                                   "id-ID",
@@ -376,7 +380,7 @@ export default function DashboardContent() {
                         </div>
                         <Badge
                           variant="outline"
-                          className="border-purple-200 text-purple-700 bg-white px-3 py-1"
+                          className="border-purple-200 text-purple-700 bg-white px-2 py-1 md:px-3 md:py-1 text-xs"
                         >
                           {event.type || "Event"}
                         </Badge>
@@ -384,9 +388,11 @@ export default function DashboardContent() {
                     ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <Zap className="h-16 w-16 text-gray-300 mx-auto mb-3" />
-                  <p className="text-gray-500">Tidak ada event mendatang</p>
+                <div className="text-center py-8 md:py-12">
+                  <Zap className="h-12 w-12 md:h-16 md:w-16 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 text-sm md:text-base">
+                    Tidak ada event mendatang
+                  </p>
                 </div>
               )}
             </CardContent>
@@ -395,35 +401,37 @@ export default function DashboardContent() {
 
         {/* Health Metrics */}
         <Card className="mb-8 border-0 shadow-lg">
-          <CardHeader className="bg-linear-to-r from-blue-50 to-cyan-50">
-            <CardTitle className="flex items-center text-lg">
-              <Activity className="h-5 w-5 mr-2 text-blue-600" />
+          <CardHeader className="bg-linear-to-r from-blue-50 to-cyan-50 px-4 py-4 md:px-6 md:py-6">
+            <CardTitle className="flex items-center text-base md:text-lg">
+              <Activity className="h-4 w-4 md:h-5 md:w-5 mr-2 text-blue-600" />
               Metrik Kesehatan
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center p-6 bg-blue-50 rounded-2xl border border-blue-100 hover:shadow-md transition-all duration-200">
-                <div className="text-4xl font-bold text-blue-600 mb-2">
+          <CardContent className="pt-4 md:pt-6 px-4 md:px-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
+              <div className="text-center p-3 md:p-6 bg-blue-50 rounded-xl md:rounded-2xl border border-blue-100 hover:shadow-md transition-all duration-200">
+                <div className="text-2xl md:text-4xl font-bold text-blue-600 mb-1 md:mb-2">
                   {healthMetrics?.averageSleep || 0}h
                 </div>
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-xs md:text-sm font-medium text-gray-700">
                   Rata-rata Tidur
                 </p>
               </div>
-              <div className="text-center p-6 bg-cyan-50 rounded-2xl border border-cyan-100 hover:shadow-md transition-all duration-200">
-                <div className="text-4xl font-bold text-cyan-600 mb-2">
+              <div className="text-center p-3 md:p-6 bg-cyan-50 rounded-xl md:rounded-2xl border border-cyan-100 hover:shadow-md transition-all duration-200">
+                <div className="text-2xl md:text-4xl font-bold text-cyan-600 mb-1 md:mb-2">
                   {healthMetrics?.averageWater || 0}L
                 </div>
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-xs md:text-sm font-medium text-gray-700">
                   Rata-rata Air
                 </p>
               </div>
-              <div className="text-center p-6 bg-teal-50 rounded-2xl border border-teal-100 hover:shadow-md transition-all duration-200">
-                <div className="text-4xl font-bold text-teal-600 mb-2">
+              <div className="text-center p-3 md:p-6 bg-teal-50 rounded-xl md:rounded-2xl border border-teal-100 hover:shadow-md transition-all duration-200 col-span-2 md:col-span-1">
+                <div className="text-2xl md:text-4xl font-bold text-teal-600 mb-1 md:mb-2">
                   {healthMetrics?.moodScore || 0}/10
                 </div>
-                <p className="text-sm font-medium text-gray-700">Skor Mood</p>
+                <p className="text-xs md:text-sm font-medium text-gray-700">
+                  Skor Mood
+                </p>
               </div>
             </div>
           </CardContent>
@@ -431,26 +439,26 @@ export default function DashboardContent() {
 
         {/* Achievements */}
         {achievements && achievements.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Award className="h-5 w-5 mr-2" />
+          <Card className="border-0 shadow-lg">
+            <CardHeader className="bg-gray-50 px-4 py-4 md:px-6 md:py-6">
+              <CardTitle className="flex items-center text-base md:text-lg">
+                <Award className="h-4 w-4 md:h-5 md:w-5 mr-2 text-yellow-600" />
                 Pencapaian
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <CardContent className="pt-4 md:pt-6 px-4 md:px-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                 {achievements.map((achievement: any, index: number) => (
                   <div
                     key={index}
-                    className="flex items-center p-3 bg-yellow-50 rounded-lg border border-yellow-200"
+                    className="flex flex-col sm:flex-row items-start sm:items-center p-3 md:p-4 bg-yellow-50 rounded-xl border border-yellow-200 hover:shadow-md transition-shadow duration-200 gap-2"
                   >
-                    <Award className="h-8 w-8 text-yellow-600 mr-3" />
-                    <div>
-                      <p className="font-medium text-yellow-800">
+                    <Award className="h-6 w-6 md:h-8 md:w-8 text-yellow-600 shrink-0" />
+                    <div className="flex-1">
+                      <p className="font-medium text-yellow-800 text-sm md:text-base">
                         {achievement.title || "Pencapaian"}
                       </p>
-                      <p className="text-sm text-yellow-600">
+                      <p className="text-xs md:text-sm text-yellow-600 mt-1">
                         {achievement.description || ""}
                       </p>
                     </div>
@@ -460,34 +468,6 @@ export default function DashboardContent() {
             </CardContent>
           </Card>
         )}
-
-        {/* Quick Actions */}
-        <div className="mt-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Aksi Cepat</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button
-              onClick={() => router.push("/log")}
-              className="h-24 flex flex-col items-center justify-center bg-linear-to-br from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0"
-            >
-              <Heart className="h-8 w-8 mb-2" />
-              <span className="text-base font-semibold">Log Harian</span>
-            </Button>
-            <Button
-              onClick={() => router.push("/calender")}
-              className="h-24 flex flex-col items-center justify-center bg-linear-to-br from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0"
-            >
-              <Calendar className="h-8 w-8 mb-2" />
-              <span className="text-base font-semibold">Kalender</span>
-            </Button>
-            <Button
-              onClick={() => router.push("/analysis")}
-              className="h-24 flex flex-col items-center justify-center bg-linear-to-br from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0"
-            >
-              <TrendingUp className="h-8 w-8 mb-2" />
-              <span className="text-base font-semibold">Analisis</span>
-            </Button>
-          </div>
-        </div>
       </main>
     </div>
   );

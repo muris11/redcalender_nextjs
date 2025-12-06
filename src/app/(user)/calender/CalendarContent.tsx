@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLoading } from "@/components/ui/loading";
 import { useAuthStore } from "@/store/authStore";
-import { ChevronLeft, ChevronRight, Clock, Heart, Plus } from "lucide-react";
-import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -24,8 +23,6 @@ export default function CalendarContent() {
   const { user, isAuthenticated, isLoading } = useAuthStore();
 
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [showLogForm, setShowLogForm] = useState(false);
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
 
@@ -51,6 +48,9 @@ export default function CalendarContent() {
       isAuthenticated,
       userId: user?.id,
     });
+
+    // Set page title
+    document.title = "Kalender";
 
     // Wait until auth state has initialized
     if (isLoading) {
@@ -200,10 +200,8 @@ export default function CalendarContent() {
   };
 
   const handleDateClick = (day: CalendarDay) => {
-    setSelectedDate(day.date);
-    if (day.isCurrentMonth) {
-      setShowLogForm(true);
-    }
+    const dateStr = day.date.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+    router.push(`/log?date=${dateStr}`);
   };
 
   const getPhaseColor = (phase?: string) => {
@@ -256,43 +254,43 @@ export default function CalendarContent() {
     <div className="min-h-screen bg-linear-to-br from-purple-50 via-white to-pink-50">
       <Navbar />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
         {/* Month Navigation */}
-        <Card className="mb-8 border-0 shadow-lg overflow-hidden">
-          <div className="bg-linear-to-r from-purple-500 to-pink-500 p-6">
+        <Card className="mb-6 md:mb-8 border-0 shadow-lg overflow-hidden">
+          <div className="bg-linear-to-r from-purple-500 to-pink-500 p-4 md:p-6">
             <div className="flex items-center justify-between">
               <Button
                 variant="outline"
                 onClick={() => navigateMonth(-1)}
-                className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white transition-all duration-200"
+                className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white transition-all duration-200 p-2 md:p-3"
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
 
-              <CardTitle className="text-3xl font-bold text-white">
+              <CardTitle className="text-xl md:text-2xl lg:text-3xl font-bold text-white text-center px-2">
                 {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
               </CardTitle>
 
               <Button
                 variant="outline"
                 onClick={() => navigateMonth(1)}
-                className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white transition-all duration-200"
+                className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white transition-all duration-200 p-2 md:p-3"
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-4 w-4 md:h-5 md:w-5" />
               </Button>
             </div>
           </div>
         </Card>
 
         {/* Calendar Grid */}
-        <Card className="mb-8 border-0 shadow-lg">
-          <CardContent className="p-8">
+        <Card className="mb-6 md:mb-8 border-0 shadow-lg">
+          <CardContent className="p-2 md:p-4 lg:p-6">
             {/* Week day headers */}
-            <div className="grid grid-cols-7 gap-2 mb-6">
+            <div className="grid grid-cols-7 gap-0.5 md:gap-1 mb-2 md:mb-4">
               {weekDays.map((day) => (
                 <div
                   key={day}
-                  className="text-center text-sm font-bold text-gray-700 uppercase tracking-wide"
+                  className="text-center text-[10px] md:text-xs lg:text-sm font-bold text-gray-700 uppercase tracking-wide py-1 md:py-2"
                 >
                   {day}
                 </div>
@@ -300,21 +298,29 @@ export default function CalendarContent() {
             </div>
 
             {/* Calendar days */}
-            <div className="grid grid-cols-7 gap-3">
+            <div className="grid grid-cols-7 gap-0.5 md:gap-1">
               {calendarDays.map((day, index) => (
                 <button
                   key={index}
                   onClick={() => handleDateClick(day)}
                   className={`
-                    relative p-4 rounded-2xl border-2 transition-all hover:scale-105 hover:shadow-lg h-28 flex flex-col items-start justify-between
-                    ${day.isCurrentMonth ? "bg-white" : "bg-gray-50 opacity-40"}
-                    ${day.isToday ? "ring-4 ring-pink-400 ring-offset-2" : ""}
+                    relative p-1 md:p-2 rounded-lg md:rounded-xl border transition-all hover:scale-105 hover:shadow-md min-h-10 md:min-h-12 lg:min-h-14 flex flex-col items-center justify-center cursor-pointer
+                    ${
+                      day.isCurrentMonth
+                        ? "bg-white hover:bg-gray-50"
+                        : "bg-gray-50 opacity-40"
+                    }
+                    ${
+                      day.isToday
+                        ? "ring-1 md:ring-2 ring-pink-400 ring-offset-1"
+                        : ""
+                    }
                     ${getPhaseColor(day.phase)}
-                    ${day.hasData ? "font-bold shadow-md" : ""}
+                    ${day.hasData ? "font-bold shadow-sm" : ""}
                   `}
                 >
                   <div
-                    className={`text-base font-bold ${
+                    className={`text-xs md:text-sm font-bold ${
                       day.isToday ? "text-pink-600" : ""
                     }`}
                   >
@@ -322,35 +328,66 @@ export default function CalendarContent() {
                   </div>
 
                   {day.phase && (
-                    <div className="text-2xl self-center">
+                    <div className="text-sm md:text-base lg:text-lg">
                       {getPhaseIcon(day.phase)}
                     </div>
                   )}
 
                   {day.cycleDay && (
-                    <div className="text-[11px] self-end text-gray-600 font-medium bg-white/70 px-2 py-0.5 rounded-full">
+                    <div className="text-[8px] md:text-[9px] text-gray-600 font-medium bg-white/70 px-0.5 md:px-1 py-0.5 rounded">
                       D{day.cycleDay}
                     </div>
                   )}
 
                   {day.hasData && (
-                    <div className="absolute top-2 right-2 w-2.5 h-2.5 bg-pink-500 rounded-full shadow-sm"></div>
+                    <div className="absolute top-0.5 md:top-1 right-0.5 md:right-1 w-1.5 h-1.5 md:w-2 md:h-2 bg-pink-500 rounded-full shadow-sm"></div>
                   )}
                 </button>
               ))}
+            </div>
+
+            {/* Instructions */}
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <div className="flex items-start space-x-3 mb-4">
+                <div className="w-5 h-5 text-blue-600 mt-0.5">👆</div>
+                <div>
+                  <p className="text-sm font-semibold text-blue-800 mb-1">
+                    Klik Tanggal untuk Catat Gejala
+                  </p>
+                  <p className="text-xs text-blue-700">
+                    Klik pada tanggal mana saja di kalender untuk membuka
+                    halaman pencatatan gejala harian pada tanggal tersebut.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
+                <div className="flex items-center space-x-3">
+                  <div className="w-4 h-4 bg-pink-500 rounded-full shadow-sm"></div>
+                  <span className="text-sm font-medium text-gray-700">
+                    Memiliki data catatan
+                  </span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-6 h-6 border-4 border-pink-400 rounded-lg"></div>
+                  <span className="text-sm font-medium text-gray-700">
+                    Hari ini
+                  </span>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Legend */}
         <Card className="border-0 shadow-lg">
-          <CardHeader className="bg-gray-50">
-            <CardTitle className="text-xl flex items-center">
+          <CardHeader className="bg-gray-50 px-4 py-4 md:px-6 md:py-6">
+            <CardTitle className="text-lg md:text-xl flex items-center">
               <span className="mr-2">🎨</span> Legenda Fase Siklus
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <CardContent className="p-4 md:p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
               <div className="flex items-center space-x-3 p-3 bg-red-50 rounded-xl border border-red-200">
                 <div className="w-6 h-6 bg-red-100 border-2 border-red-300 rounded-lg flex items-center justify-center text-lg">
                   🩸
@@ -385,89 +422,61 @@ export default function CalendarContent() {
               </div>
             </div>
 
-            <div className="mt-6 pt-6 border-t border-gray-200 flex flex-wrap gap-6">
-              <div className="flex items-center space-x-3">
-                <div className="w-4 h-4 bg-pink-500 rounded-full shadow-sm"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  Memiliki data catatan
-                </span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-6 h-6 border-4 border-pink-400 rounded-lg"></div>
-                <span className="text-sm font-medium text-gray-700">
-                  Hari ini
-                </span>
+            {/* Phase Explanations */}
+            <div className="mt-6 space-y-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                Penjelasan Fase Siklus
+              </h3>
+
+              <div className="space-y-3">
+                <div className="p-3 bg-red-50 rounded-lg border border-red-200">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <span className="text-lg">🩸</span>
+                    <h4 className="font-semibold text-red-800">Menstruasi</h4>
+                  </div>
+                  <p className="text-xs text-red-700">
+                    Fase dimana lapisan dinding rahim luruh dan keluar bersama
+                    darah. Biasanya berlangsung 3-7 hari.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <span className="text-lg">🌱</span>
+                    <h4 className="font-semibold text-green-800">Folikuler</h4>
+                  </div>
+                  <p className="text-xs text-green-700">
+                    Fase dimana folikel di ovarium berkembang dan memproduksi
+                    estrogen. Tubuh mempersiapkan ovulasi.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-purple-50 rounded-lg border border-purple-200">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <span className="text-lg">🌸</span>
+                    <h4 className="font-semibold text-purple-800">Ovulasi</h4>
+                  </div>
+                  <p className="text-xs text-purple-700">
+                    Fase dimana sel telur dilepaskan dari ovarium. Waktu yang
+                    paling subur dalam siklus menstruasi.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <span className="text-lg">🌙</span>
+                    <h4 className="font-semibold text-blue-800">Luteal</h4>
+                  </div>
+                  <p className="text-xs text-blue-700">
+                    Fase dimana tubuh mempersiapkan kehamilan. Jika tidak hamil,
+                    fase ini berakhir dengan menstruasi berikutnya.
+                  </p>
+                </div>
               </div>
             </div>
           </CardContent>
         </Card>
-
-        {/* Quick Actions */}
-        <div className="mt-8 flex flex-wrap gap-4">
-          <Button
-            onClick={() => setShowLogForm(true)}
-            className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 px-6 py-6 text-base"
-          >
-            <Plus className="h-5 w-5 mr-2" />
-            Catat Gejala Hari Ini
-          </Button>
-
-          <Button
-            asChild
-            className="bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 px-6 py-6 text-base"
-          >
-            <Link href="/analysis">
-              <Clock className="h-5 w-5 mr-2" />
-              Lihat Analisis Siklus
-            </Link>
-          </Button>
-        </div>
       </main>
-
-      {/* Log Form Modal */}
-      {showLogForm && selectedDate && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
-          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto border-0 shadow-2xl">
-            <CardHeader className="bg-linear-to-r from-pink-500 to-purple-500 text-white">
-              <CardTitle className="text-xl">
-                Catat Data untuk{" "}
-                {selectedDate.toLocaleDateString("id-ID", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="text-center py-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-pink-100 rounded-full mb-4">
-                  <Heart className="h-8 w-8 text-pink-600" />
-                </div>
-                <p className="text-gray-600 text-lg mb-6">
-                  Form pencatatan gejala dan mood akan segera tersedia. Fitur
-                  ini sedang dalam pengembangan.
-                </p>
-              </div>
-              <div className="flex justify-end space-x-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowLogForm(false)}
-                  className="px-6"
-                >
-                  Tutup
-                </Button>
-                <Button
-                  asChild
-                  className="bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 px-6"
-                >
-                  <Link href="/log">Buka Form Lengkap</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }

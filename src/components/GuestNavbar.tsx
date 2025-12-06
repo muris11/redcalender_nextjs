@@ -26,7 +26,7 @@ export function GuestNavbar() {
           <Link href="/" className="flex items-center space-x-3 group">
             <img
               src="/logo.png"
-              alt="Red Calendar Logo"
+              alt="Red Calender Logo"
               className="h-15 w-15 object-contain group-hover:scale-110 transition-transform duration-300"
             />
             <h1 className="text-lg md:text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">

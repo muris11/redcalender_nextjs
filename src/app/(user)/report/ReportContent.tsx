@@ -3,7 +3,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageLoading } from "@/components/ui/loading";
 import {
@@ -20,11 +19,9 @@ import {
   Calendar,
   FileText,
   Heart,
-  Home,
   Moon,
   TrendingUp,
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -197,77 +194,74 @@ export default function ReportContent() {
   return (
     <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-pink-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        {/* Page Header */}
+        <div className="mb-8 sm:mb-10 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-linear-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-3 sm:mb-4">
+            Laporan Kesehatan
+          </h1>
+          <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4">
+            Ringkasan kesehatan reproduksi Anda
+          </p>
+        </div>
+
         {/* Header Actions */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-4xl font-bold bg-linear-to-r from-indigo-600 to-pink-600 bg-clip-text text-transparent mb-3">
-              Laporan Kesehatan
-            </h1>
-            <p className="text-gray-600 text-lg">
-              Ringkasan kesehatan reproduksi Anda
-            </p>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-              <SelectTrigger className="w-48 h-12 border-2 border-gray-200 hover:border-indigo-300">
-                <SelectValue placeholder="Pilih periode" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="3months">3 Bulan Terakhir</SelectItem>
-                <SelectItem value="6months">6 Bulan Terakhir</SelectItem>
-                <SelectItem value="12months">12 Bulan Terakhir</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Download button removed */}
-          </div>
+        <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-center mb-6 sm:mb-8 lg:mb-10 gap-4">
+          <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+            <SelectTrigger className="w-full sm:w-48 h-10 sm:h-12 border-2 border-gray-200 hover:border-indigo-300 rounded-lg sm:rounded-xl">
+              <SelectValue placeholder="Pilih periode" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="3months">3 Bulan Terakhir</SelectItem>
+              <SelectItem value="6months">6 Bulan Terakhir</SelectItem>
+              <SelectItem value="12months">12 Bulan Terakhir</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            <div className="h-2 bg-linear-to-r from-blue-400 to-blue-600"></div>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center text-lg text-gray-800">
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 lg:mb-10">
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white/90 backdrop-blur-sm">
+            <div className="h-1 sm:h-2 bg-linear-to-r from-blue-400 to-blue-600"></div>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-blue-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
+                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                 </div>
-                Siklus Saat Ini
+                <span className="text-sm sm:text-base">Siklus Saat Ini</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-blue-600 mb-2">
+            <CardContent className="pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-1 sm:mb-2">
                 Hari ke-{analysis.cycleDay}
               </div>
               <Badge
                 className={`${getPhaseColor(
                   analysis.currentPhase
-                )} px-3 py-1 text-sm font-semibold`}
+                )} px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold`}
               >
                 {getPhaseName(analysis.currentPhase)}
               </Badge>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            <div className="h-2 bg-linear-to-r from-green-400 to-green-600"></div>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center text-lg text-gray-800">
-                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                  <TrendingUp className="h-5 w-5 text-green-600" />
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white/90 backdrop-blur-sm">
+            <div className="h-1 sm:h-2 bg-linear-to-r from-green-400 to-green-600"></div>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-green-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
+                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
                 </div>
-                Rata-rata Siklus
+                <span className="text-sm sm:text-base">Rata-rata Siklus</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-green-600 mb-2">
+            <CardContent className="pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1 sm:mb-2">
                 {analysis.avgCycleLength} hari
               </div>
               <div className="flex items-center space-x-2">
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${regularityStatus.color}`}
+                  className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${regularityStatus.color}`}
                 >
                   {regularityStatus.icon} {regularityStatus.text}
                 </span>
@@ -275,39 +269,39 @@ export default function ReportContent() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            <div className="h-2 bg-linear-to-r from-red-400 to-red-600"></div>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center text-lg text-gray-800">
-                <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
-                  <Activity className="h-5 w-5 text-red-600" />
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white/90 backdrop-blur-sm">
+            <div className="h-1 sm:h-2 bg-linear-to-r from-red-400 to-red-600"></div>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-red-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
+                  <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
                 </div>
-                Rata-rata Haid
+                <span className="text-sm sm:text-base">Rata-rata Haid</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-600 mb-2">
+            <CardContent className="pt-0">
+              <div className="text-2xl sm:text-3xl font-bold text-red-600 mb-1 sm:mb-2">
                 {analysis.avgPeriodLength} hari
               </div>
-              <p className="text-sm font-medium text-green-600">
+              <p className="text-xs sm:text-sm font-medium text-green-600">
                 ✓ Normal (3-7 hari)
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            <div className="h-2 bg-linear-to-r from-purple-400 to-purple-600"></div>
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center text-lg text-gray-800">
-                <div className="h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center mr-3">
-                  <Moon className="h-5 w-5 text-purple-600" />
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white/90 backdrop-blur-sm">
+            <div className="h-1 sm:h-2 bg-linear-to-r from-purple-400 to-purple-600"></div>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-purple-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
+                  <Moon className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
                 </div>
-                Masa Subur
+                <span className="text-sm sm:text-base">Masa Subur</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-0">
               <div
-                className={`text-3xl font-bold mb-2 ${
+                className={`text-lg sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2 ${
                   analysis.fertileWindow.isActive
                     ? "text-purple-600"
                     : "text-gray-400"
@@ -315,7 +309,7 @@ export default function ReportContent() {
               >
                 {analysis.fertileWindow.isActive ? "Aktif" : "Tidak Aktif"}
               </div>
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-xs sm:text-sm font-medium text-gray-600">
                 Hari {analysis.fertileWindow.start}-{analysis.fertileWindow.end}
               </p>
             </CardContent>
@@ -324,23 +318,26 @@ export default function ReportContent() {
 
         {/* Health Alerts */}
         {analysis.healthAlerts.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold mb-4">Peringatan Kesehatan</h2>
-            <div className="space-y-3">
+          <div className="mb-6 sm:mb-8 lg:mb-10">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-4 sm:mb-6 text-gray-800">
+              Peringatan Kesehatan
+            </h2>
+            <div className="space-y-3 sm:space-y-4">
               {analysis.healthAlerts.map((alert, index) => (
                 <Alert
                   key={index}
-                  className={
+                  className={`${
                     alert.severity === "high"
                       ? "border-red-200 bg-red-50"
                       : alert.severity === "medium"
                       ? "border-yellow-200 bg-yellow-50"
                       : "border-blue-200 bg-blue-50"
-                  }
+                  } border-l-4`}
                 >
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    <strong>{alert.title}:</strong> {alert.message}
+                  <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <AlertDescription className="text-sm sm:text-base">
+                    <strong className="font-semibold">{alert.title}:</strong>{" "}
+                    {alert.message}
                   </AlertDescription>
                 </Alert>
               ))}
@@ -349,99 +346,142 @@ export default function ReportContent() {
         )}
 
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8 lg:mb-10">
           {/* Cycle Length Trend */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Tren Panjang Siklus</CardTitle>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="text-lg sm:text-xl text-gray-800">
+                Tren Panjang Siklus
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart
-                  data={cycles.map((cycle, index) => ({
-                    month: `Bulan ${index + 1}`,
-                    cycleLength:
-                      Math.floor(
-                        (new Date(cycle.startDate).getTime() -
-                          new Date(
-                            cycles[index + 1]?.startDate || cycle.startDate
-                          ).getTime()) /
-                          (1000 * 60 * 60 * 24)
-                      ) || 28,
-                  }))}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis domain={[20, 40]} />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    type="monotone"
-                    dataKey="cycleLength"
-                    stroke="#ec4899"
-                    strokeWidth={2}
-                    name="Panjang Siklus (hari)"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+            <CardContent className="pt-0">
+              <div className="h-64 sm:h-72 lg:h-80 xl:h-96">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={cycles.map((cycle, index) => ({
+                      month: `Bulan ${index + 1}`,
+                      cycleLength:
+                        Math.floor(
+                          (new Date(cycle.startDate).getTime() -
+                            new Date(
+                              cycles[index + 1]?.startDate || cycle.startDate
+                            ).getTime()) /
+                            (1000 * 60 * 60 * 24)
+                        ) || 28,
+                    }))}
+                    margin={{
+                      top: 5,
+                      right: 10,
+                      left: 10,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis
+                      dataKey="month"
+                      fontSize={12}
+                      tick={{ fontSize: 11 }}
+                    />
+                    <YAxis
+                      domain={[20, 40]}
+                      fontSize={12}
+                      tick={{ fontSize: 11 }}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "white",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                        fontSize: "12px",
+                      }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: "12px" }} />
+                    <Line
+                      type="monotone"
+                      dataKey="cycleLength"
+                      stroke="#ec4899"
+                      strokeWidth={2}
+                      name="Panjang Siklus (hari)"
+                      dot={{ fill: "#ec4899", strokeWidth: 2, r: 4 }}
+                      activeDot={{ r: 6, stroke: "#ec4899", strokeWidth: 2 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
 
           {/* Symptom Distribution */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Distribusi Gejala</CardTitle>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="text-lg sm:text-xl text-gray-800">
+                Distribusi Gejala
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={analysis.symptomFrequency.slice(0, 5)}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name} ${(percent * 100).toFixed(0)}%`
-                    }
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="count"
-                  >
-                    {analysis.symptomFrequency
-                      .slice(0, 5)
-                      .map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={pieColors[index % pieColors.length]}
-                        />
-                      ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+            <CardContent className="pt-0">
+              <div className="h-64 sm:h-72 lg:h-80 xl:h-96">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={analysis.symptomFrequency.slice(0, 5)}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) =>
+                        `${name} ${(percent * 100).toFixed(0)}%`
+                      }
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="count"
+                    >
+                      {analysis.symptomFrequency
+                        .slice(0, 5)
+                        .map((entry, index) => (
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={pieColors[index % pieColors.length]}
+                          />
+                        ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "white",
+                        border: "1px solid #e5e7eb",
+                        borderRadius: "8px",
+                        fontSize: "12px",
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Detailed Analysis */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 mb-6 sm:mb-8 lg:mb-10">
           {/* Symptom Frequency */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Gejala Paling Umum</CardTitle>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="text-lg sm:text-xl text-gray-800 flex items-center">
+                <Activity className="h-5 w-5 mr-2 text-pink-600" />
+                Gejala Paling Umum
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
+            <CardContent className="pt-0">
+              <div className="space-y-3 sm:space-y-4">
                 {analysis.symptomFrequency.slice(0, 8).map((symptom, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <span className="text-sm font-medium">{symptom.name}</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <span className="text-sm sm:text-base font-medium text-gray-800 flex-1 mr-3">
+                      {symptom.name}
+                    </span>
+                    <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 shrink-0">
+                      <div className="w-16 sm:w-20 lg:w-24 bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-pink-600 h-2 rounded-full"
+                          className="bg-pink-600 h-2 rounded-full transition-all duration-500"
                           style={{
                             width: `${
                               (symptom.count /
@@ -455,7 +495,7 @@ export default function ReportContent() {
                           }}
                         ></div>
                       </div>
-                      <span className="text-sm text-gray-600 w-8">
+                      <span className="text-xs sm:text-sm text-gray-600 font-medium w-6 sm:w-8 text-right">
                         {symptom.count}
                       </span>
                     </div>
@@ -466,22 +506,27 @@ export default function ReportContent() {
           </Card>
 
           {/* Mood Analysis */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Analisis Mood</CardTitle>
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="pb-3 sm:pb-4">
+              <CardTitle className="text-lg sm:text-xl text-gray-800 flex items-center">
+                <Heart className="h-5 w-5 mr-2 text-purple-600" />
+                Analisis Mood
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
+            <CardContent className="pt-0">
+              <div className="space-y-3 sm:space-y-4">
                 {analysis.moodFrequency.map((mood, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <span className="text-sm font-medium">{mood.name}</span>
-                    <div className="flex items-center space-x-2">
-                      <div className="w-24 bg-gray-200 rounded-full h-2">
+                    <span className="text-sm sm:text-base font-medium text-gray-800 flex-1 mr-3">
+                      {mood.name}
+                    </span>
+                    <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 shrink-0">
+                      <div className="w-16 sm:w-20 lg:w-24 bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-purple-600 h-2 rounded-full"
+                          className="bg-purple-600 h-2 rounded-full transition-all duration-500"
                           style={{
                             width: `${
                               (mood.count /
@@ -493,7 +538,7 @@ export default function ReportContent() {
                           }}
                         ></div>
                       </div>
-                      <span className="text-sm text-gray-600 w-8">
+                      <span className="text-xs sm:text-sm text-gray-600 font-medium w-6 sm:w-8 text-right">
                         {mood.count}
                       </span>
                     </div>
@@ -505,20 +550,29 @@ export default function ReportContent() {
         </div>
 
         {/* Recommendations */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center">
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm mb-6 sm:mb-8 lg:mb-10">
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="text-lg sm:text-xl text-gray-800 flex items-center">
               <Heart className="h-5 w-5 mr-2 text-pink-600" />
               Rekomendasi Kesehatan Personal
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <CardContent className="pt-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
               {analysis.recommendations.map((rec, index) => (
-                <div key={index} className="border rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-gray-900">{rec.title}</h3>
-                    <Badge className={getPriorityColor(rec.priority)}>
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 hover:shadow-md hover:border-pink-200 transition-all duration-300 bg-white/50 backdrop-blur-sm"
+                >
+                  <div className="flex items-start justify-between mb-2 sm:mb-3">
+                    <h3 className="font-semibold text-gray-900 text-sm sm:text-base leading-tight flex-1 mr-2">
+                      {rec.title}
+                    </h3>
+                    <Badge
+                      className={`${getPriorityColor(
+                        rec.priority
+                      )} px-2 py-1 text-xs font-semibold shrink-0`}
+                    >
                       {rec.priority === "high"
                         ? "Penting"
                         : rec.priority === "medium"
@@ -526,7 +580,9 @@ export default function ReportContent() {
                         : "Ringan"}
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600">{rec.description}</p>
+                  <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                    {rec.description}
+                  </p>
                 </div>
               ))}
             </div>
@@ -534,81 +590,83 @@ export default function ReportContent() {
         </Card>
 
         {/* Cycle History */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
+        <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-white/90 backdrop-blur-sm">
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="text-lg sm:text-xl text-gray-800 flex items-center">
               <FileText className="h-5 w-5 mr-2 text-blue-600" />
               Riwayat Siklus
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-2">No</th>
-                    <th className="text-left p-2">Mulai</th>
-                    <th className="text-left p-2">Selesai</th>
-                    <th className="text-left p-2">Durasi</th>
-                    <th className="text-left p-2">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cycles.slice(0, 6).map((cycle, index) => (
-                    <tr key={cycle.id} className="border-b">
-                      <td className="p-2">{index + 1}</td>
-                      <td className="p-2">
-                        {new Date(cycle.startDate).toLocaleDateString("id-ID")}
-                      </td>
-                      <td className="p-2">
-                        {cycle.endDate
-                          ? new Date(cycle.endDate).toLocaleDateString("id-ID")
-                          : "-"}
-                      </td>
-                      <td className="p-2">
-                        {cycle.endDate
-                          ? Math.floor(
-                              (new Date(cycle.endDate).getTime() -
-                                new Date(cycle.startDate).getTime()) /
-                                (1000 * 60 * 60 * 24)
-                            )
-                          : "-"}{" "}
-                        hari
-                      </td>
-                      <td className="p-2">
-                        {cycle.isAbnormal ? (
-                          <Badge className="bg-red-100 text-red-800">
-                            Abnormal
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-green-100 text-green-800">
-                            Normal
-                          </Badge>
-                        )}
-                      </td>
+          <CardContent className="pt-0">
+            <div className="overflow-x-auto -mx-4 sm:-mx-6">
+              <div className="inline-block min-w-full align-middle">
+                <table className="min-w-full text-xs sm:text-sm divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        No
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Mulai
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Selesai
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Durasi
+                      </th>
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {cycles.slice(0, 6).map((cycle, index) => (
+                      <tr key={cycle.id} className="hover:bg-gray-50">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {index + 1}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {new Date(cycle.startDate).toLocaleDateString(
+                            "id-ID"
+                          )}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {cycle.endDate
+                            ? new Date(cycle.endDate).toLocaleDateString(
+                                "id-ID"
+                              )
+                            : "-"}
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {cycle.endDate
+                            ? Math.floor(
+                                (new Date(cycle.endDate).getTime() -
+                                  new Date(cycle.startDate).getTime()) /
+                                  (1000 * 60 * 60 * 24)
+                              )
+                            : "-"}{" "}
+                          hari
+                        </td>
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
+                          {cycle.isAbnormal ? (
+                            <Badge className="bg-red-100 text-red-800 text-xs px-2 py-1">
+                              Abnormal
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-green-100 text-green-800 text-xs px-2 py-1">
+                              Normal
+                            </Badge>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </CardContent>
         </Card>
-
-        {/* Footer Actions */}
-        <div className="flex justify-center space-x-4 mt-8">
-          <Button variant="outline" asChild>
-            <Link href="/dashboard">
-              <Home className="h-4 w-4 mr-2" />
-              Kembali ke Dashboard
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/analysis">
-              <FileText className="h-4 w-4 mr-2" />
-              Lihat Analisis Lengkap
-            </Link>
-          </Button>
-        </div>
       </main>
     </div>
   );

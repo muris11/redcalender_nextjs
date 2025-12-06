@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { PageLoading } from "@/components/ui/loading";
+import { Loading, PageLoading } from "@/components/ui/loading";
 import {
   Select,
   SelectContent,
@@ -21,15 +21,17 @@ import {
   Calendar,
   Clock,
   Filter,
+  GraduationCap,
   Heart,
   Search,
+  Sparkles,
   User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-interface Article {
+interface EducationArticle {
   id: string;
   title: string;
   content: string;
@@ -58,16 +60,21 @@ export default function EducationContent() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading } = useAuthStore();
 
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<EducationArticle[]>([]);
   const [categories, setCategories] = useState<
     Array<{ id: string; name: string; slug: string; color: string }>
   >([]);
   const [thumbnailMap, setThumbnailMap] = useState<Record<string, string>>({});
-  const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
+  const [filteredArticles, setFilteredArticles] = useState<EducationArticle[]>(
+    []
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [preloadingArticle, setPreloadingArticle] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     if (isLoading) return;
@@ -127,7 +134,7 @@ export default function EducationContent() {
       }
 
       // Transform API data to match our interface
-      const transformedArticles: Article[] = data.articles.map(
+      const transformedArticles: EducationArticle[] = data.articles.map(
         (article: any) => ({
           ...article,
           publishedAt: article.createdAt, // Map createdAt to publishedAt for compatibility
@@ -154,7 +161,7 @@ export default function EducationContent() {
     }
   };
 
-  const fetchSignedUrls = async (list: Article[]) => {
+  const fetchSignedUrls = async (list: EducationArticle[]) => {
     if (!list || list.length === 0) return;
     const toFetch = list.filter(
       (a) => a.thumbnail && !/^https?:\/\//i.test(a.thumbnail)
@@ -215,12 +222,23 @@ export default function EducationContent() {
     };
   };
 
+  const handleReadMore = async (articleId: string) => {
+    setPreloadingArticle(articleId);
+
+    try {
+      // Navigate immediately for better performance
+      router.push(`/education/${articleId}`);
+    } catch (error) {
+      console.error("Error navigating to article:", error);
+      setPreloadingArticle(null);
+    }
+  };
   if (!isAuthenticated) {
     return null; // Will redirect
   }
 
   if (isDataLoading) {
-    return <PageLoading text="Memuat artikel edukasi..." />;
+    return <PageLoading text="Memuat materi edukasi kesehatan..." />;
   }
 
   if (error) {
@@ -248,166 +266,253 @@ export default function EducationContent() {
   return (
     <div className="min-h-screen bg-linear-to-br from-pink-50 via-white to-purple-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section - match admin hero style but retain user theme */}
-        <div className="relative overflow-hidden bg-linear-to-r from-pink-600 via-pink-500 to-rose-500 rounded-3xl mb-8 p-10 text-white shadow-2xl">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
+        {/* Header Section - Enhanced Education Hero */}
+        <div className="relative overflow-hidden bg-linear-to-r from-pink-600 via-pink-500 to-rose-500 rounded-xl sm:rounded-2xl lg:rounded-3xl mb-6 sm:mb-8 lg:mb-10 p-6 sm:p-8 lg:p-10 xl:p-12 text-white shadow-2xl">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-              <div>
-                <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3">
-                  🎓 Edukasi Kesehatan
-                </h2>
-                <p className="text-pink-100 text-lg opacity-90 max-w-2xl">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 sm:gap-8">
+              <div className="flex-1">
+                <div className="flex items-center mb-3 sm:mb-4">
+                  <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 mr-3 text-pink-200" />
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
+                    Edukasi Kesehatan
+                  </h1>
+                </div>
+                <p className="text-pink-100 text-sm sm:text-base lg:text-lg opacity-90 max-w-2xl leading-relaxed">
                   Dapatkan informasi terpercaya dari tenaga kesehatan
-                  profesional tentang kesehatan menstruasi, tips PMS, dan
-                  nutrisi untuk keseimbangan hormon.
+                  profesional tentang kesehatan menstruasi, tips PMS, nutrisi
+                  untuk keseimbangan hormon, dan panduan kesehatan reproduksi.
                 </p>
+                <div className="flex flex-wrap gap-2 mt-4 sm:mt-6">
+                  <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 py-1">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    Terpercaya
+                  </Badge>
+                  <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 py-1">
+                    <Heart className="h-3 w-3 mr-1" />
+                    Ahli Kesehatan
+                  </Badge>
+                  <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 py-1">
+                    <BookOpen className="h-3 w-3 mr-1" />
+                    Update Terbaru
+                  </Badge>
+                </div>
               </div>
-              <div className="flex items-center space-x-4">
-                <Button
-                  className="bg-white text-pink-700 hover:bg-pink-50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 px-6 py-6 text-base font-semibold"
-                  asChild
-                >
-                  <a href="/">💬 Konsultasi Dokter</a>
-                </Button>
+              <div className="hidden lg:flex items-center justify-center">
+                <div className="relative">
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
+                    <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 text-white" />
+                  </div>
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
+                    <Sparkles className="h-4 w-4 text-yellow-800" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          {/* Decorative */}
-          <div className="absolute -top-4 -right-4 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
-          <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+          {/* Enhanced Decorative Elements */}
+          <div className="absolute -top-4 -right-4 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute -bottom-6 -left-6 w-32 h-32 sm:w-40 sm:h-40 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 sm:w-20 sm:h-20 bg-white/5 rounded-full blur-xl"></div>
         </div>
 
-        {/* Search and Filter */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border-0 p-6 mb-8">
-          <div className="flex flex-col md:flex-row gap-4">
+        {/* Enhanced Search and Filter Section */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border-0 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 lg:mb-10">
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4 sm:h-5 sm:w-5" />
                 <Input
-                  placeholder="Cari artikel, topik, atau tags..."
+                  placeholder="Cari materi edukasi, topik kesehatan, atau kata kunci..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 h-12 border-2 border-gray-200 focus:border-pink-400 text-base"
+                  className="pl-10 sm:pl-12 h-10 sm:h-12 border-2 border-gray-200 focus:border-pink-400 text-sm sm:text-base rounded-lg sm:rounded-xl"
                 />
               </div>
             </div>
 
-            <div className="w-full md:w-64">
+            <div className="w-full lg:w-64">
               <Select
                 value={selectedCategory}
                 onValueChange={setSelectedCategory}
               >
-                <SelectTrigger className="h-12 border-2 border-gray-200 hover:border-pink-300">
-                  <Filter className="h-5 w-5 mr-2" />
-                  <SelectValue placeholder="Kategori" />
+                <SelectTrigger className="h-10 sm:h-12 border-2 border-gray-200 hover:border-pink-300 rounded-lg sm:rounded-xl">
+                  <Filter className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
+                  <SelectValue placeholder="Pilih Kategori" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Semua Kategori</SelectItem>
+                  <SelectItem value="all" className="text-sm sm:text-base">
+                    📚 Semua Kategori
+                  </SelectItem>
                   {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.slug}>
-                      {category.name}
+                    <SelectItem
+                      key={category.id}
+                      value={category.slug}
+                      className="text-sm sm:text-base"
+                    >
+                      {getCategoryIcon(category.slug)}
+                      <span className="ml-2">{category.name}</span>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </div>
+
+          {/* Quick Filter Tags */}
+          <div className="flex flex-wrap gap-2 mt-4 sm:mt-6">
+            <span className="text-xs sm:text-sm text-gray-600 mr-2 self-center">
+              Filter Cepat:
+            </span>
+            {categories.slice(0, 4).map((category) => (
+              <Button
+                key={category.id}
+                variant={
+                  selectedCategory === category.slug ? "default" : "outline"
+                }
+                size="sm"
+                onClick={() =>
+                  setSelectedCategory(
+                    selectedCategory === category.slug ? "all" : category.slug
+                  )
+                }
+                className={`text-xs sm:text-sm px-3 py-1 h-7 sm:h-8 rounded-full transition-all duration-200 ${
+                  selectedCategory === category.slug
+                    ? "bg-pink-500 hover:bg-pink-600 text-white shadow-md"
+                    : "border-pink-200 text-pink-600 hover:bg-pink-50"
+                }`}
+              >
+                {getCategoryIcon(category.slug)}
+                <span className="ml-1">{category.name}</span>
+              </Button>
+            ))}
+          </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="px-0 mb-8">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-2xl p-6">
+        {/* Enhanced Stats Cards */}
+        <div className="px-0 mb-6 sm:mb-8 lg:mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-bold text-slate-600 mb-2">
-                    Total Artikel
+                <div className="flex-1">
+                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
+                    Total Materi
                   </p>
-                  <p className="text-4xl font-bold text-slate-800">
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
                     {articles.length}
                   </p>
                 </div>
-                <div className="p-4 bg-linear-to-br from-pink-500 to-rose-500 rounded-2xl shadow-lg">
-                  <BookOpen className="h-7 w-7 text-white" />
+                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-pink-500 to-rose-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
+                  <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
                 </div>
               </div>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-2xl p-6">
+            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-bold text-slate-600 mb-2">
-                    Artikel Dipublikasikan
+                <div className="flex-1">
+                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
+                    Materi Terpublikasi
                   </p>
-                  <p className="text-4xl font-bold text-slate-800">
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
                     {articles.filter((a) => a.published).length}
                   </p>
                 </div>
-                <div className="p-4 bg-linear-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-lg">
-                  <Heart className="h-7 w-7 text-white" />
+                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-blue-500 to-cyan-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
+                  <Heart className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
                 </div>
               </div>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-2xl p-6">
+            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-bold text-slate-600 mb-2">
-                    Penulis
+                <div className="flex-1">
+                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
+                    Penulis Ahli
                   </p>
-                  <p className="text-4xl font-bold text-slate-800">
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
                     {
                       Array.from(new Set(articles.map((a) => a.author.name)))
                         .length
                     }
                   </p>
                 </div>
-                <div className="p-4 bg-linear-to-br from-orange-500 to-red-500 rounded-2xl shadow-lg">
-                  <User className="h-7 w-7 text-white" />
+                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-orange-500 to-red-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
+                  <User className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
+                </div>
+              </div>
+            </div>
+            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
+                    Kategori
+                  </p>
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
+                    {categories.length}
+                  </p>
+                </div>
+                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-green-500 to-teal-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
+                  <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Results Summary */}
-        <div className="mb-6">
-          <p className="text-gray-700 text-base font-medium">
-            📚 Menampilkan{" "}
-            <span className="font-bold text-pink-600">
-              {filteredArticles.length}
-            </span>{" "}
-            dari <span className="font-bold">{articles.length}</span> artikel
-            {selectedCategory !== "all" &&
-              ` dalam kategori "${
-                categories.find((c) => c.slug === selectedCategory)?.name ||
-                selectedCategory
-              }"`}
-            {searchTerm && ` untuk "${searchTerm}"`}
-          </p>
+        {/* Enhanced Results Summary */}
+        <div className="mb-4 sm:mb-6 lg:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <p className="text-gray-700 text-sm sm:text-base font-medium">
+              Menampilkan{" "}
+              <span className="font-bold text-pink-600">
+                {filteredArticles.length}
+              </span>{" "}
+              dari <span className="font-bold">{articles.length}</span> materi
+              edukasi
+              {selectedCategory !== "all" &&
+                ` dalam kategori "${
+                  categories.find((c) => c.slug === selectedCategory)?.name ||
+                  selectedCategory
+                }"`}
+              {searchTerm && ` untuk "${searchTerm}"`}
+            </p>
+            {(searchTerm || selectedCategory !== "all") && (
+              <Button
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCategory("all");
+                }}
+                variant="outline"
+                size="sm"
+                className="border-pink-200 text-pink-600 hover:bg-pink-50 hover:border-pink-300 text-xs sm:text-sm px-3 py-2 h-auto"
+              >
+                🔄 Reset Filter
+              </Button>
+            )}
+          </div>
         </div>
 
-        {/* Articles Grid */}
+        {/* Enhanced Education Articles Grid */}
         {filteredArticles.length === 0 ? (
-          <div className="text-center py-16">
-            <Card className="border-0 shadow-xl bg-linear-to-br from-pink-50 to-purple-50 max-w-md mx-auto">
-              <CardContent className="p-12">
+          <div className="text-center py-12 sm:py-16 lg:py-20">
+            <Card className="border-0 shadow-xl bg-linear-to-br from-pink-50 to-purple-50 max-w-lg mx-auto">
+              <CardContent className="p-8 sm:p-12">
                 <div className="mb-6">
-                  <div className="h-20 w-20 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center mx-auto shadow-lg">
-                    <BookOpen className="h-10 w-10 text-white" />
+                  <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center mx-auto shadow-lg">
+                    <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
                   {articles.length === 0
-                    ? "Belum Ada Artikel"
-                    : "Tidak Ada Hasil"}
+                    ? "Materi Edukasi Akan Segera Ditambahkan"
+                    : "Tidak Ada Hasil Ditemukan"}
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
                   {articles.length === 0
-                    ? "Artikel edukasi akan segera ditambahkan. Silakan cek kembali nanti!"
+                    ? "Materi edukasi kesehatan akan segera ditambahkan oleh tenaga ahli. Silakan cek kembali nanti untuk update terbaru!"
                     : searchTerm
-                    ? `Tidak ada artikel yang cocok dengan pencarian "${searchTerm}"`
-                    : `Tidak ada artikel dalam kategori ${
+                    ? `Tidak ada materi edukasi yang cocok dengan pencarian "${searchTerm}"`
+                    : `Tidak ada materi dalam kategori ${
                         categories.find((c) => c.slug === selectedCategory)
                           ?.name || selectedCategory
                       }`}
@@ -420,14 +525,14 @@ export default function EducationContent() {
                     }}
                     className="bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-md"
                   >
-                    🔄 Reset Filter
+                    🔄 Reset dan Lihat Semua
                   </Button>
                 )}
               </CardContent>
             </Card>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10 lg:mb-12">
             {filteredArticles.map((article) => {
               const imageSrc =
                 (thumbnailMap[article.id] || article.thumbnail) ?? undefined;
@@ -438,57 +543,66 @@ export default function EducationContent() {
                   onClick={() => router.push(`/education/${article.id}`)}
                   role="button"
                   tabIndex={0}
-                  className="hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden border-0 shadow-lg bg-white"
+                  className="hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden border-0 shadow-lg bg-white group"
                 >
-                  <div className="w-full h-48 sm:h-56 md:h-48 lg:h-44 xl:h-56 bg-slate-100 overflow-hidden relative">
+                  <div className="w-full h-40 sm:h-48 lg:h-44 xl:h-52 bg-slate-100 overflow-hidden relative">
                     {imageSrc ? (
                       <img
                         src={imageSrc}
-                        alt={`thumbnail-${article.title}`}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                        alt={`Thumbnail materi: ${article.title}`}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 group-hover:brightness-110"
                         loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="w-full h-full bg-linear-to-br from-pink-100 to-purple-100 flex items-center justify-center">
-                        <BookOpen className="h-16 w-16 text-pink-300" />
+                        <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 text-pink-300" />
                       </div>
                     )}
-                    <div className="absolute top-3 right-3">
+                    <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
                       <Badge
                         style={getCategoryColor(article.category.color)}
-                        className="text-xs font-semibold shadow-lg"
+                        className="text-xs font-semibold shadow-lg backdrop-blur-sm"
                       >
                         {getCategoryIcon(article.category.slug)}
                         <span className="ml-1">{article.category.name}</span>
                       </Badge>
                     </div>
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    {/* Preloading Overlay */}
+                    {preloadingArticle === article.id && (
+                      <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-20">
+                        <Loading size="sm" text="Memuat artikel..." />
+                      </div>
+                    )}
                   </div>
-                  <CardHeader className="pt-4 pb-3">
+                  <CardHeader className="pt-3 sm:pt-4 pb-2 sm:pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 pr-2">
-                        <h3 className="text-lg font-bold line-clamp-2 text-gray-800 hover:text-pink-600 transition-colors">
+                        <h3 className="text-base sm:text-lg font-bold line-clamp-2 text-gray-800 hover:text-pink-600 transition-colors group-hover:text-pink-600">
                           {article.title}
                         </h3>
                       </div>
                     </div>
                   </CardHeader>
 
-                  <CardContent>
-                    <p className="text-gray-600 mb-4 line-clamp-3 text-sm leading-relaxed">
+                  <CardContent className="pt-0">
+                    <p className="text-gray-600 mb-3 sm:mb-4 line-clamp-3 text-sm leading-relaxed">
                       {article.excerpt}
                     </p>
 
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4 pb-4 border-b border-gray-100">
-                      <div className="flex items-center space-x-2">
-                        <User className="h-4 w-4 text-pink-500" />
-                        <span className="font-medium">
+                    <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100">
+                      <div className="flex items-center space-x-1 sm:space-x-2 min-w-0 flex-1">
+                        <User className="h-3 w-3 sm:h-4 sm:w-4 text-pink-500 shrink-0" />
+                        <span className="font-medium truncate">
                           {article.author.name}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-3">
+                      <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 ml-2 sm:ml-3">
                         <div className="flex items-center space-x-1">
-                          <Calendar className="h-4 w-4 text-blue-500" />
-                          <span>
+                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
+                          <span className="hidden sm:inline">
                             {new Date(article.createdAt).toLocaleDateString(
                               "id-ID",
                               {
@@ -497,22 +611,42 @@ export default function EducationContent() {
                               }
                             )}
                           </span>
+                          <span className="sm:hidden">
+                            {new Date(article.createdAt).toLocaleDateString(
+                              "id-ID",
+                              {
+                                day: "numeric",
+                                month: "numeric",
+                              }
+                            )}
+                          </span>
                         </div>
                         <div className="flex items-center space-x-1">
-                          <Clock className="h-4 w-4 text-green-500" />
-                          <span>{article.readTime} menit</span>
+                          <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
+                          <span>{article.readTime} min</span>
                         </div>
                       </div>
                     </div>
 
                     <Button
-                      className="w-full bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0 py-6"
+                      className="w-full bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0 py-2 sm:py-3 text-sm sm:text-base font-semibold"
                       onClick={(e) => {
                         e.stopPropagation();
-                        router.push(`/education/${article.id}`);
+                        handleReadMore(article.id);
                       }}
+                      disabled={preloadingArticle === article.id}
                     >
-                      📖 Baca Selengkapnya
+                      {preloadingArticle === article.id ? (
+                        <div className="flex items-center justify-center">
+                          <div className="relative mr-2">
+                            <div className="animate-spin rounded-full h-4 w-4 border-4 border-pink-200 border-t-pink-600" />
+                            <div className="absolute inset-0 animate-pulse rounded-full bg-pink-100 opacity-50 h-4 w-4" />
+                          </div>
+                          Memuat...
+                        </div>
+                      ) : (
+                        <>Baca Selengkapnya</>
+                      )}
                     </Button>
                   </CardContent>
                 </Card>

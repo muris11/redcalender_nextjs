@@ -111,44 +111,50 @@ export default function ProfileContent() {
   return (
     <div className="min-h-screen bg-linear-to-br from-purple-50 via-white to-pink-50">
       <Navbar />
-      <div className="container mx-auto px-4 py-8 max-w-5xl">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        {/* Page Header */}
+        <div className="mb-8 sm:mb-10 text-center">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 sm:mb-4">
             👤 Profil Saya
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4">
             Kelola informasi pribadi dan pengaturan akun Anda
           </p>
         </div>
 
         {/* Status Cards */}
-        <div className="grid gap-6 md:grid-cols-3 mb-8">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            <div className="h-2 bg-linear-to-r from-green-400 to-green-600"></div>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <div className="h-14 w-14 rounded-full bg-green-100 flex items-center justify-center">
-                  <User className="h-7 w-7 text-green-600" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 lg:mb-10">
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white/90 backdrop-blur-sm">
+            <div className="h-1 sm:h-2 bg-linear-to-r from-green-400 to-green-600"></div>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                  <User className="h-5 w-5 sm:h-7 sm:w-7 text-green-600" />
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-gray-600">Status Akun</p>
-                  <p className="text-2xl font-bold text-green-600">✓ Aktif</p>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
+                    Status Akun
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-green-600">
+                    ✓ Aktif
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            <div className="h-2 bg-linear-to-r from-blue-400 to-blue-600"></div>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <div className="h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center">
-                  <Calendar className="h-7 w-7 text-blue-600" />
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white/90 backdrop-blur-sm">
+            <div className="h-1 sm:h-2 bg-linear-to-r from-blue-400 to-blue-600"></div>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                  <Calendar className="h-5 w-5 sm:h-7 sm:w-7 text-blue-600" />
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-gray-600">Onboarding</p>
-                  <p className="text-2xl font-bold text-blue-600">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
+                    Onboarding
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-blue-600">
                     {user?.isOnboarded ? "✓ Selesai" : "⏳ Belum"}
                   </p>
                 </div>
@@ -156,18 +162,18 @@ export default function ProfileContent() {
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden">
-            <div className="h-2 bg-linear-to-r from-purple-400 to-purple-600"></div>
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <div className="h-14 w-14 rounded-full bg-purple-100 flex items-center justify-center">
-                  <Settings className="h-7 w-7 text-purple-600" />
+          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-white/90 backdrop-blur-sm">
+            <div className="h-1 sm:h-2 bg-linear-to-r from-purple-400 to-purple-600"></div>
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
+                  <Settings className="h-5 w-5 sm:h-7 sm:w-7 text-purple-600" />
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-gray-600">
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
                     Siklus Rata-rata
                   </p>
-                  <p className="text-2xl font-bold text-purple-600">
+                  <p className="text-xl sm:text-2xl font-bold text-purple-600">
                     {user?.avgCycleLength || 28} hari
                   </p>
                 </div>
@@ -188,7 +194,7 @@ export default function ProfileContent() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold bg-linear-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent">
-                      🎉 Data Onboarding Lengkap
+                      Data Onboarding Lengkap
                     </h3>
                     <p className="text-sm text-green-600 font-medium mt-1">
                       Terima kasih telah melengkapi profil Anda!
@@ -201,27 +207,51 @@ export default function ProfileContent() {
                   className="border-0 bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
                 >
                   <Settings className="h-4 w-4 mr-2" />
-                  ✏️ Edit Onboarding
+                  Edit Onboarding
                 </Button>
               </div>
-              <div className="grid gap-4 md:grid-cols-2 text-sm">
-                <div>
-                  <span className="font-medium">Tanggal Lahir:</span>{" "}
-                  {user.birthDate
-                    ? new Date(user.birthDate).toLocaleDateString("id-ID")
-                    : "Belum diisi"}
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="menstrualStatus"
+                    className="text-base font-semibold"
+                  >
+                    Status Menstruasi
+                  </Label>
+                  <Input
+                    id="menstrualStatus"
+                    value={user.menstrualStatus || "Belum diisi"}
+                    disabled
+                    className="h-12 border-2 bg-gray-50 cursor-not-allowed"
+                  />
                 </div>
-                <div>
-                  <span className="font-medium">Status Menstruasi:</span>{" "}
-                  {user.menstrualStatus || "Belum diisi"}
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="onboarding-avgPeriodLength"
+                    className="text-base font-semibold"
+                  >
+                    Durasi Periode (hari)
+                  </Label>
+                  <Input
+                    id="onboarding-avgPeriodLength"
+                    value={`${user.avgPeriodLength || 6} hari`}
+                    disabled
+                    className="h-12 border-2 bg-gray-50 cursor-not-allowed"
+                  />
                 </div>
-                <div>
-                  <span className="font-medium">Durasi Periode:</span>{" "}
-                  {user.avgPeriodLength || 6} hari
-                </div>
-                <div>
-                  <span className="font-medium">Panjang Siklus:</span>{" "}
-                  {user.avgCycleLength || 28} hari
+                <div className="space-y-2">
+                  <Label
+                    htmlFor="onboarding-avgCycleLength"
+                    className="text-base font-semibold"
+                  >
+                    Panjang Siklus (hari)
+                  </Label>
+                  <Input
+                    id="onboarding-avgCycleLength"
+                    value={`${user.avgCycleLength || 28} hari`}
+                    disabled
+                    className="h-12 border-2 bg-gray-50 cursor-not-allowed"
+                  />
                 </div>
               </div>
             </CardContent>
@@ -239,7 +269,7 @@ export default function ProfileContent() {
                 </div>
                 <div>
                   <CardTitle className="text-xl text-pink-700">
-                    👤 Informasi Pribadi
+                    Informasi Pribadi
                   </CardTitle>
                   <CardDescription className="text-pink-600/80">
                     Update informasi dasar akun Anda
@@ -310,7 +340,7 @@ export default function ProfileContent() {
                 </div>
                 <div>
                   <CardTitle className="text-xl text-purple-700">
-                    📅 Pengaturan Siklus
+                    Pengaturan Siklus
                   </CardTitle>
                   <CardDescription className="text-purple-600/80">
                     Sesuaikan perhitungan siklus menstruasi Anda
@@ -379,7 +409,7 @@ export default function ProfileContent() {
                 </div>
                 <div>
                   <CardTitle className="text-xl text-teal-700">
-                    ⚙️ Tampilan Aplikasi
+                    Tampilan Aplikasi
                   </CardTitle>
                   <CardDescription className="text-teal-600/80">
                     Personalisasi pengalaman Anda
@@ -425,14 +455,14 @@ export default function ProfileContent() {
                 <>
                   <Save className="mr-2 h-5 w-5" />
                   <span className="text-base font-semibold">
-                    💾 Simpan Perubahan
+                    Simpan Perubahan
                   </span>
                 </>
               )}
             </Button>
           </div>
         </form>
-      </div>
+      </main>
     </div>
   );
 }

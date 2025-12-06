@@ -147,26 +147,6 @@ export default function GuestFooter() {
             <p className="text-gray-600 text-sm">
               © {currentYear} Red Calendar. All rights reserved. Made with
             </p>
-            <div className="flex gap-6 text-sm">
-              <a
-                href="#"
-                className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-              >
-                Kebijakan Privasi
-              </a>
-              <a
-                href="#"
-                className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-              >
-                Syarat Layanan
-              </a>
-              <a
-                href="#"
-                className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-              >
-                Cookie
-              </a>
-            </div>
           </div>
         </div>
       </div>

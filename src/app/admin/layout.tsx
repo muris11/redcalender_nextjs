@@ -48,7 +48,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="h-full relative bg-gradient-to-br from-pink-50 via-red-50 to-orange-50 min-h-screen">
+    <div className="h-full relative bg-gray-50 min-h-screen">
       {/* Admin Navbar - Always visible */}
       <AdminNavbar
         onMobileMenuToggle={handleMobileMenuToggle}
@@ -56,27 +56,37 @@ export default function AdminLayout({
       />
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 lg:top-16 z-40">
-        <AdminSidebar />
+      <div className="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 lg:top-20 z-40">
+        <AdminSidebar onNavigate={() => {}} />
       </div>
 
       {/* Mobile Sidebar Overlay */}
-      {isMobileMenuOpen && (
+      <div
+        className={`lg:hidden fixed inset-0 z-50 transition-opacity duration-300 ${
+          isMobileMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
         <div
-          className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50 backdrop-blur-sm"
+          className="absolute inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
           onClick={() => setIsMobileMenuOpen(false)}
+        />
+        <div
+          className={`absolute inset-y-0 left-0 w-80 shadow-2xl transform transition-transform duration-300 ease-in-out ${
+            isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          onClick={(e) => e.stopPropagation()}
         >
-          <div className="fixed inset-y-0 left-0 w-80 bg-slate-900 shadow-2xl transform transition-transform duration-300 ease-in-out">
-            <div className="pt-16">
-              <AdminSidebar />
-            </div>
+          <div className="pt-20 h-full">
+            <AdminSidebar onNavigate={() => setIsMobileMenuOpen(false)} />
           </div>
         </div>
-      )}
+      </div>
 
       {/* Main Content */}
-      <main className="lg:pl-80 pt-16 min-h-screen transition-all duration-300 ease-in-out">
-        <div className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8 max-w-full overflow-x-hidden">
+      <main className="lg:pl-80 pt-20 min-h-screen transition-all duration-300 ease-in-out">
+        <div className="px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 max-w-full overflow-x-hidden">
           {children}
         </div>
       </main>

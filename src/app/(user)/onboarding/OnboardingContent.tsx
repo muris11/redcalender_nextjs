@@ -198,7 +198,7 @@ export default function OnboardingContent() {
         toast.success(
           user?.isOnboarded
             ? "Data onboarding berhasil diperbarui!"
-            : "Onboarding selesai! Selamat datang di Red Calendar!"
+            : "Onboarding selesai! Selamat datang di Red Calender!"
         );
 
         // Redirect to dashboard for first-time onboarding

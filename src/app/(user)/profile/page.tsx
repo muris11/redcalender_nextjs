@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 export const metadata: Metadata = {
   title: "Profil Kesehatan",
   description:
-    "Kelola profil kesehatan Anda, lihat riwayat siklus menstruasi, dan atur preferensi aplikasi Red Calendar.",
+    "Kelola profil kesehatan Anda, lihat riwayat siklus menstruasi, dan atur preferensi aplikasi Red Calender.",
 };
 
 const ProfileContent = dynamic(() => import("./ProfileContent"), {

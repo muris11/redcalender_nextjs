@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 export const metadata: Metadata = {
   title: "Onboarding Kesehatan",
   description:
-    "Lengkapi profil kesehatan Anda untuk pengalaman tracking menstruasi yang personal dan akurat dengan Red Calendar.",
+    "Lengkapi profil kesehatan Anda untuk pengalaman tracking menstruasi yang personal dan akurat dengan Red Calender.",
 };
 
 const OnboardingContent = dynamic(() => import("./OnboardingContent"));

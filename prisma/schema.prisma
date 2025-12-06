@@ -1,4 +1,4 @@
-// Red Calendar - Sistem Pencatatan & Analisis Siklus Menstruasi
+// Red Calender - Sistem Pencatatan & Analisis Siklus Menstruasi
 // Database schema sesuai SRS document
 
 generator client {

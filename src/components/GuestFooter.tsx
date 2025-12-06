@@ -24,8 +24,8 @@ export default function GuestFooter() {
               <div className="h-10 w-10 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
                 <span className="text-xl">🌸</span>
               </div>
-              <span className="text-2xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-                Red Calendar
+              <span className="text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                Red Calender
               </span>
             </div>
             <p className="text-gray-600 mb-4 max-w-md">
@@ -145,7 +145,7 @@ export default function GuestFooter() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 text-sm">
-              © {currentYear} Red Calendar. All rights reserved. Made with
+              © {currentYear} Red Calender. All rights reserved. Made with
             </p>
           </div>
         </div>

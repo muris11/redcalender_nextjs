@@ -72,15 +72,14 @@ export default function RegisterForm() {
     });
 
     if (result.success) {
-      // Show loading screen before redirect
+      // Immediately show loading state and redirect to onboarding
       setRedirectText("Memuat onboarding...");
       setIsRedirectLoading(true);
-      setTimeout(() => {
-        toast.success(
-          "Registrasi berhasil! Mengalihkan ke halaman onboarding..."
-        );
-        router.push("/onboarding");
-      }, 1500);
+      toast.success(
+        "Registrasi berhasil! Mengalihkan ke halaman onboarding..."
+      );
+      // Use replace so the back button doesn't return to registration
+      router.replace("/onboarding");
     } else {
       setError(result.error || "Registrasi gagal");
     }

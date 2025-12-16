@@ -1,23 +1,15 @@
-import { db, testDatabaseConnection } from "@/lib/db";
+import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   console.log("🔄 [REGISTRATION] API called at", new Date().toISOString());
   try {
-    console.log("🔍 [REGISTRATION] Testing database connection...");
-    const connected = await testDatabaseConnection();
-    if (!connected) {
-      console.error("❌ [REGISTRATION] Database connection failed");
-      return NextResponse.json(
-        {
-          error:
-            "Tidak dapat terhubung ke database. Pastikan DATABASE_URL sudah diatur dan mengarah ke Vercel Postgres.",
-        },
-        { status: 500 }
-      );
-    }
-    console.log("✅ [REGISTRATION] Database connected successfully");
+    // Skip an explicit connect/test here to avoid extra latency on each request.
+    // The Prisma client is initialized once per server and will manage pooling.
+    console.log(
+      "🔍 [REGISTRATION] Proceeding without explicit DB connectivity test to reduce latency"
+    );
 
     const body = await request.json();
     console.log("📝 [REGISTRATION] Received data:", {
@@ -99,16 +91,8 @@ export async function POST(request: NextRequest) {
     });
 
     // Log for debugging: show new user id and total users count
-    try {
-      const totalUsers = await db.user.count();
-      console.info(
-        `📊 [REGISTRATION] New user created: ${user.id}. Total users: ${totalUsers}`
-      );
-    } catch (e) {
-      console.warn(
-        "⚠️ [REGISTRATION] Created user but failed to count users for logging."
-      );
-    }
+    // Optional: Log created user id for debugging (avoid heavy queries in hot paths)
+    console.info(`📊 [REGISTRATION] New user created: ${user.id}`);
 
     // Remove password dari response
     const { password: _, ...userWithoutPassword } = user;

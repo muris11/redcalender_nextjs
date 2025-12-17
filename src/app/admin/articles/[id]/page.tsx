@@ -2,7 +2,6 @@
 
 import { ArticleForm } from "@/components/admin/ArticleForm";
 import { PageLoading } from "@/components/ui/loading";
-import { Edit } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -51,39 +50,41 @@ export default function EditArticlePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-red-50 to-orange-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-pink-600 via-red-500 to-orange-500 text-white">
-        <div className="max-w-7xl mx-auto px-8 py-12">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <Edit className="h-8 w-8" />
-            </div>
+    <div className="min-h-screen">
+      {/* Header Section */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 rounded-3xl mx-4 sm:mx-6 lg:mx-8 mt-0 mb-8 p-8 text-white shadow-2xl shadow-emerald-500/20 border border-white/10">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Edit Artikel</h1>
-              <p className="text-pink-100 text-lg">
-                Perbarui artikel yang sudah ada
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 text-white drop-shadow-sm">
+                Edit Artikel 📝
+              </h1>
+              <p className="text-emerald-100 text-lg font-medium opacity-90 max-w-2xl">
+                Perbarui konten edukasi untuk pengguna Anda
               </p>
             </div>
           </div>
         </div>
+        {/* Decorative elements */}
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl"></div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
-          <ArticleForm
-            initialData={{
-              id: article.id,
-              title: article.title,
-              content: article.content,
-              categoryId: article.categoryId,
-              thumbnail: article.thumbnail,
-              published: article.published,
-            }}
-            isEditing
-          />
-        </div>
+      <div className="px-4 sm:px-6 lg:px-8 pb-12">
+        <ArticleForm
+          initialData={{
+            id: article.id,
+            title: article.title,
+            content: article.content,
+            categoryId: article.categoryId,
+            thumbnail: article.thumbnail,
+            published: article.published,
+          }}
+          isEditing
+        />
       </div>
     </div>
   );

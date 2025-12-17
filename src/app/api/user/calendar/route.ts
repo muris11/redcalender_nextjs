@@ -118,9 +118,13 @@ function generateCalendarData(
   // Previous month days
   const prevMonthLastDay = new Date(year, month, 0).getDate();
   for (let i = startingDayOfWeek - 1; i >= 0; i--) {
-    const date = new Date(year, month - 1, prevMonthLastDay - i);
+    const prevDay = prevMonthLastDay - i;
+    const prevMonth = month - 1;
+    const prevYear = prevMonth < 0 ? year - 1 : year;
+    const actualMonth = prevMonth < 0 ? 11 : prevMonth;
+    const dateString = `${prevYear}-${String(actualMonth + 1).padStart(2, "0")}-${String(prevDay).padStart(2, "0")}`;
     calendarDays.push({
-      date: date.toISOString().split("T")[0],
+      date: dateString,
       isCurrentMonth: false,
       isToday: false,
       phase: null,
@@ -131,17 +135,19 @@ function generateCalendarData(
 
   // Current month days
   const today = new Date();
-  // Use local date instead of UTC for accurate today detection
-  const todayString = `${today.getFullYear()}-${String(
-    today.getMonth() + 1
-  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  // Use local date components for accurate today detection
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+  const todayDate = today.getDate();
 
   for (let day = 1; day <= daysInMonth; day++) {
     const date = new Date(year, month, day);
-    const dateString = `${date.getFullYear()}-${String(
-      date.getMonth() + 1
-    ).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-    const isToday = dateString === todayString;
+    // Check if this day is today by comparing year, month, and day directly
+    const isToday = year === todayYear && month === todayMonth && day === todayDate;
+    
+    // Format date as YYYY-MM-DD without using toISOString (which converts to UTC)
+    const dateString = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
 
     // Calculate cycle phase
     let phase: "menstrual" | "follicular" | "ovulation" | "luteal" | null =
@@ -180,7 +186,7 @@ function generateCalendarData(
     );
 
     calendarDays.push({
-      date: date.toISOString().split("T")[0],
+      date: dateString,
       isCurrentMonth: true,
       isToday,
       phase,
@@ -192,9 +198,12 @@ function generateCalendarData(
   // Next month days to fill grid (42 days total for 6 rows)
   const remainingDays = 42 - calendarDays.length;
   for (let i = 1; i <= remainingDays; i++) {
-    const date = new Date(year, month + 1, i);
+    const nextMonth = month + 1;
+    const nextYear = nextMonth > 11 ? year + 1 : year;
+    const actualMonth = nextMonth > 11 ? 0 : nextMonth;
+    const dateString = `${nextYear}-${String(actualMonth + 1).padStart(2, "0")}-${String(i).padStart(2, "0")}`;
     calendarDays.push({
-      date: date.toISOString().split("T")[0],
+      date: dateString,
       isCurrentMonth: false,
       isToday: false,
       phase: null,

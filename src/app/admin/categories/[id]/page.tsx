@@ -2,25 +2,21 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Edit, Loader2, Save } from "lucide-react";
-import Link from "next/link";
+import { ArrowLeft, Loader2, Save } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -167,53 +163,47 @@ export default function EditCategoryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-red-50 to-orange-50">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-pink-600 via-red-500 to-orange-500 text-white">
-        <div className="max-w-7xl mx-auto px-8 py-12">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
-              <Edit className="h-8 w-8" />
-            </div>
+    <div className="min-h-screen">
+      {/* Header Section */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 rounded-3xl mx-4 sm:mx-6 lg:mx-8 mt-0 mb-8 p-8 text-white shadow-2xl shadow-orange-500/20 border border-white/10">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="relative z-10">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Edit Kategori</h1>
-              <p className="text-pink-100 text-lg">
+              <div className="flex items-center gap-4 mb-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => router.back()}
+                  className="text-white hover:bg-white/20 rounded-xl"
+                >
+                  <ArrowLeft className="h-6 w-6" />
+                </Button>
+                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-sm">
+                  Edit Kategori 📝
+                </h1>
+              </div>
+              <p className="text-orange-100 text-lg font-medium opacity-90 max-w-2xl ml-14">
                 Perbarui informasi kategori yang sudah ada
               </p>
             </div>
           </div>
         </div>
+        {/* Decorative elements */}
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-pink-500/20 rounded-full blur-3xl"></div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-8 py-8">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8">
-          <div className="mb-8">
-            <Link
-              href="/admin/categories"
-              className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Kembali ke Kategori
-            </Link>
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-              Edit Kategori
-            </h2>
-            <p className="text-gray-500 mt-2">Perbarui informasi kategori.</p>
-          </div>
-
-          <Card className="max-w-2xl border-0 shadow-none bg-transparent">
-            <CardHeader className="px-0">
-              <CardTitle>Detail Kategori</CardTitle>
-              <CardDescription>
-                Modifikasi informasi kategori di bawah ini.
-              </CardDescription>
-            </CardHeader>
+      <div className="px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-8">
+          <Card className="max-w-4xl border-0 shadow-none bg-transparent">
             <CardContent className="px-0">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Nama Kategori *</Label>
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <Label htmlFor="name" className="text-base font-bold text-slate-700">Nama Kategori *</Label>
                     <Input
                       id="name"
                       value={formData.name}
@@ -222,11 +212,12 @@ export default function EditCategoryPage() {
                       }
                       placeholder="e.g., Kesehatan Reproduksi"
                       required
+                      className="h-12 text-lg border-slate-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl bg-white/50 backdrop-blur-sm"
                     />
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="slug">Slug *</Label>
+                  <div className="space-y-4">
+                    <Label htmlFor="slug" className="text-base font-bold text-slate-700">Slug *</Label>
                     <Input
                       id="slug"
                       value={formData.slug}
@@ -235,15 +226,16 @@ export default function EditCategoryPage() {
                       }
                       placeholder="e.g., kesehatan-reproduksi"
                       required
+                      className="h-12 text-lg border-slate-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl bg-white/50 backdrop-blur-sm"
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-slate-500 font-medium ml-1">
                       Used in URLs, auto-generated from name
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description">Deskripsi</Label>
+                <div className="space-y-4">
+                  <Label htmlFor="description" className="text-base font-bold text-slate-700">Deskripsi</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
@@ -251,20 +243,21 @@ export default function EditCategoryPage() {
                       handleInputChange("description", e.target.value)
                     }
                     placeholder="Brief description of this category..."
-                    rows={3}
+                    rows={4}
+                    className="resize-none border-slate-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl bg-white/50 backdrop-blur-sm p-4 leading-relaxed"
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="icon">Ikon</Label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="space-y-4">
+                    <Label htmlFor="icon" className="text-base font-bold text-slate-700">Ikon</Label>
                     <Select
                       value={formData.icon}
                       onValueChange={(value) =>
                         handleInputChange("icon", value)
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="h-12 border-slate-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl bg-white/50 backdrop-blur-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -277,15 +270,15 @@ export default function EditCategoryPage() {
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="color">Warna</Label>
+                  <div className="space-y-4">
+                    <Label htmlFor="color" className="text-base font-bold text-slate-700">Warna</Label>
                     <Select
                       value={formData.color}
                       onValueChange={(value) =>
                         handleInputChange("color", value)
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="h-12 border-slate-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl bg-white/50 backdrop-blur-sm">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -304,8 +297,8 @@ export default function EditCategoryPage() {
                     </Select>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="order">Urutan Tampilan</Label>
+                  <div className="space-y-4">
+                    <Label htmlFor="order" className="text-base font-bold text-slate-700">Urutan Tampilan</Label>
                     <Input
                       id="order"
                       type="number"
@@ -317,38 +310,41 @@ export default function EditCategoryPage() {
                           parseInt(e.target.value) || 1
                         )
                       }
+                      className="h-12 border-slate-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl bg-white/50 backdrop-blur-sm"
                     />
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3 bg-white/40 p-4 rounded-xl border border-white/40 w-fit">
                   <Switch
                     id="isActive"
                     checked={formData.isActive}
                     onCheckedChange={(checked) =>
                       handleInputChange("isActive", checked)
                     }
+                    className="data-[state=checked]:bg-emerald-500"
                   />
-                  <Label htmlFor="isActive">Kategori Aktif</Label>
+                  <Label htmlFor="isActive" className="text-base font-medium text-slate-700 cursor-pointer">Kategori Aktif</Label>
                 </div>
 
-                <div className="flex justify-end space-x-4 pt-6">
+                <div className="flex justify-end space-x-4 pt-6 border-t border-slate-200/50">
                   <Button
                     type="button"
                     variant="outline"
                     onClick={() => router.push("/admin/categories")}
+                    className="h-12 px-6 rounded-xl border-slate-300 hover:bg-slate-50 hover:text-slate-900 font-medium"
                   >
                     Batal
                   </Button>
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-pink-600 hover:bg-pink-700"
+                    className="h-12 px-8 bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white shadow-lg shadow-orange-500/30 rounded-xl font-bold hover:scale-105 transition-all duration-300"
                   >
                     {isLoading ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      <Loader2 className="h-5 w-5 animate-spin mr-2" />
                     ) : (
-                      <Save className="h-4 w-4 mr-2" />
+                      <Save className="h-5 w-5 mr-2" />
                     )}
                     Perbarui Kategori
                   </Button>

@@ -2,32 +2,32 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
 } from "@/components/ui/chart";
 import { PageLoading } from "@/components/ui/loading";
 import {
-  Activity,
-  ArrowDownRight,
-  ArrowUpRight,
-  Calendar,
-  Clock,
-  FileText,
-  PieChart,
-  TrendingUp,
-  UserPlus,
-  Users,
+    Activity,
+    ArrowDownRight,
+    ArrowUpRight,
+    Calendar,
+    Clock,
+    FileText,
+    PieChart,
+    TrendingUp,
+    UserPlus,
+    Users,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Line,
-  LineChart,
-  XAxis,
-  YAxis,
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Line,
+    LineChart,
+    XAxis,
+    YAxis,
 } from "recharts";
 
 interface AnalyticsData {
@@ -217,7 +217,7 @@ export default function AdminDashboardPage() {
       ? activities
       : [
           {
-            id: 1,
+            id: "1",
             user: "Loading...",
             action: "Fetching activities...",
             time: "Just now",
@@ -282,33 +282,34 @@ export default function AdminDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen">
       {/* Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 rounded-2xl mx-4 sm:mx-6 lg:mx-8 mt-0 mb-8 p-8 text-white shadow-2xl">
-        <div className="absolute inset-0 bg-black/10"></div>
+      <div className="relative overflow-hidden bg-gradient-to-r from-pink-600 via-purple-600 to-indigo-600 rounded-3xl mx-4 sm:mx-6 lg:mx-8 mt-0 mb-8 p-8 text-white shadow-2xl shadow-pink-500/20 border border-white/10">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <div className="relative z-10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 text-white drop-shadow-sm">
                 Selamat Datang Kembali! 👋
               </h1>
-              <p className="text-pink-100 text-lg opacity-90">
-                Berikut ringkasan aktivitas platform Anda hari ini
+              <p className="text-pink-100 text-lg font-medium opacity-90 max-w-2xl">
+                Berikut ringkasan aktivitas platform Anda hari ini. Pantau terus perkembangan komunitasmu!
               </p>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+            <div className="flex items-center space-x-3 bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20 shadow-inner">
+              <div className="bg-green-500/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-green-400/30">
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">Sistem Online</span>
+                  <div className="w-2.5 h-2.5 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.5)]"></div>
+                  <span className="text-sm font-bold text-green-100">Sistem Online</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
         {/* Decorative elements */}
-        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
-        <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl"></div>
       </div>
 
       {/* Stats Grid - More Fluid Layout */}
@@ -317,29 +318,29 @@ export default function AdminDashboardPage() {
           {stats.map((item, index) => (
             <Card
               key={item.label}
-              className={`group relative overflow-hidden border-0 bg-white/80 backdrop-blur-sm hover:bg-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl ${item.shadowColor} cursor-pointer`}
+              className={`group relative overflow-hidden border border-white/40 bg-white/60 backdrop-blur-xl hover:bg-white/80 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl ${item.shadowColor} cursor-pointer rounded-3xl`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${item.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                className={`absolute inset-0 bg-gradient-to-br ${item.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
               ></div>
               <CardHeader className="relative z-10 flex flex-row items-center justify-between space-y-0 pb-3">
-                <CardTitle className="text-sm font-semibold text-slate-600 group-hover:text-slate-800 transition-colors">
+                <CardTitle className="text-sm font-bold text-slate-600 group-hover:text-slate-800 transition-colors">
                   {item.label}
                 </CardTitle>
                 <div
-                  className={`p-3 rounded-xl bg-gradient-to-br ${item.gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                  className={`p-3 rounded-2xl bg-gradient-to-br ${item.gradient} shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}
                 >
                   <item.icon className="h-5 w-5 text-white" />
                 </div>
               </CardHeader>
               <CardContent className="relative z-10">
                 <div
-                  className={`text-3xl font-bold mb-2 ${item.textColor} group-hover:scale-105 transition-transform duration-300`}
+                  className={`text-4xl font-extrabold mb-2 ${item.textColor} group-hover:scale-105 transition-transform duration-500 tracking-tight`}
                 >
                   {item.value}
                 </div>
-                <div className="flex items-center text-sm">
+                <div className="flex items-center text-sm font-medium bg-white/50 w-fit px-2 py-1 rounded-lg backdrop-blur-sm">
                   {item.changeType === "increase" ? (
                     <ArrowUpRight className="h-4 w-4 text-emerald-500 mr-1 group-hover:scale-110 transition-transform" />
                   ) : (
@@ -354,12 +355,12 @@ export default function AdminDashboardPage() {
                   >
                     {item.change}
                   </span>
-                  <span className="text-slate-500 ml-1">dari bulan lalu</span>
+                  <span className="text-slate-500 ml-1">vs bulan lalu</span>
                 </div>
               </CardContent>
               {/* Subtle animated border */}
               <div
-                className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${item.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`}
+                className={`absolute bottom-0 left-0 h-1.5 w-full bg-gradient-to-r ${item.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out origin-left`}
               ></div>
             </Card>
           ))}
@@ -371,60 +372,63 @@ export default function AdminDashboardPage() {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
           {/* Recent Activity - Takes more space on larger screens */}
           <div className="xl:col-span-2">
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center space-x-3 text-slate-800">
-                  <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg shadow-lg">
-                    <Clock className="h-5 w-5 text-white" />
+            <Card className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden">
+              <CardHeader className="pb-6 border-b border-slate-100/50 bg-white/30">
+                <CardTitle className="flex items-center space-x-4 text-slate-800">
+                  <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-lg shadow-blue-500/20">
+                    <Clock className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-xl font-bold">Aktivitas Terbaru</span>
+                  <div>
+                    <span className="text-xl font-bold block">Aktivitas Terbaru</span>
+                    <span className="text-sm font-normal text-slate-500">Pantau kegiatan pengguna secara real-time</span>
+                  </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 p-6">
                 {recentActivities.map((activity, index) => (
                   <div
                     key={activity.id}
-                    className="group flex items-center space-x-4 p-4 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-white transition-all duration-300 border border-transparent hover:border-slate-200 hover:shadow-md"
+                    className="group flex items-center space-x-4 p-4 rounded-2xl hover:bg-white transition-all duration-300 border border-transparent hover:border-slate-100 hover:shadow-lg hover:shadow-slate-200/50 cursor-default"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 ${
+                      className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ${
                         activity.type === "article"
-                          ? "bg-gradient-to-br from-emerald-500 to-green-500 text-white"
+                          ? "bg-gradient-to-br from-emerald-500 to-green-500 text-white shadow-emerald-500/20"
                           : activity.type === "user"
-                          ? "bg-gradient-to-br from-blue-500 to-cyan-500 text-white"
+                          ? "bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-blue-500/20"
                           : activity.type === "cycle"
-                          ? "bg-gradient-to-br from-pink-500 to-rose-500 text-white"
+                          ? "bg-gradient-to-br from-pink-500 to-rose-500 text-white shadow-pink-500/20"
                           : activity.type === "log"
-                          ? "bg-gradient-to-br from-purple-500 to-violet-500 text-white"
-                          : "bg-gradient-to-br from-slate-400 to-slate-500 text-white"
+                          ? "bg-gradient-to-br from-purple-500 to-violet-500 text-white shadow-purple-500/20"
+                          : "bg-gradient-to-br from-slate-400 to-slate-500 text-white shadow-slate-500/20"
                       }`}
                     >
                       {activity.type === "article" && (
-                        <FileText className="h-6 w-6" />
+                        <FileText className="h-7 w-7" />
                       )}
                       {activity.type === "user" && (
-                        <UserPlus className="h-6 w-6" />
+                        <UserPlus className="h-7 w-7" />
                       )}
                       {activity.type === "cycle" && (
-                        <Activity className="h-6 w-6" />
+                        <Activity className="h-7 w-7" />
                       )}
                       {activity.type === "log" && (
-                        <Calendar className="h-6 w-6" />
+                        <Calendar className="h-7 w-7" />
                       )}
                       {activity.type === "loading" && (
-                        <Clock className="h-6 w-6" />
+                        <Clock className="h-7 w-7" />
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 group-hover:text-slate-900 transition-colors truncate">
+                      <p className="text-base font-bold text-slate-800 group-hover:text-slate-900 transition-colors truncate">
                         {activity.user}
                       </p>
                       <p className="text-sm text-slate-600 group-hover:text-slate-700 transition-colors truncate">
                         {activity.action}
                       </p>
                     </div>
-                    <div className="text-xs text-slate-500 bg-slate-100 px-3 py-1 rounded-full font-medium">
+                    <div className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 group-hover:bg-white group-hover:border-slate-300 transition-colors">
                       {activity.time}
                     </div>
                   </div>
@@ -435,38 +439,41 @@ export default function AdminDashboardPage() {
 
           {/* System Status - Compact and modern */}
           <div>
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center space-x-3 text-slate-800">
-                  <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg shadow-lg">
-                    <PieChart className="h-5 w-5 text-white" />
+            <Card className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden h-full">
+              <CardHeader className="pb-6 border-b border-slate-100/50 bg-white/30">
+                <CardTitle className="flex items-center space-x-4 text-slate-800">
+                  <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-2xl shadow-lg shadow-indigo-500/20">
+                    <PieChart className="h-6 w-6 text-white" />
                   </div>
-                  <span className="text-xl font-bold">Status Sistem</span>
+                  <div>
+                    <span className="text-xl font-bold block">Status Sistem</span>
+                    <span className="text-sm font-normal text-slate-500">Kesehatan server & database</span>
+                  </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-6">
                 <div className="space-y-4">
                   {systemMetricsData.map((metric, index) => (
                     <div
                       key={index}
-                      className="group flex items-center justify-between p-3 rounded-xl hover:bg-gradient-to-r hover:from-slate-50 hover:to-white transition-all duration-300 border border-transparent hover:border-slate-200"
+                      className="group flex items-center justify-between p-4 rounded-2xl bg-white/40 hover:bg-white transition-all duration-300 border border-white/50 hover:border-slate-200 hover:shadow-md"
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       <div className="flex-1">
-                        <span className="text-sm font-medium text-slate-700 group-hover:text-slate-800 transition-colors">
+                        <span className="text-sm font-semibold text-slate-600 group-hover:text-slate-800 transition-colors block mb-1">
                           {metric.label}
                         </span>
-                        <div className="text-sm font-bold text-slate-900 mt-1">
+                        <div className="text-lg font-extrabold text-slate-900">
                           {metric.value}
                         </div>
                       </div>
                       <div
-                        className={`w-3 h-3 rounded-full shadow-sm ${
+                        className={`w-4 h-4 rounded-full shadow-lg border-2 border-white ${
                           metric.status === "excellent"
-                            ? "bg-emerald-500 shadow-emerald-500/30"
+                            ? "bg-emerald-500 shadow-emerald-500/40"
                             : metric.status === "good"
-                            ? "bg-yellow-500 shadow-yellow-500/30"
-                            : "bg-red-500 shadow-red-500/30"
+                            ? "bg-yellow-500 shadow-yellow-500/40"
+                            : "bg-red-500 shadow-red-500/40"
                         } group-hover:scale-125 transition-transform duration-300`}
                       ></div>
                     </div>
@@ -480,31 +487,34 @@ export default function AdminDashboardPage() {
 
       {/* Performance Overview - Full Width */}
       <div className="px-4 sm:px-6 lg:px-8 mb-8">
-        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300">
-          <CardHeader className="pb-6">
-            <CardTitle className="flex items-center space-x-3 text-slate-800">
-              <div className="p-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg shadow-lg">
-                <TrendingUp className="h-5 w-5 text-white" />
+        <Card className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden">
+          <CardHeader className="pb-6 border-b border-slate-100/50 bg-white/30">
+            <CardTitle className="flex items-center space-x-4 text-slate-800">
+              <div className="p-3 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl shadow-lg shadow-orange-500/20">
+                <TrendingUp className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold">
-                Performance Overview {currentYear}
-              </span>
+              <div>
+                <span className="text-xl font-bold block">
+                  Performance Overview {currentYear}
+                </span>
+                <span className="text-sm font-normal text-slate-500">Analisis pertumbuhan pengguna dan konten</span>
+              </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               {/* User Growth Chart */}
               <div className="space-y-4">
-                <h4 className="text-lg font-semibold text-slate-800 flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full"></div>
+                <h4 className="text-lg font-bold text-slate-800 flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full shadow-sm"></div>
                   <span>Pertumbuhan Pengguna</span>
                   {isMobile && (
-                    <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
+                    <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full border border-blue-100">
                       Bulan Ini
                     </span>
                   )}
                 </h4>
-                <div className="bg-gradient-to-br from-slate-50 to-white p-6 rounded-xl border border-slate-200/50">
+                <div className="bg-gradient-to-br from-white/50 to-white/80 p-6 rounded-3xl border border-white/60 shadow-inner">
                   <ChartContainer
                     config={{
                       users: {
@@ -512,27 +522,42 @@ export default function AdminDashboardPage() {
                         color: "hsl(var(--chart-1))",
                       },
                     }}
-                    className="h-64 w-full min-w-0"
+                    className="h-72 w-full min-w-0"
                   >
                     {historicalData.length > 0 ? (
                       <LineChart data={getFilteredData()}>
                         <CartesianGrid
                           strokeDasharray="3 3"
-                          className="opacity-30"
+                          className="opacity-20"
+                          vertical={false}
                         />
-                        <XAxis dataKey="month" className="text-xs" />
-                        <YAxis className="text-xs" />
-                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <XAxis 
+                          dataKey="month" 
+                          className="text-xs font-medium text-slate-500" 
+                          tickLine={false}
+                          axisLine={false}
+                          dy={10}
+                        />
+                        <YAxis 
+                          className="text-xs font-medium text-slate-500" 
+                          tickLine={false}
+                          axisLine={false}
+                          dx={-10}
+                        />
+                        <ChartTooltip 
+                          content={<ChartTooltipContent className="bg-white/90 backdrop-blur-md border-none shadow-xl rounded-xl" />} 
+                        />
                         <Line
                           type="monotone"
                           dataKey="users"
                           stroke="url(#userGradient)"
-                          strokeWidth={3}
-                          dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+                          strokeWidth={4}
+                          dot={{ fill: "#3b82f6", strokeWidth: 4, r: 6, stroke: "white" }}
                           activeDot={{
-                            r: 6,
+                            r: 8,
                             stroke: "#3b82f6",
-                            strokeWidth: 2,
+                            strokeWidth: 4,
+                            fill: "white"
                           }}
                         />
                         <defs>
@@ -549,10 +574,12 @@ export default function AdminDashboardPage() {
                         </defs>
                       </LineChart>
                     ) : (
-                      <div className="flex items-center justify-center h-full text-slate-500">
+                      <div className="flex items-center justify-center h-full text-slate-400">
                         <div className="text-center">
-                          <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                          <p className="text-sm">Memuat data...</p>
+                          <div className="bg-slate-100 p-4 rounded-full inline-block mb-3">
+                            <Clock className="h-8 w-8 text-slate-300" />
+                          </div>
+                          <p className="text-sm font-medium">Memuat data...</p>
                         </div>
                       </div>
                     )}
@@ -562,11 +589,11 @@ export default function AdminDashboardPage() {
 
               {/* Article Growth Chart */}
               <div className="space-y-4">
-                <h4 className="text-lg font-semibold text-slate-800 flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full"></div>
+                <h4 className="text-lg font-bold text-slate-800 flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full shadow-sm"></div>
                   <span>Artikel & Siklus</span>
                 </h4>
-                <div className="bg-gradient-to-br from-slate-50 to-white p-6 rounded-xl border border-slate-200/50">
+                <div className="bg-gradient-to-br from-white/50 to-white/80 p-6 rounded-3xl border border-white/60 shadow-inner">
                   <ChartContainer
                     config={{
                       articles: {
@@ -578,25 +605,42 @@ export default function AdminDashboardPage() {
                         color: "hsl(var(--chart-3))",
                       },
                     }}
-                    className="h-64 w-full min-w-0"
+                    className="h-72 w-full min-w-0"
                   >
-                    <BarChart data={getFilteredData()}>
+                    <BarChart data={getFilteredData()} barGap={8}>
                       <CartesianGrid
                         strokeDasharray="3 3"
-                        className="opacity-30"
+                        className="opacity-20"
+                        vertical={false}
                       />
-                      <XAxis dataKey="month" className="text-xs" />
-                      <YAxis className="text-xs" />
-                      <ChartTooltip content={<ChartTooltipContent />} />
+                      <XAxis 
+                        dataKey="month" 
+                        className="text-xs font-medium text-slate-500" 
+                        tickLine={false}
+                        axisLine={false}
+                        dy={10}
+                      />
+                      <YAxis 
+                        className="text-xs font-medium text-slate-500" 
+                        tickLine={false}
+                        axisLine={false}
+                        dx={-10}
+                      />
+                      <ChartTooltip 
+                        content={<ChartTooltipContent className="bg-white/90 backdrop-blur-md border-none shadow-xl rounded-xl" />} 
+                        cursor={{ fill: 'rgba(0,0,0,0.05)', radius: 8 }}
+                      />
                       <Bar
                         dataKey="articles"
                         fill="url(#articleGradient)"
-                        radius={[4, 4, 0, 0]}
+                        radius={[6, 6, 6, 6]}
+                        barSize={20}
                       />
                       <Bar
                         dataKey="cycles"
                         fill="url(#cycleGradient)"
-                        radius={[4, 4, 0, 0]}
+                        radius={[6, 6, 6, 6]}
+                        barSize={20}
                       />
                       <defs>
                         <linearGradient
@@ -628,59 +672,59 @@ export default function AdminDashboardPage() {
 
             {/* Performance Metrics Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              <div className="group bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-xl border border-blue-200/50 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+              <div className="group bg-gradient-to-br from-blue-50 to-cyan-50 p-6 rounded-2xl border border-blue-100 hover:shadow-lg hover:shadow-blue-500/10 hover:scale-[1.02] transition-all duration-300">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-sm font-semibold text-blue-700 mb-1">
+                    <p className="text-sm font-bold text-blue-700 mb-1 uppercase tracking-wider">
                       Aktivitas Harian
                     </p>
-                    <p className="text-3xl font-bold text-blue-900 group-hover:scale-105 transition-transform">
+                    <p className="text-4xl font-extrabold text-blue-900 group-hover:scale-105 transition-transform">
                       {analytics?.dailyLogsToday || 0}
                     </p>
                   </div>
-                  <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
                     <Activity className="h-6 w-6 text-white" />
                   </div>
                 </div>
-                <p className="text-xs text-blue-600 font-medium">
+                <p className="text-xs text-blue-600 font-semibold bg-blue-100/50 px-3 py-1.5 rounded-full w-fit">
                   Log harian tercatat hari ini
                 </p>
               </div>
 
-              <div className="group bg-gradient-to-br from-emerald-50 to-green-50 p-6 rounded-xl border border-emerald-200/50 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+              <div className="group bg-gradient-to-br from-emerald-50 to-green-50 p-6 rounded-2xl border border-emerald-100 hover:shadow-lg hover:shadow-emerald-500/10 hover:scale-[1.02] transition-all duration-300">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-sm font-semibold text-emerald-700 mb-1">
-                      Artikel Dipublikasikan
+                    <p className="text-sm font-bold text-emerald-700 mb-1 uppercase tracking-wider">
+                      Artikel
                     </p>
-                    <p className="text-3xl font-bold text-emerald-900 group-hover:scale-105 transition-transform">
+                    <p className="text-4xl font-extrabold text-emerald-900 group-hover:scale-105 transition-transform">
                       {analytics?.publishedArticles || 0}
                     </p>
                   </div>
-                  <div className="p-3 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="p-3 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
                     <FileText className="h-6 w-6 text-white" />
                   </div>
                 </div>
-                <p className="text-xs text-emerald-600 font-medium">
+                <p className="text-xs text-emerald-600 font-semibold bg-emerald-100/50 px-3 py-1.5 rounded-full w-fit">
                   Dari {analytics?.totalArticles || 0} artikel total
                 </p>
               </div>
 
-              <div className="group bg-gradient-to-br from-pink-50 to-rose-50 p-6 rounded-xl border border-pink-200/50 hover:shadow-lg hover:scale-[1.02] transition-all duration-300">
+              <div className="group bg-gradient-to-br from-pink-50 to-rose-50 p-6 rounded-2xl border border-pink-100 hover:shadow-lg hover:shadow-pink-500/10 hover:scale-[1.02] transition-all duration-300">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-sm font-semibold text-pink-700 mb-1">
+                    <p className="text-sm font-bold text-pink-700 mb-1 uppercase tracking-wider">
                       Siklus Aktif
                     </p>
-                    <p className="text-3xl font-bold text-pink-900 group-hover:scale-105 transition-transform">
+                    <p className="text-4xl font-extrabold text-pink-900 group-hover:scale-105 transition-transform">
                       {analytics?.activeCycles || 0}
                     </p>
                   </div>
-                  <div className="p-3 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+                  <div className="p-3 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform">
                     <Calendar className="h-6 w-6 text-white" />
                   </div>
                 </div>
-                <p className="text-xs text-pink-600 font-medium">
+                <p className="text-xs text-pink-600 font-semibold bg-pink-100/50 px-3 py-1.5 rounded-full w-fit">
                   Siklus yang sedang dilacak
                 </p>
               </div>

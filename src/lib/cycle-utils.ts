@@ -69,18 +69,18 @@ export function calculateCyclePhase(
 }
 
 /**
- * Get phase name in Indonesian
+ * Get phase name in Indonesian (user-friendly terminology)
  */
 export function getPhaseName(phase: string): string {
   switch (phase) {
     case "menstrual":
-      return "Menstruasi";
+      return "Sedang Menstruasi";
     case "follicular":
-      return "Folikuler";
+      return "Setelah Menstruasi";
     case "ovulation":
-      return "Ovulasi";
+      return "Masa Subur";
     case "luteal":
-      return "Luteal";
+      return "Menjelang Menstruasi";
     default:
       return phase;
   }

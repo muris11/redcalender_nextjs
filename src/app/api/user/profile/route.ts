@@ -11,7 +11,9 @@ export async function PUT(request: NextRequest) {
       birthDate, 
       avgCycleLength, 
       avgPeriodLength, 
-      theme 
+      theme,
+      currentlyMenstruating,
+      menstrualStatus
     } = body;
 
     if (!id) {
@@ -29,7 +31,9 @@ export async function PUT(request: NextRequest) {
         birthDate: birthDate ? new Date(birthDate) : undefined,
         avgCycleLength: avgCycleLength ? parseInt(avgCycleLength) : undefined,
         avgPeriodLength: avgPeriodLength ? parseInt(avgPeriodLength) : undefined,
-        theme
+        theme,
+        currentlyMenstruating: currentlyMenstruating || undefined,
+        menstrualStatus: menstrualStatus || undefined
       }
     });
 
@@ -46,3 +50,4 @@ export async function PUT(request: NextRequest) {
     );
   }
 }
+

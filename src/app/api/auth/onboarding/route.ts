@@ -8,8 +8,10 @@ export async function POST(request: NextRequest) {
     console.log("📝 [ONBOARDING] Received data:", {
       userId: body.userId,
       birthDate: body.birthDate,
+      currentlyMenstruating: body.currentlyMenstruating,
       menstrualStatus: body.menstrualStatus,
       lastPeriodDate: body.lastPeriodDate,
+      lastPeriodEndDate: body.lastPeriodEndDate,
       periodDuration: body.periodDuration,
       cycleLength: body.cycleLength,
       commonSymptoms: body.commonSymptoms?.length,
@@ -23,8 +25,10 @@ export async function POST(request: NextRequest) {
     const {
       userId,
       birthDate,
+      currentlyMenstruating,
       menstrualStatus,
       lastPeriodDate,
+      lastPeriodEndDate,
       periodDuration,
       cycleLength,
       commonSymptoms,
@@ -57,8 +61,10 @@ export async function POST(request: NextRequest) {
       where: { id: userId },
       data: {
         birthDate: birthDate ? new Date(birthDate) : null,
+        currentlyMenstruating,
         menstrualStatus,
         lastPeriodDate: lastPeriodDate ? new Date(lastPeriodDate) : null,
+        lastPeriodEndDate: lastPeriodEndDate ? new Date(lastPeriodEndDate) : null,
         avgPeriodLength: periodDuration ? parseInt(periodDuration) : 6,
         avgCycleLength: cycleLength ? parseInt(cycleLength) : 28,
         isOnboarded: true,

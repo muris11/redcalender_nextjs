@@ -48,7 +48,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="h-full relative bg-gray-50 min-h-screen">
+    <div className="h-full relative bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen">
       {/* Admin Navbar - Always visible */}
       <AdminNavbar
         onMobileMenuToggle={handleMobileMenuToggle}
@@ -56,7 +56,7 @@ export default function AdminLayout({
       />
 
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 lg:top-20 z-40">
+      <div className="hidden lg:flex lg:w-80 lg:flex-col lg:fixed lg:inset-y-0 lg:top-0 z-40 pt-20 bg-white/40 backdrop-blur-xl border-r border-white/20 shadow-xl">
         <AdminSidebar onNavigate={() => {}} />
       </div>
 

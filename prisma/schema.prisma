@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -23,8 +23,10 @@ model User {
   avgPeriodLength   Int      @default(6)  // Rata-rata durasi haid
   theme             String?  // Tema personalisasi (kucing, gajah, unicorn)
   isOnboarded       Boolean  @default(false) // Status onboarding
-  menstrualStatus   String?  // Status menstruasi (regular, irregular, pms, none)
-  lastPeriodDate    DateTime? // Tanggal haid terakhir
+  menstrualStatus   String?  // Status menstruasi (regular, irregular, never, prefer_not)
+  lastPeriodDate    DateTime? // Tanggal haid terakhir (hari pertama)
+  lastPeriodEndDate DateTime? // Tanggal akhir haid terakhir
+  currentlyMenstruating String? // Status saat ini: yes, no, unsure, prefer_not
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -155,6 +157,8 @@ model Article {
   categoryId  String   // Reference to ArticleCategory
   createdBy   String   // Admin user ID
   published   Boolean  @default(true)
+  sourceUrl   String?  // URL sumber terpercaya
+  sourceName  String?  // Nama sumber (mis: WHO, Kemenkes RI)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

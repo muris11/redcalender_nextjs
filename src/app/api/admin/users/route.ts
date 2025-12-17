@@ -1,4 +1,5 @@
 import { db, testDatabaseConnection } from "@/lib/db";
+import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -129,13 +130,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Hash password before storing
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = await db.user.create({
       data: {
         name,
         email,
         phone,
         role: role || "USER",
-        password, // In production, this should be hashed
+        password: hashedPassword,
       },
       select: {
         id: true,
@@ -209,9 +213,9 @@ export async function PUT(request: NextRequest) {
       role,
     };
 
-    // Only update password if provided
+    // Only update password if provided - hash it first
     if (password && password.trim() !== "") {
-      updateData.password = password;
+      updateData.password = await bcrypt.hash(password, 10);
     }
 
     const user = await db.user.update({

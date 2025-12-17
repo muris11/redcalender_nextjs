@@ -1,140 +1,116 @@
 "use client";
 
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from "lucide-react";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export default function GuestFooter() {
   const currentYear = new Date().getFullYear();
-  useEffect(() => {
-    console.log("GuestFooter mounted");
-  }, []);
 
   return (
     <footer
       role="contentinfo"
       aria-label="Guest footer"
-      className="bg-white border-t border-gray-200 mt-auto z-10"
+      className="bg-white border-t border-pink-100 mt-auto z-10 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-pink-400 via-purple-500 to-pink-400"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Section */}
-          <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="h-10 w-10 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-                <span className="text-xl">🌸</span>
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center shadow-lg shadow-pink-200">
+                <span className="text-2xl">🌸</span>
               </div>
-              <span className="text-xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="text-2xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
                 Red Calender
               </span>
             </div>
-            <p className="text-gray-600 mb-4 max-w-md">
+            <p className="text-gray-500 leading-relaxed">
               Platform pencatatan siklus menstruasi yang membantu Anda memahami
               kesehatan reproduksi dengan lebih baik. Privasi dan keamanan data
               Anda adalah prioritas kami.
             </p>
             <div className="flex gap-4">
-              <a
-                href="https://www.facebook.com"
-                className="h-10 w-10 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center transition-colors"
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5 text-blue-600" />
-              </a>
-              <a
-                href="https://www.instagram.com"
-                className="h-10 w-10 rounded-full bg-purple-100 hover:bg-purple-200 flex items-center justify-center transition-colors"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5 text-pink-600" />
-              </a>
-              <a
-                href="https://www.twitter.com"
-                className="h-10 w-10 rounded-full bg-pink-100 hover:bg-pink-200 flex items-center justify-center transition-colors"
-                aria-label="Twitter"
-              >
-                <Twitter className="h-5 w-5 text-blue-400" />
-              </a>
+              {[
+                { icon: Facebook, color: "text-blue-600", bg: "bg-blue-50 hover:bg-blue-100" },
+                { icon: Instagram, color: "text-pink-600", bg: "bg-pink-50 hover:bg-pink-100" },
+                { icon: Twitter, color: "text-sky-500", bg: "bg-sky-50 hover:bg-sky-100" },
+              ].map((social, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className={`h-10 w-10 rounded-full ${social.bg} flex items-center justify-center transition-all duration-300 hover:scale-110`}
+                >
+                  <social.icon className={`h-5 w-5 ${social.color}`} />
+                </a>
+              ))}
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-bold text-gray-800 mb-4 text-lg">
-              Tautan Cepat
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Beranda
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/login"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Login
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/register"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Daftar
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="#features"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Fitur
-                </a>
-              </li>
+            <h3 className="font-bold text-gray-900 mb-6 text-lg">Tautan Cepat</h3>
+            <ul className="space-y-4">
+              {[
+                { name: "Beranda", href: "/" },
+                { name: "Fitur", href: "/#features" },
+                { name: "Login", href: "/login" },
+                { name: "Daftar", href: "/register" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-500 hover:text-pink-600 transition-colors font-medium flex items-center gap-2 group"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-pink-300 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Support & Info */}
           <div>
-            <h3 className="font-bold text-gray-800 mb-4 text-lg">
-              Bantuan & Info
-            </h3>
-            <ul className="space-y-3">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Pusat Bantuan
+            <h3 className="font-bold text-gray-900 mb-6 text-lg">Bantuan & Info</h3>
+            <ul className="space-y-4">
+              {[
+                { name: "Pusat Bantuan", href: "/help-center" },
+                { name: "Kebijakan Privasi", href: "/privacy-policy" },
+                { name: "Syarat & Ketentuan", href: "/terms" },
+                { name: "Hubungi Kami", href: "/contact" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-500 hover:text-pink-600 transition-colors font-medium flex items-center gap-2 group"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-pink-300 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact Info */}
+          <div>
+            <h3 className="font-bold text-gray-900 mb-6 text-lg">Hubungi Kami</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3 text-gray-500">
+                <MapPin className="h-5 w-5 text-pink-500 shrink-0 mt-1" />
+                <span>Jl. Teknologi No. 123, Jakarta Selatan, Indonesia</span>
+              </li>
+              <li className="flex items-center gap-3 text-gray-500">
+                <Mail className="h-5 w-5 text-pink-500 shrink-0" />
+                <a href="mailto:support@redcalender.com" className="hover:text-pink-600 transition-colors">
+                  support@redcalender.com
                 </a>
               </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Kebijakan Privasi
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Syarat & Ketentuan
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-pink-600 transition-colors font-medium"
-                >
-                  Hubungi Kami
+              <li className="flex items-center gap-3 text-gray-500">
+                <Phone className="h-5 w-5 text-pink-500 shrink-0" />
+                <a href="tel:+6281234567890" className="hover:text-pink-600 transition-colors">
+                  +62 812 3456 7890
                 </a>
               </li>
             </ul>
@@ -142,10 +118,13 @@ export default function GuestFooter() {
         </div>
 
         {/* Bottom Section */}
-        <div className="mt-12 pt-8 border-t border-gray-200">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-600 text-sm">
-              © {currentYear} Red Calender. All rights reserved. Made with
+        <div className="mt-16 pt-8 border-t border-gray-100">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <p className="text-gray-400 text-sm">
+              © {currentYear} Red Calender. All rights reserved.
+            </p>
+            <p className="text-gray-400 text-sm flex items-center gap-1">
+              Made with <span className="text-red-500 animate-pulse">❤</span> for women's health
             </p>
           </div>
         </div>

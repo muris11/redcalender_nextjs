@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -50,6 +50,15 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    // Update user's status - now menstruating
+    await db.user.update({
+      where: { id: userId },
+      data: { 
+        currentlyMenstruating: 'yes',
+        lastPeriodDate: new Date(startDate)
+      }
+    });
+
     // Update user's average cycle length if we have previous cycles
     const allCycles = await db.cycle.findMany({
       where: { userId, endDate: { not: null } }
@@ -85,6 +94,90 @@ export async function POST(request: NextRequest) {
     console.error('Error creating cycle:', error);
     return NextResponse.json(
       { error: 'Failed to create cycle' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+    const { endDate } = await request.json();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Find the latest cycle without an end date
+    const latestCycle = await db.cycle.findFirst({
+      where: { 
+        userId,
+        endDate: null 
+      },
+      orderBy: { startDate: 'desc' }
+    });
+
+    if (!latestCycle) {
+      return NextResponse.json(
+        { error: 'No active period found' },
+        { status: 404 }
+      );
+    }
+
+    // Update the cycle with end date
+    const updatedCycle = await db.cycle.update({
+      where: { id: latestCycle.id },
+      data: { endDate: new Date(endDate) }
+    });
+
+    // Update user's average period length and status
+    const cyclesWithEnd = await db.cycle.findMany({
+      where: { userId, endDate: { not: null } }
+    });
+
+    if (cyclesWithEnd.length > 0) {
+      const periodLengths = cyclesWithEnd.map(c => {
+        const start = new Date(c.startDate);
+        const end = new Date(c.endDate!);
+        return Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+      });
+      
+      const avgPeriodLength = Math.round(
+        periodLengths.reduce((a, b) => a + b, 0) / periodLengths.length
+      );
+      
+      await db.user.update({
+        where: { id: userId },
+        data: { 
+          avgPeriodLength,
+          currentlyMenstruating: 'no',
+          lastPeriodEndDate: new Date(endDate)
+        }
+      });
+    } else {
+      // Just update the status if no cycles with end date yet
+      await db.user.update({
+        where: { id: userId },
+        data: { 
+          currentlyMenstruating: 'no',
+          lastPeriodEndDate: new Date(endDate)
+        }
+      });
+    }
+
+    return NextResponse.json({
+      message: 'Period end date updated successfully',
+      cycle: updatedCycle
+    });
+
+  } catch (error) {
+    console.error('Error updating cycle:', error);
+    return NextResponse.json(
+      { error: 'Failed to update cycle' },
       { status: 500 }
     );
   }

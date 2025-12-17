@@ -3,12 +3,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthStore } from "@/store/authStore";
 import { Bell, LogOut, Menu, X } from "lucide-react";
@@ -102,7 +102,7 @@ export function AdminNavbar({
   }, [viewedNotificationIds]);
 
   return (
-    <nav className="bg-white shadow-md border-b border-gray-100 sticky top-0 z-50">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-xl border-b border-white/20 shadow-sm transition-all duration-300">
       <div className="w-full px-6 lg:px-0">
         <div className="flex justify-between items-center h-20 lg:grid lg:grid-cols-3 lg:gap-4">
           {/* Logo Section - Kiri */}
@@ -128,14 +128,14 @@ export function AdminNavbar({
             <div className="flex items-center">
               <div className="flex items-center space-x-3 group">
                 <div className="relative hidden lg:block">
-                  <div className="absolute inset-0 bg-linear-to-r from-pink-400 to-purple-500 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
                   <img
                     src="/logo.png"
                     alt="RedCalender Admin Logo"
                     className="relative h-12 w-12 object-contain group-hover:scale-110 transition-transform duration-300"
                   />
                 </div>
-                <span className="text-base lg:text-2xl font-extrabold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="text-base lg:text-2xl font-extrabold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
                   RedCalender Admin
                 </span>
               </div>
@@ -144,7 +144,7 @@ export function AdminNavbar({
 
           {/* Center Content - Desktop Only */}
           <div className="hidden lg:flex items-center justify-center">
-            <div className="flex items-center space-x-2 px-4 py-2 bg-pink-50 rounded-xl">
+            <div className="flex items-center space-x-2 px-4 py-2 bg-pink-50/50 rounded-xl border border-pink-100/50">
               <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-semibold text-gray-700">
                 Dashboard Admin Aktif
@@ -169,7 +169,7 @@ export function AdminNavbar({
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 mt-2" align="end" forceMount>
+              <DropdownMenuContent className="w-80 mt-2 glass-card border-white/20" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal p-4">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-semibold leading-none text-gray-900">
@@ -182,13 +182,13 @@ export function AdminNavbar({
                     )}
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-100/50" />
                 <div className="max-h-64 overflow-y-auto">
                   {notifications.length > 0 ? (
                     notifications.map((notification) => (
                       <DropdownMenuItem
                         key={notification.id}
-                        className="flex flex-col items-start p-4 cursor-pointer hover:bg-gray-50"
+                        className="flex flex-col items-start p-4 cursor-pointer hover:bg-gray-50/50 focus:bg-gray-50/50"
                         onClick={() =>
                           markNotificationAsViewed(notification.id)
                         }
@@ -228,10 +228,10 @@ export function AdminNavbar({
             </DropdownMenu>
 
             {/* User Info Display - Desktop */}
-            <div className="flex items-center space-x-3 px-4 py-2 bg-pink-50 rounded-xl">
+            <div className="flex items-center space-x-3 px-4 py-2 bg-pink-50/50 rounded-xl border border-pink-100/50">
               <Avatar className="h-10 w-10 border-2 border-pink-300 shadow-sm">
                 <AvatarImage src="" alt={user?.name || "Admin"} />
-                <AvatarFallback className="bg-linear-to-br from-pink-500 to-purple-600 text-white font-bold text-sm">
+                <AvatarFallback className="bg-gradient-to-br from-pink-500 to-purple-600 text-white font-bold text-sm">
                   {user?.name?.charAt(0)?.toUpperCase() || "A"}
                 </AvatarFallback>
               </Avatar>
@@ -277,7 +277,7 @@ export function AdminNavbar({
                   )}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 mt-2" align="end" forceMount>
+              <DropdownMenuContent className="w-80 mt-2 glass-card border-white/20" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal p-3">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-semibold leading-none text-gray-900">
@@ -290,13 +290,13 @@ export function AdminNavbar({
                     )}
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-100/50" />
                 <div className="max-h-48 overflow-y-auto space-y-2 p-3">
                   {notifications.length > 0 ? (
                     notifications.slice(0, 3).map((notification) => (
                       <div
                         key={notification.id}
-                        className="p-2 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                        className="p-2 bg-gray-50/50 rounded-lg hover:bg-gray-100/50 cursor-pointer transition-colors"
                         onClick={() => {
                           markNotificationAsViewed(notification.id);
                           handleNotificationDropdownOpen(true);
@@ -336,19 +336,19 @@ export function AdminNavbar({
                 >
                   <Avatar className="h-10 w-10 border-2 border-pink-300 shadow-sm">
                     <AvatarImage src="" alt={user?.name || "Admin"} />
-                    <AvatarFallback className="bg-linear-to-br from-pink-500 to-purple-600 text-white font-bold text-sm">
+                    <AvatarFallback className="bg-gradient-to-br from-pink-500 to-purple-600 text-white font-bold text-sm">
                       {user?.name?.charAt(0)?.toUpperCase() || "A"}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 mt-2" align="end" forceMount>
+              <DropdownMenuContent className="w-80 mt-2 glass-card border-white/20" align="end" forceMount>
                 {/* User Info Header */}
-                <DropdownMenuLabel className="font-normal p-4 bg-linear-to-r from-pink-50 to-purple-50">
+                <DropdownMenuLabel className="font-normal p-4 bg-gradient-to-r from-pink-50/50 to-purple-50/50">
                   <div className="flex items-center space-x-3">
                     <Avatar className="h-12 w-12 border-2 border-pink-300">
                       <AvatarImage src="" alt={user?.name || "Admin"} />
-                      <AvatarFallback className="bg-linear-to-br from-pink-500 to-purple-600 text-white font-bold">
+                      <AvatarFallback className="bg-gradient-to-br from-pink-500 to-purple-600 text-white font-bold">
                         {user?.name?.charAt(0)?.toUpperCase() || "A"}
                       </AvatarFallback>
                     </Avatar>
@@ -363,7 +363,7 @@ export function AdminNavbar({
                     </div>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator className="bg-gray-100/50" />
 
                 {/* Logout */}
                 <DropdownMenuItem

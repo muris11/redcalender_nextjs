@@ -88,6 +88,25 @@ export async function GET(request: NextRequest) {
       db.dailyLog.count({ where: { userId } }),
     ]);
 
+    // Get last 30 days logs for health metrics
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const recentLogs = await db.dailyLog.findMany({
+      where: {
+        userId,
+        date: { gte: thirtyDaysAgo }
+      },
+      include: {
+        logMoods: {
+          include: { mood: true }
+        }
+      }
+    });
+
+    // Calculate health metrics
+    const healthMetrics = calculateHealthMetrics(recentLogs);
+
     // Calculate cycle metrics
     const cycleMetrics = calculateCycleMetrics(user, latestCycle, recentCycles);
 
@@ -116,6 +135,7 @@ export async function GET(request: NextRequest) {
       todayLog: todayData,
       stats: quickStats,
       alerts,
+      healthMetrics,
     };
 
     return NextResponse.json({ dashboard: dashboardData });
@@ -338,4 +358,53 @@ function generateHealthAlerts(
   }
 
   return alerts;
+}
+
+// Calculate health metrics from recent logs
+function calculateHealthMetrics(logs: any[]) {
+  const logsWithSleep = logs.filter(l => l.sleepHours !== null);
+  const logsWithWater = logs.filter(l => l.waterIntake !== null);
+  const logsWithMoods = logs.filter(l => l.logMoods?.length > 0);
+
+  // Average sleep hours
+  const averageSleep = logsWithSleep.length > 0
+    ? Math.round(
+        (logsWithSleep.reduce((sum, l) => sum + Number(l.sleepHours), 0) / logsWithSleep.length) * 10
+      ) / 10
+    : 0;
+
+  // Average water intake (convert ml to liters)
+  const averageWater = logsWithWater.length > 0
+    ? Math.round(
+        (logsWithWater.reduce((sum, l) => sum + l.waterIntake, 0) / logsWithWater.length / 1000) * 10
+      ) / 10
+    : 0;
+
+  // Mood score (based on positive vs negative moods)
+  const positiveMoods = ['Riang', 'Jatuh cinta'];
+  const negativeMoods = ['Pemarah', 'Lelah', 'Berduka', 'Depresi', 'Emosional', 'Cemas'];
+  
+  let moodScore = 5; // Default neutral
+  if (logsWithMoods.length > 0) {
+    let totalPositive = 0;
+    let totalNegative = 0;
+    
+    logsWithMoods.forEach(log => {
+      log.logMoods.forEach((lm: any) => {
+        if (positiveMoods.includes(lm.mood.name)) totalPositive++;
+        if (negativeMoods.includes(lm.mood.name)) totalNegative++;
+      });
+    });
+    
+    const total = totalPositive + totalNegative;
+    if (total > 0) {
+      moodScore = Math.round((totalPositive / total) * 10);
+    }
+  }
+
+  return {
+    averageSleep,
+    averageWater,
+    moodScore
+  };
 }

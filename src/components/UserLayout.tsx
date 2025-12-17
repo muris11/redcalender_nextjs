@@ -1,6 +1,6 @@
 "use client";
 
-import { PageLoading } from "@/components/ui/loading";
+import { UnifiedPageLoading } from "@/components/ui/loading-skeletons";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -92,21 +92,11 @@ export default function UserLayout({ children }: UserLayoutProps) {
 
   // Show loading with timeout warning
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-50 via-red-50 to-orange-50">
-        <PageLoading />
-        {loadingTimeout && (
-          <p className="mt-4 text-sm text-gray-600">
-            Loading is taking longer than usual. Please refresh if this
-            persists.
-          </p>
-        )}
-      </div>
-    );
+    return <UnifiedPageLoading />;
   }
 
   if (!isAuthorized) {
-    return <PageLoading />;
+    return <UnifiedPageLoading />;
   }
 
   return <>{children}</>;

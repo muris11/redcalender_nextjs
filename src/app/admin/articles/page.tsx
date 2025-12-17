@@ -4,14 +4,22 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PageLoading } from "@/components/ui/loading";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
-import { Edit, Loader2, Plus, Trash2 } from "lucide-react";
+import {
+    CheckCircle,
+    Edit,
+    File,
+    FileText,
+    Loader2,
+    Plus,
+    Trash2,
+} from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -135,83 +143,84 @@ export default function ArticlesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen">
       {/* Header Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 rounded-2xl mx-4 sm:mx-6 lg:mx-8 mt-0 mb-8 p-8 text-white shadow-2xl">
-        <div className="absolute inset-0 bg-black/10"></div>
+      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 rounded-3xl mx-4 sm:mx-6 lg:mx-8 mt-0 mb-8 p-8 text-white shadow-2xl shadow-emerald-500/20 border border-white/10">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         <div className="relative z-10">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-2">
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 text-white drop-shadow-sm">
                 Manajemen Artikel 📝
               </h1>
-              <p className="text-emerald-100 text-lg opacity-90">
+              <p className="text-emerald-100 text-lg font-medium opacity-90 max-w-2xl">
                 Buat dan kelola konten edukasi untuk pengguna Anda
               </p>
             </div>
             <Button
               asChild
-              className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="bg-white text-emerald-700 hover:bg-emerald-50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-xl px-6 py-6 font-bold"
             >
               <Link href="/admin/articles/new">
-                <Plus className="h-4 w-4 mr-2" />
+                <Plus className="h-5 w-5 mr-2" />
                 Artikel Baru
               </Link>
             </Button>
           </div>
         </div>
         {/* Decorative elements */}
-        <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/5 rounded-full blur-xl"></div>
-        <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+        <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-32 -left-20 w-80 h-80 bg-teal-500/20 rounded-full blur-3xl"></div>
       </div>
 
       {/* Stats Cards */}
       <div className="px-4 sm:px-6 lg:px-8 mb-8">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] rounded-xl p-6">
+          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] rounded-3xl p-6 group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-600 mb-1">
+                <p className="text-sm font-bold text-slate-600 mb-1 uppercase tracking-wider">
                   Total Artikel
                 </p>
-                <p className="text-3xl font-bold text-slate-800">
+                <p className="text-3xl font-extrabold text-slate-800 group-hover:scale-105 transition-transform">
                   {totalArticles}
                 </p>
               </div>
-              <div className="p-3 bg-gradient-to-br from-emerald-500 to-green-500 rounded-xl shadow-lg">
-                <Edit className="h-6 w-6 text-white" />
+              <div className="p-3 bg-gradient-to-br from-emerald-500 to-green-500 rounded-2xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                <FileText className="h-6 w-6 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] rounded-xl p-6">
+          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] rounded-3xl p-6 group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-600 mb-1">
+                <p className="text-sm font-bold text-slate-600 mb-1 uppercase tracking-wider">
                   Dipublikasikan
                 </p>
-                <p className="text-3xl font-bold text-slate-800">
+                <p className="text-3xl font-extrabold text-slate-800 group-hover:scale-105 transition-transform">
                   {articles.filter((a) => a.published).length}
                 </p>
               </div>
-              <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl shadow-lg">
-                <Plus className="h-6 w-6 text-white" />
+              <div className="p-3 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl shadow-lg shadow-blue-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                <CheckCircle className="h-6 w-6 text-white" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] rounded-xl p-6">
+          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] rounded-3xl p-6 group cursor-pointer">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-slate-600 mb-1">
+                <p className="text-sm font-bold text-slate-600 mb-1 uppercase tracking-wider">
                   Draf
                 </p>
-                <p className="text-3xl font-bold text-slate-800">
+                <p className="text-3xl font-extrabold text-slate-800 group-hover:scale-105 transition-transform">
                   {articles.filter((a) => !a.published).length}
                 </p>
               </div>
-              <div className="p-3 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl shadow-lg">
-                <Edit className="h-6 w-6 text-white" />
+              <div className="p-3 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl shadow-lg shadow-orange-500/20 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                <File className="h-6 w-6 text-white" />
               </div>
             </div>
           </div>
@@ -220,8 +229,8 @@ export default function ArticlesPage() {
 
       {/* Articles Table */}
       <div className="px-4 sm:px-6 lg:px-8 mb-8">
-        <div className="bg-white/80 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl overflow-hidden">
-          <div className="p-6 border-b border-slate-200/50">
+        <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden">
+          <div className="p-6 border-b border-slate-100/50 bg-white/30">
             <h3 className="text-xl font-bold text-slate-800">Daftar Artikel</h3>
             <p className="text-slate-600 mt-1">
               Kelola semua artikel dalam sistem
@@ -231,26 +240,26 @@ export default function ArticlesPage() {
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow className="hover:bg-slate-50/50">
-                  <TableHead className="hidden sm:table-cell font-semibold text-slate-700">
+                <TableRow className="hover:bg-slate-50/50 border-slate-100/50">
+                  <TableHead className="hidden sm:table-cell font-bold text-slate-700">
                     Gambar
                   </TableHead>
-                  <TableHead className="font-semibold text-slate-700">
+                  <TableHead className="font-bold text-slate-700">
                     Judul
                   </TableHead>
-                  <TableHead className="hidden md:table-cell font-semibold text-slate-700">
+                  <TableHead className="hidden md:table-cell font-bold text-slate-700">
                     Kategori
                   </TableHead>
-                  <TableHead className="hidden md:table-cell font-semibold text-slate-700">
+                  <TableHead className="hidden md:table-cell font-bold text-slate-700">
                     Penulis
                   </TableHead>
-                  <TableHead className="font-semibold text-slate-700">
+                  <TableHead className="font-bold text-slate-700">
                     Status
                   </TableHead>
-                  <TableHead className="hidden md:table-cell font-semibold text-slate-700">
+                  <TableHead className="hidden md:table-cell font-bold text-slate-700">
                     Dibuat Pada
                   </TableHead>
-                  <TableHead className="text-right font-semibold text-slate-700">
+                  <TableHead className="text-right font-bold text-slate-700">
                     Aksi
                   </TableHead>
                 </TableRow>
@@ -263,7 +272,9 @@ export default function ArticlesPage() {
                       className="text-center py-12 text-slate-500"
                     >
                       <div className="text-center">
-                        <Edit className="h-12 w-12 mx-auto mb-4 opacity-50 text-slate-400" />
+                        <div className="bg-slate-100 p-4 rounded-full inline-block mb-3">
+                          <FileText className="h-8 w-8 text-slate-300" />
+                        </div>
                         <p className="text-lg font-medium mb-2">
                           Belum ada artikel
                         </p>
@@ -277,7 +288,7 @@ export default function ArticlesPage() {
                   articles.map((article, index) => (
                     <TableRow
                       key={article.id}
-                      className="hover:bg-gradient-to-r hover:from-slate-50 hover:to-white transition-all duration-200 border-b border-slate-100/50"
+                      className="hover:bg-white/60 transition-all duration-200 border-b border-slate-100/50 group"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       <TableCell className="hidden sm:table-cell">
@@ -285,14 +296,16 @@ export default function ArticlesPage() {
                           <img
                             src={thumbnailMap[article.id] || article.thumbnail}
                             alt={`thumbnail-${article.title}`}
-                            className="w-14 h-10 object-cover rounded-md"
+                            className="w-14 h-10 object-cover rounded-xl shadow-sm group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="w-14 h-10 bg-slate-100 rounded-md" />
+                          <div className="w-14 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
+                            <FileText className="h-5 w-5 text-slate-300" />
+                          </div>
                         )}
                       </TableCell>
 
-                      <TableCell className="font-medium text-slate-800 max-w-xs">
+                      <TableCell className="font-semibold text-slate-800 max-w-xs">
                         <div className="truncate" title={article.title}>
                           {article.title}
                         </div>
@@ -300,7 +313,7 @@ export default function ArticlesPage() {
                       <TableCell className="hidden md:table-cell">
                         <Badge
                           variant="secondary"
-                          className="capitalize font-medium shadow-sm"
+                          className="capitalize font-bold shadow-sm px-3 py-1 rounded-lg"
                           style={{
                             backgroundColor: article.category?.color
                               ? article.category.color + "20"
@@ -314,22 +327,22 @@ export default function ArticlesPage() {
                           {article.category?.name || "Tidak Ada Kategori"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell text-slate-700">
+                      <TableCell className="hidden md:table-cell text-slate-700 font-medium">
                         {article.author.name}
                       </TableCell>
                       <TableCell>
                         <Badge
                           variant={article.published ? "default" : "outline"}
-                          className={`font-medium ${
+                          className={`font-bold px-3 py-1 rounded-lg ${
                             article.published
-                              ? "bg-emerald-100 text-emerald-700 border-emerald-200"
-                              : "bg-orange-100 text-orange-700 border-orange-200"
+                              ? "bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-200"
+                              : "bg-orange-100 text-orange-700 border-orange-200 hover:bg-orange-200"
                           }`}
                         >
                           {article.published ? "Dipublikasikan" : "Draf"}
                         </Badge>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell text-slate-600">
+                      <TableCell className="hidden md:table-cell text-slate-600 font-medium">
                         {new Date(article.createdAt).toLocaleDateString(
                           "id-ID",
                           {
@@ -345,7 +358,7 @@ export default function ArticlesPage() {
                             variant="ghost"
                             size="icon"
                             asChild
-                            className="hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 hover:scale-110"
+                            className="h-8 w-8 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200 hover:scale-110"
                           >
                             <Link href={`/admin/articles/${article.id}`}>
                               <Edit className="h-4 w-4" />
@@ -354,7 +367,7 @@ export default function ArticlesPage() {
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="text-red-500 hover:text-red-700 hover:bg-red-50 transition-all duration-200 hover:scale-110"
+                            className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 hover:scale-110"
                             onClick={() => handleDelete(article.id)}
                             disabled={isDeleting === article.id}
                           >
@@ -378,22 +391,22 @@ export default function ArticlesPage() {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="px-4 sm:px-6 lg:px-8 mb-8">
-          <div className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-xl p-6">
+          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-2xl p-6">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="text-sm text-slate-600">
+              <div className="text-sm font-medium text-slate-600">
                 Menampilkan{" "}
-                <strong className="text-slate-800">
+                <strong className="text-slate-900">
                   {articles.length === 0
                     ? 0
                     : (currentPage - 1) * articlesPerPage + 1}{" "}
                 </strong>
                 hingga{" "}
-                <strong className="text-slate-800">
+                <strong className="text-slate-900">
                   {currentPage === totalPages
                     ? totalArticles
                     : currentPage * articlesPerPage}
                 </strong>{" "}
-                dari <strong className="text-slate-800">{totalArticles}</strong>{" "}
+                dari <strong className="text-slate-900">{totalArticles}</strong>{" "}
                 artikel
               </div>
               <div className="flex items-center space-x-3">
@@ -402,11 +415,11 @@ export default function ArticlesPage() {
                   size="sm"
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1 || isLoading}
-                  className="hover:bg-slate-50 transition-all duration-200 hover:scale-105"
+                  className="hover:bg-white hover:shadow-md transition-all duration-200 hover:scale-105 border-slate-200 rounded-xl"
                 >
                   Sebelumnya
                 </Button>
-                <span className="text-sm text-slate-600 bg-slate-100 px-3 py-1 rounded-full font-medium">
+                <span className="text-sm font-bold text-slate-700 bg-white px-4 py-2 rounded-xl border border-slate-200 shadow-sm">
                   Halaman {currentPage} dari {totalPages}
                 </span>
                 <Button
@@ -414,7 +427,7 @@ export default function ArticlesPage() {
                   size="sm"
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages || isLoading}
-                  className="hover:bg-slate-50 transition-all duration-200 hover:scale-105"
+                  className="hover:bg-white hover:shadow-md transition-all duration-200 hover:scale-105 border-slate-200 rounded-xl"
                 >
                   Selanjutnya
                 </Button>

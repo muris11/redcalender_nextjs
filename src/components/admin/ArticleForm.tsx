@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -222,34 +222,40 @@ export function ArticleForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-8 max-w-2xl mx-auto px-2 sm:px-0 w-full"
+      className="space-y-8 w-full"
     >
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="icon" asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            asChild
+            className="hover:bg-white/20 hover:text-slate-800 rounded-xl transition-all duration-200"
+          >
             <Link href="/admin/articles">
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-5 w-5" />
             </Link>
           </Button>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-slate-800">
             {isEditing ? "Edit Artikel" : "Artikel Baru"}
           </h2>
         </div>
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-4 bg-white/40 backdrop-blur-sm p-2 rounded-xl border border-white/40">
+          <div className="flex items-center space-x-2 px-2">
             <Switch
               id="published"
               checked={formData.published}
               onCheckedChange={(checked) =>
                 setFormData((prev) => ({ ...prev, published: checked }))
               }
+              className="data-[state=checked]:bg-emerald-500"
             />
-            <Label htmlFor="published">Dipublikasikan</Label>
+            <Label htmlFor="published" className="font-medium text-slate-700">Dipublikasikan</Label>
           </div>
           <Button
             type="submit"
             disabled={isLoading || uploading}
-            className="bg-pink-600 hover:bg-pink-700"
+            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 transition-all duration-300 hover:scale-105 rounded-xl"
           >
             {isLoading || uploading ? (
               <>
@@ -266,9 +272,9 @@ export function ArticleForm({
         </div>
       </div>
 
-      <div className="grid gap-6 bg-white p-6 rounded-lg border shadow-sm">
+      <div className="grid gap-6 bg-white/60 backdrop-blur-xl border border-white/40 shadow-xl rounded-3xl p-8">
         <div className="grid gap-2">
-          <Label htmlFor="title">Judul</Label>
+          <Label htmlFor="title" className="font-bold text-slate-700">Judul</Label>
           <Input
             id="title"
             value={formData.title}
@@ -277,12 +283,13 @@ export function ArticleForm({
             }
             required
             placeholder="Judul artikel"
+            className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 rounded-xl bg-white/50 backdrop-blur-sm h-12 text-lg"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="categoryId">Kategori</Label>
+            <Label htmlFor="categoryId" className="font-bold text-slate-700">Kategori</Label>
             <Select
               value={formData.categoryId}
               onValueChange={(value) =>
@@ -290,7 +297,7 @@ export function ArticleForm({
               }
               required
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 rounded-xl bg-white/50 backdrop-blur-sm h-12">
                 <SelectValue placeholder="Pilih kategori" />
               </SelectTrigger>
               <SelectContent>
@@ -304,16 +311,17 @@ export function ArticleForm({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="thumbnail">Thumbnail Gambar</Label>
+            <Label htmlFor="thumbnail" className="font-bold text-slate-700">Thumbnail Gambar</Label>
 
-            <div className="flex flex-col sm:flex-row items-center sm:space-x-4 space-y-4 sm:space-y-0 w-full">
+            <div className="flex flex-col sm:flex-row items-start sm:space-x-4 space-y-4 sm:space-y-0 w-full">
               <label
                 htmlFor="thumbnail"
-                className="relative w-full sm:w-64 h-32 border-2 border-dashed border-slate-200 rounded-lg flex items-center justify-center cursor-pointer hover:border-slate-300"
+                className="relative w-full sm:w-full h-32 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center cursor-pointer hover:border-emerald-500 hover:bg-emerald-50/30 transition-all duration-200 group"
                 aria-describedby="thumbnail-help"
               >
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-slate-500">
-                  Klik untuk pilih atau seret gambar (Maks 5MB)
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-sm text-slate-500 group-hover:text-emerald-600">
+                  <span className="font-medium">Klik atau seret gambar</span>
+                  <span className="text-xs opacity-70 mt-1">Maks 5MB (JPG/PNG)</span>
                 </div>
                 <input
                   id="thumbnail"
@@ -420,133 +428,101 @@ export function ArticleForm({
                   }}
                 />
               </label>
-              <div
-                id="thumbnail-help"
-                className="hidden sm:block text-xs text-slate-500 mt-1"
-              >
-                Ukuran maksimal: 5MB. Tipe: png/jpg/webp.
-              </div>
-              <div className="w-full sm:w-36 h-24 bg-slate-100 rounded overflow-hidden flex items-center justify-center border">
-                {previewUrl ? (
+              
+              {previewUrl && (
+                <div className="relative w-full sm:w-48 h-32 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 shadow-sm group">
                   <img
                     src={previewUrl}
                     alt="preview"
                     className="w-full h-full object-cover"
                   />
-                ) : (
-                  <span className="text-xs text-slate-500">
-                    Belum ada gambar
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/** Small actions for the thumbnail: remove or show name */}
-            <div className="flex items-center justify-between mt-2 sm:mt-0">
-              <div className="text-xs text-slate-500">
-                {localObjectUrl && <span>Preview image (local)</span>}
-                {!localObjectUrl && formData.thumbnail && (
-                  <span className="truncate block max-w-xs">
-                    {formData.thumbnail}
-                  </span>
-                )}
-              </div>
-              {(formData.thumbnail || localObjectUrl) && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={async () => {
-                    // Confirm deletion
-                    const deleteFromStorage = confirm(
-                      "Ingin menghapus file juga dari storage? OK = hapus file & referensi, Cancel = hanya hapus referensi"
-                    );
-
-                    // just clear preview and reference
-                    if (!deleteFromStorage) {
-                      if (localObjectUrl) {
-                        try {
-                          URL.revokeObjectURL(localObjectUrl);
-                        } catch (err) {
-                          // noop
-                        }
-                      }
-                      setLocalObjectUrl(null);
-                      setPreviewUrl(null);
-                      setFormData((prev) => ({ ...prev, thumbnail: "" }));
-                      return;
-                    }
-
-                    // delete from storage
-                    try {
-                      setUploading(true);
-                      // extract a storage path if the thumbnail is a full public URL
-                      const extractPath = (value: string) => {
-                        try {
-                          if (!value) return "";
-                          if (/^https?:\/\//i.test(value)) {
-                            const u = new URL(value);
-                            const parts = u.pathname.split("/");
-                            const idx = parts.indexOf("articles");
-                            if (idx >= 0) return parts.slice(idx + 1).join("/");
-                            return value;
-                          }
-                          return value;
-                        } catch (err) {
-                          return value;
-                        }
-                      };
-
-                      const path = formData.thumbnail
-                        ? extractPath(formData.thumbnail)
-                        : localObjectUrl || "";
-                      if (!path) {
-                        // nothing to delete
-                        setLocalObjectUrl(null);
-                        setPreviewUrl(null);
-                        setFormData((prev) => ({ ...prev, thumbnail: "" }));
-                        return;
-                      }
-
-                      const res = await fetch("/api/admin/upload", {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ path }),
-                      });
-                      const json = await res.json();
-                      if (!res.ok) {
-                        toast.error(
-                          json.error || "Gagal menghapus file dari storage"
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      className="h-8 text-xs"
+                      onClick={async () => {
+                        // Confirm deletion
+                        const deleteFromStorage = confirm(
+                          "Hapus gambar ini?"
                         );
-                        return;
-                      }
 
-                      // success
-                      if (localObjectUrl) {
+                        // just clear preview and reference
+                        if (!deleteFromStorage) return;
+
+                        // delete from storage
                         try {
-                          URL.revokeObjectURL(localObjectUrl);
-                        } catch (err) {}
-                      }
-                      setLocalObjectUrl(null);
-                      setPreviewUrl(null);
-                      setFormData((prev) => ({ ...prev, thumbnail: "" }));
-                      toast.success("Gambar berhasil dihapus dari storage");
-                    } catch (err) {
-                      console.error(err);
-                      toast.error("Gagal menghapus file dari storage");
-                    } finally {
-                      setUploading(false);
-                    }
-                  }}
-                >
-                  Hapus
-                </Button>
+                          setUploading(true);
+                          // extract a storage path if the thumbnail is a full public URL
+                          const extractPath = (value: string) => {
+                            try {
+                              if (!value) return "";
+                              if (/^https?:\/\//i.test(value)) {
+                                const u = new URL(value);
+                                const parts = u.pathname.split("/");
+                                const idx = parts.indexOf("articles");
+                                if (idx >= 0) return parts.slice(idx + 1).join("/");
+                                return value;
+                              }
+                              return value;
+                            } catch (err) {
+                              return value;
+                            }
+                          };
+
+                          const path = formData.thumbnail
+                            ? extractPath(formData.thumbnail)
+                            : localObjectUrl || "";
+                          if (!path) {
+                            // nothing to delete
+                            setLocalObjectUrl(null);
+                            setPreviewUrl(null);
+                            setFormData((prev) => ({ ...prev, thumbnail: "" }));
+                            return;
+                          }
+
+                          const res = await fetch("/api/admin/upload", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ path }),
+                          });
+                          const json = await res.json();
+                          if (!res.ok) {
+                            toast.error(
+                              json.error || "Gagal menghapus file dari storage"
+                            );
+                            return;
+                          }
+
+                          // success
+                          if (localObjectUrl) {
+                            try {
+                              URL.revokeObjectURL(localObjectUrl);
+                            } catch (err) {}
+                          }
+                          setLocalObjectUrl(null);
+                          setPreviewUrl(null);
+                          setFormData((prev) => ({ ...prev, thumbnail: "" }));
+                          toast.success("Gambar berhasil dihapus");
+                        } catch (err) {
+                          console.error(err);
+                          toast.error("Gagal menghapus file");
+                        } finally {
+                          setUploading(false);
+                        }
+                      }}
+                    >
+                      Hapus
+                    </Button>
+                  </div>
+                </div>
               )}
             </div>
 
             {uploading && (
               <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden mt-2">
                 <div
-                  className="h-2 bg-pink-600"
+                  className="h-2 bg-emerald-500 transition-all duration-300"
                   style={{ width: `${uploadProgress}%` }}
                 />
               </div>
@@ -555,7 +531,7 @@ export function ArticleForm({
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="content">Konten</Label>
+          <Label htmlFor="content" className="font-bold text-slate-700">Konten</Label>
           <Textarea
             id="content"
             value={formData.content}
@@ -564,10 +540,10 @@ export function ArticleForm({
             }
             required
             placeholder="Tulis konten artikel di sini..."
-            className="min-h-[250px] sm:min-h-[400px] font-mono"
+            className="min-h-[400px] font-mono border-slate-200 focus:border-emerald-500 focus:ring-emerald-500 rounded-xl bg-white/50 backdrop-blur-sm p-4 leading-relaxed"
           />
-          <p className="text-xs text-gray-500">
-            Mendukung teks dasar. Dukungan Markdown dapat ditambahkan nanti.
+          <p className="text-xs text-slate-500 font-medium">
+            Mendukung format Markdown dasar.
           </p>
         </div>
       </div>

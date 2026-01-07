@@ -3,7 +3,7 @@
 import { useAuthStore } from "@/store/authStore";
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "kucing" | "gajah" | "unicorn";
+type Theme = "kucing" | "gajah" | "unicorn" | "sapi";
 
 interface ThemeContextType {
   theme: Theme;
@@ -21,7 +21,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setMounted(true);
     // Load theme from localStorage first, then from user preference
     const savedTheme = localStorage.getItem("redcalendar_theme") as Theme;
-    if (savedTheme && ["kucing", "gajah", "unicorn"].includes(savedTheme)) {
+    if (savedTheme && ["kucing", "gajah", "unicorn", "sapi"].includes(savedTheme)) {
       setThemeState(savedTheme);
       applyTheme(savedTheme);
     }
@@ -29,7 +29,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Sync with user theme from database when user loads
-    if (user?.theme && ["kucing", "gajah", "unicorn"].includes(user.theme)) {
+    if (user?.theme && ["kucing", "gajah", "unicorn", "sapi"].includes(user.theme)) {
       const userTheme = user.theme as Theme;
       setThemeState(userTheme);
       applyTheme(userTheme);
@@ -40,7 +40,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
     // Remove all theme classes
-    root.classList.remove("theme-kucing", "theme-gajah", "theme-unicorn");
+    root.classList.remove("theme-kucing", "theme-gajah", "theme-unicorn", "theme-sapi");
     // Add new theme class
     root.classList.add(`theme-${newTheme}`);
   };

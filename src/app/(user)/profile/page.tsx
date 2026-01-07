@@ -514,6 +514,13 @@ export default function ProfileContent() {
                         <span className="text-xs text-muted-foreground">(Teal & Cyan)</span>
                       </div>
                     </SelectItem>
+                    <SelectItem value="sapi">
+                      <div className="flex items-center gap-2">
+                        <span>🐄</span>
+                        <span>Sapi</span>
+                        <span className="text-xs text-muted-foreground">(Hitam & Putih)</span>
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 

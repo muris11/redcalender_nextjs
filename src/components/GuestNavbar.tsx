@@ -4,11 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export function GuestNavbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -93,15 +94,15 @@ export function GuestNavbar() {
             <Button
               variant="ghost"
               className="text-gray-600 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 font-medium px-4"
-              asChild
+              onClick={() => router.push("/login")}
             >
-              <Link href="/login">Masuk</Link>
+              Masuk
             </Button>
             <Button 
               className="rounded-full px-6 bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 hover:shadow-pink-500/30 transition-all duration-300 transform hover:-translate-y-0.5 hover-glow"
-              asChild
+              onClick={() => router.push("/register")}
             >
-              <Link href="/register">Daftar Gratis</Link>
+              Daftar Gratis
             </Button>
           </div>
 
@@ -189,17 +190,21 @@ export function GuestNavbar() {
                 <Button
                   variant="outline"
                   className="w-full justify-center h-12 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold text-lg"
-                  asChild
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push("/login");
+                  }}
                 >
-                  <Link href="/login">Masuk</Link>
+                  Masuk
                 </Button>
                 <Button 
                   className="w-full h-12 rounded-xl bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 font-semibold text-lg active:scale-95 transition-all"
-                  asChild
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    router.push("/register");
+                  }}
                 >
-                  <Link href="/register">Daftar Gratis Sekarang</Link>
+                  Daftar Gratis Sekarang
                 </Button>
               </div>
             </div>

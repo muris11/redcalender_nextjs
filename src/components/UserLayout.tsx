@@ -52,7 +52,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
     }
 
     if (!isAuthenticated) {
-      router.push("/login");
+      router.push("/");
       return;
     }
 

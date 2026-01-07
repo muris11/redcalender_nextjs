@@ -82,27 +82,39 @@ export default function OnboardingContent() {
       // Allow re-access for editing
     }
 
-    if (user?.isOnboarded) {
+    if (!user?.id) return;
+
+    let storedData: Partial<OnboardingData> | null = null;
+    if (typeof window !== "undefined") {
+      try {
+        const raw = localStorage.getItem(`redcalendar_onboarding_${user.id}`);
+        storedData = raw ? JSON.parse(raw) : null;
+      } catch {
+        storedData = null;
+      }
+    }
+
+    if (user?.isOnboarded || storedData) {
       setOnboardingData({
         birthDate: user.birthDate
           ? new Date(user.birthDate).toISOString().split("T")[0]
-          : "",
-        currentlyMenstruating: (user as any).currentlyMenstruating || "",
-        menstrualStatus: user.menstrualStatus || "",
+          : storedData?.birthDate || "",
+        currentlyMenstruating: (user as any).currentlyMenstruating || storedData?.currentlyMenstruating || "",
+        menstrualStatus: user.menstrualStatus || storedData?.menstrualStatus || "",
         lastPeriodDate: user.lastPeriodDate
           ? new Date(user.lastPeriodDate).toISOString().split("T")[0]
-          : "",
+          : storedData?.lastPeriodDate || "",
         lastPeriodEndDate: (user as any).lastPeriodEndDate
           ? new Date((user as any).lastPeriodEndDate).toISOString().split("T")[0]
-          : "",
-        periodDuration: user.avgPeriodLength?.toString() || "",
-        cycleLength: user.avgCycleLength?.toString() || "",
-        commonSymptoms: [],
-        severity: "",
-        exerciseFrequency: "",
-        stressLevel: "",
-        sleepQuality: "",
-        diet: "",
+          : storedData?.lastPeriodEndDate || "",
+        periodDuration: user.avgPeriodLength?.toString() || storedData?.periodDuration || "",
+        cycleLength: user.avgCycleLength?.toString() || storedData?.cycleLength || "",
+        commonSymptoms: storedData?.commonSymptoms || [],
+        severity: storedData?.severity || "",
+        exerciseFrequency: storedData?.exerciseFrequency || "",
+        stressLevel: storedData?.stressLevel || "",
+        sleepQuality: storedData?.sleepQuality || "",
+        diet: storedData?.diet || "",
       });
     }
   }, [isAuthenticated, user]);
@@ -190,6 +202,13 @@ export default function OnboardingContent() {
         };
 
         useAuthStore.getState().setUser(updatedUser);
+
+        if (typeof window !== "undefined" && user?.id) {
+          localStorage.setItem(
+            `redcalendar_onboarding_${user.id}`,
+            JSON.stringify(onboardingData)
+          );
+        }
 
         toast.success(
           user?.isOnboarded
@@ -585,31 +604,31 @@ export default function OnboardingContent() {
 
       {/* Progress Steps */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
           {[1, 2, 3, 4].map((step) => (
             <div key={step} className="flex-1 relative">
               <div className="flex items-center">
                 <div
-                  className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-colors ${
+                  className={`relative z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold transition-colors ${
                     currentStep >= step
                       ? "bg-primary text-primary-foreground"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {currentStep > step ? <CheckCircle className="h-5 w-5" /> : step}
+                  {currentStep > step ? <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5" /> : step}
                 </div>
                 {step < 4 && (
                   <div
-                    className={`flex-1 h-1 mx-2 transition-colors ${
+                    className={`flex-1 h-0.5 sm:h-1 mx-1.5 sm:mx-2 transition-colors ${
                       currentStep > step ? "bg-primary" : "bg-muted"
                     }`}
                   />
                 )}
               </div>
-              <div className="absolute top-12 left-0 right-0 text-center">
+              <div className="mt-2 text-center px-1 sm:absolute sm:top-12 sm:left-0 sm:right-0 sm:mt-0">
                 <Text
                   variant="body-xs"
-                  className={currentStep >= step ? "text-primary" : "text-muted-foreground"}
+                  className={`text-[11px] sm:text-xs ${currentStep >= step ? "text-primary" : "text-muted-foreground"}`}
                 >
                   {step === 1 && "Pribadi"}
                   {step === 2 && "Siklus"}
@@ -620,11 +639,11 @@ export default function OnboardingContent() {
             </div>
           ))}
         </div>
-        <div className="flex justify-between text-sm">
-          <Text variant="body-sm">
+        <div className="flex flex-row items-center justify-between gap-2 text-sm">
+          <Text variant="body-sm" className="text-muted-foreground">
             Langkah {currentStep} dari {totalSteps}
           </Text>
-          <Text variant="body-sm" className="text-primary font-semibold">
+          <Text variant="body-sm" className="text-primary font-semibold sm:text-right">
             {Math.round(progressPercentage)}% Selesai
           </Text>
         </div>
@@ -645,11 +664,12 @@ export default function OnboardingContent() {
           {renderStep()}
 
           {/* Navigation Buttons */}
-          <div className="flex justify-between gap-4 mt-8 pt-6 border-t">
+          <div className="flex flex-col-reverse gap-3 mt-8 pt-6 border-t sm:flex-row sm:justify-between sm:gap-4">
             <Button
               variant="outline"
               onClick={handlePrevious}
               disabled={currentStep === 1}
+              className="w-full sm:w-auto"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Sebelumnya
@@ -659,7 +679,7 @@ export default function OnboardingContent() {
               <Button
                 onClick={handleSubmit}
                 disabled={!validateStep() || isSaving}
-                className="text-white"
+                className="w-full text-white sm:w-auto"
               >
                 {isSaving
                   ? "Menyimpan..."
@@ -672,7 +692,7 @@ export default function OnboardingContent() {
               <Button
                 onClick={handleNext}
                 disabled={!validateStep()}
-                className="text-white"
+                className="w-full text-white sm:w-auto"
               >
                 Selanjutnya
                 <ArrowLeft className="h-4 w-4 ml-2 rotate-180" />

@@ -13,7 +13,13 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loading } from "@/components/ui/loading";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAuthStore } from "@/store/authStore";
 import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
 import Link from "next/link";
@@ -263,40 +269,39 @@ export default function RegisterForm() {
                   </div>
                   <div className="space-y-3">
                     <Label className="text-gray-700 font-medium">Pilih Tema Favorit Anda</Label>
-                    <RadioGroup
+                    <Select
                       value={formData.theme}
                       onValueChange={(value) =>
                         handleInputChange("theme", value)
                       }
-                      className="grid grid-cols-1 sm:grid-cols-3 gap-4"
                     >
-                      {[
-                        { id: "kucing", label: "Kucing", icon: "🐱", description: "Pink Lembut", color: "border-pink-200 bg-pink-50/50" },
-                        { id: "gajah", label: "Gajah", icon: "🐘", description: "Biru Tenang", color: "border-blue-200 bg-blue-50/50" },
-                        { id: "unicorn", label: "Unicorn", icon: "🦄", description: "Ungu Ajaib", color: "border-purple-200 bg-purple-50/50" },
-                      ].map((theme) => (
-                        <div key={theme.id} className={`relative flex flex-col items-center justify-center p-4 border rounded-xl cursor-pointer transition-all duration-200 h-32 ${formData.theme === theme.id ? `border-transparent ring-2 ring-pink-500 ${theme.color} shadow-sm` : `border-gray-200 bg-white hover:border-pink-300 hover:shadow-sm`}`}>
-                          <RadioGroupItem
-                            value={theme.id}
-                            id={`theme-${theme.id}`}
-                            className="sr-only"
-                          />
-                          <Label
-                            htmlFor={`theme-${theme.id}`}
-                            className="flex flex-col items-center justify-center w-full cursor-pointer gap-2"
-                          >
-                          <span className="text-4xl filter drop-shadow-sm">{theme.icon}</span>
-                          <div className="text-center">
-                            <span className="block font-bold text-gray-800">{theme.label}</span>
-                            <span className="block text-xs text-gray-500 font-medium mt-0.5">{theme.description}</span>
+                      <SelectTrigger className="h-12 rounded-xl bg-white border-gray-200 shadow-sm">
+                        <SelectValue placeholder="Pilih Tema" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="kucing">
+                          <div className="flex items-center gap-2">
+                            <span>🐱</span>
+                            <span>Kucing</span>
+                            <span className="text-xs text-muted-foreground">(Pink & Rose)</span>
                           </div>
-                        </Label>
-                          {formData.theme === theme.id && (
-                            <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-pink-500 ring-2 ring-white"></div>
-                          )}
-                        </div>
-                      ))}
-                    </RadioGroup>
+                        </SelectItem>
+                        <SelectItem value="gajah">
+                          <div className="flex items-center gap-2">
+                            <span>🐘</span>
+                            <span>Gajah</span>
+                            <span className="text-xs text-muted-foreground">(Purple & Lavender)</span>
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="unicorn">
+                          <div className="flex items-center gap-2">
+                            <span>🦄</span>
+                            <span>Unicorn</span>
+                            <span className="text-xs text-muted-foreground">(Teal & Cyan)</span>
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 

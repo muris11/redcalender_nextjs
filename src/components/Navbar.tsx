@@ -40,6 +40,7 @@ export function Navbar() {
       case 'kucing': return '🐱 Kucing';
       case 'gajah': return '🐘 Gajah';
       case 'unicorn': return '🦄 Unicorn';
+      case 'sapi': return '🐄 Sapi';
       default: return '🐱 Kucing';
     }
   };

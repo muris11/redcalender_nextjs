@@ -62,6 +62,8 @@ export function AppSidebar() {
         return { emoji: "🐘", label: "Gajah", color: "text-purple-500" };
       case "unicorn":
         return { emoji: "🦄", label: "Unicorn", color: "text-teal-500" };
+      case "sapi":
+        return { emoji: "🐄", label: "Sapi", color: "text-gray-700" };
       default:
         return { emoji: "🐱", label: "Kucing", color: "text-pink-500" };
     }

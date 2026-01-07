@@ -2,6 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  generateBuildId: async () => {
+    // Generate unique build ID to invalidate cache on each deployment
+    return `build-${Date.now()}`;
+  },
   typescript: {
     ignoreBuildErrors: true,
   },

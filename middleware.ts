@@ -84,7 +84,12 @@ export function middleware(request: NextRequest) {
   
   // Get session from cookie
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
-  const session = token ? verifyTokenFromCookie(token) : null;
+  let session: { id: string; role: string } | null = null;
+  
+  // Only verify token if it exists and is not empty
+  if (token && token.length > 0) {
+    session = verifyTokenFromCookie(token);
+  }
   
   // Check if route is public
   const isHomePage = pathname === "/";
@@ -104,15 +109,16 @@ export function middleware(request: NextRequest) {
     return response;
   };
   
-  // Allow public routes (including home page)
+  // Allow public routes (including home page) - NO REDIRECT for unauthenticated users
   if (isHomePage || isPublicRoute || isPublicApiRoute) {
-    // If user is authenticated and trying to access login/register, redirect to dashboard
+    // Only redirect authenticated users away from login/register
     if (session && (pathname === "/login" || pathname === "/register")) {
       if (session.role === "ADMIN") {
         return addNoCacheHeaders(NextResponse.redirect(new URL("/admin", request.url)));
       }
       return addNoCacheHeaders(NextResponse.redirect(new URL("/dashboard", request.url)));
     }
+    // For unauthenticated users or other public routes, just continue
     return addNoCacheHeaders(NextResponse.next());
   }
   

@@ -90,19 +90,19 @@ export function GuestNavbar() {
 
           {/* Right Side Buttons */}
           <div className="hidden md:flex items-center gap-3 pl-4">
-            <Link href="/login">
-              <Button
-                variant="ghost"
-                className="text-gray-600 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 font-medium px-4"
-              >
-                Masuk
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button className="rounded-full px-6 bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 hover:shadow-pink-500/30 transition-all duration-300 transform hover:-translate-y-0.5 hover-glow">
-                Daftar Gratis
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              className="text-gray-600 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 font-medium px-4"
+              asChild
+            >
+              <Link href="/login">Masuk</Link>
+            </Button>
+            <Button 
+              className="rounded-full px-6 bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 hover:shadow-pink-500/30 transition-all duration-300 transform hover:-translate-y-0.5 hover-glow"
+              asChild
+            >
+              <Link href="/register">Daftar Gratis</Link>
+            </Button>
           </div>
 
           <Button
@@ -186,27 +186,21 @@ export function GuestNavbar() {
               </div>
 
               <div className="mt-auto pt-6 border-t border-gray-100 dark:border-gray-800 space-y-4">
-                <Link
-                  href="/login"
+                <Button
+                  variant="outline"
+                  className="w-full justify-center h-12 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold text-lg"
+                  asChild
                   onClick={() => setIsOpen(false)}
-                  className="block"
                 >
-                  <Button
-                    variant="outline"
-                    className="w-full justify-center h-12 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold text-lg"
-                  >
-                    Masuk
-                  </Button>
-                </Link>
-                <Link
-                  href="/register"
+                  <Link href="/login">Masuk</Link>
+                </Button>
+                <Button 
+                  className="w-full h-12 rounded-xl bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 font-semibold text-lg active:scale-95 transition-all"
+                  asChild
                   onClick={() => setIsOpen(false)}
-                  className="block"
                 >
-                  <Button className="w-full h-12 rounded-xl bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 font-semibold text-lg active:scale-95 transition-all">
-                    Daftar Gratis Sekarang
-                  </Button>
-                </Link>
+                  <Link href="/register">Daftar Gratis Sekarang</Link>
+                </Button>
               </div>
             </div>
           </div>

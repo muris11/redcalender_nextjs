@@ -1,16 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export function GuestNavbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
+  const isActive = (path: string) => pathname === path;
+
+  // Handle scroll effect for glassmorphism
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -19,143 +23,193 @@ export function GuestNavbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isActive = (path: string) => pathname === path;
+  useEffect(() => {
+    if (!isOpen) {
+      document.body.style.overflow = "";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   return (
     <header
       aria-label="Guest navigation"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/70 backdrop-blur-md shadow-md border-b border-white/20"
-          : "bg-transparent"
+          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-800/50 shadow-sm py-2"
+          : "bg-transparent border-transparent py-4"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <Link href="/" className="flex items-center space-x-3 group">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+        <div className="flex justify-between items-center h-16">
+          <Link href="/" className="flex items-center gap-2 md:gap-3 group shrink-0">
             <div className="relative">
-              <div className="absolute inset-0 bg-pink-400 blur-lg opacity-20 group-hover:opacity-40 transition-opacity rounded-full"></div>
+              <div className="absolute inset-0 bg-pink-400/20 rounded-full blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               <img
                 src="/logo.png"
                 alt="Red Calender Logo"
-                className="h-12 w-12 object-contain relative z-10 group-hover:scale-110 transition-transform duration-300"
+                className="h-9 w-9 md:h-11 md:w-11 object-contain transition-transform duration-300 group-hover:scale-110 relative z-10"
               />
             </div>
-            <h1 className="text-xl md:text-2xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
-              Red Calender
-            </h1>
+            <span className="font-extrabold text-xl md:text-2xl tracking-tight text-gray-900 dark:text-white group-hover:text-pink-600 transition-colors">
+              Red<span className="text-pink-600">Calender</span>
+            </span>
           </Link>
 
-          <nav className="hidden md:flex items-center space-x-4">
-            {[
-              { name: "Home", path: "/" },
-              { name: "Fitur", path: "/#features" },
-              { name: "Bantuan", path: "/help-center" },
-            ].map((item) => (
-              <Link key={item.path} href={item.path}>
-                <Button
-                  variant="ghost"
-                  className={`font-medium text-base transition-all duration-300 rounded-full px-6 ${
+          {/* Desktop Nav - Centered */}
+          <nav className="hidden lg:flex items-center absolute left-1/2 -translate-x-1/2">
+            <div className="flex items-center bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 dark:border-gray-700/50 shadow-sm ring-1 ring-gray-900/5">
+              {[
+                { name: "Home", path: "/" },
+                { name: "Fitur", path: "/#features" },
+                { name: "Bantuan", path: "/help-center" },
+              ].map((item) => (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  className={`relative px-5 py-2 rounded-full transition-all duration-300 ${
                     isActive(item.path)
-                      ? "bg-pink-50 text-pink-600"
-                      : "text-gray-600 hover:bg-pink-50/50 hover:text-pink-600"
+                      ? "bg-white dark:bg-gray-700 shadow-sm text-pink-600"
+                      : "text-gray-600 dark:text-gray-300 hover:text-pink-600 dark:hover:text-pink-400 hover:bg-white/50 dark:hover:bg-gray-700/50"
                   }`}
                 >
-                  {item.name}
-                </Button>
-              </Link>
-            ))}
+                  <Text
+                    variant="body-sm"
+                    className="font-medium"
+                  >
+                    {item.name}
+                  </Text>
+                </Link>
+              ))}
+            </div>
+          </nav>
 
-            <div className="h-6 w-px bg-gray-200 mx-2"></div>
-
+          {/* Right Side Buttons */}
+          <div className="hidden md:flex items-center gap-3 pl-4">
             <Link href="/login">
               <Button
                 variant="ghost"
-                className={`font-semibold text-base transition-all duration-300 rounded-full px-6 ${
-                  isActive("/login")
-                    ? "bg-pink-100 text-pink-600"
-                    : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
-                }`}
+                className="text-gray-600 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 font-medium px-4"
               >
                 Masuk
               </Button>
             </Link>
             <Link href="/register">
-              <Button
-                className={`font-bold text-base transition-all duration-300 rounded-full px-8 shadow-lg hover:shadow-pink-200/50 ${
-                  isActive("/register")
-                    ? "bg-linear-to-r from-pink-600 to-purple-700 hover:from-pink-700 hover:to-purple-800"
-                    : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 hover:scale-105"
-                }`}
-              >
+              <Button className="rounded-full px-6 bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 hover:shadow-pink-500/30 transition-all duration-300 transform hover:-translate-y-0.5 hover-glow">
                 Daftar Gratis
               </Button>
             </Link>
-          </nav>
+          </div>
 
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden hover:bg-pink-50 rounded-full transition-colors"
+            className="md:hidden text-gray-600 dark:text-gray-300 hover:text-pink-600 hover:bg-pink-50 transition-all duration-200"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? (
-              <XIcon className="h-6 w-6 text-gray-700" />
+              <XIcon className="h-6 w-6 transition-transform duration-300 rotate-90" />
             ) : (
-              <MenuIcon className="h-6 w-6 text-gray-700" />
+              <MenuIcon className="h-6 w-6 transition-transform duration-300" />
             )}
             <span className="sr-only">Toggle menu</span>
           </Button>
 
-          {/* Mobile Menu Dropdown */}
+          {/* Mobile Menu Overlay */}
           {isOpen && (
-            <>
-              <div
-                className="fixed inset-0 bg-black/20 backdrop-blur-xs z-40 md:hidden animate-in fade-in duration-300"
-                onClick={() => setIsOpen(false)}
-              />
-              <div className="absolute top-full left-0 right-0 bg-white/90 backdrop-blur-xl border-b border-pink-100 shadow-xl md:hidden animate-in slide-in-from-top-2 duration-300 z-50 rounded-b-3xl overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
-                  <nav className="flex flex-col space-y-2">
-                    {[
-                      { name: "Home", path: "/" },
-                      { name: "Fitur", path: "/#features" },
-                      { name: "Bantuan", path: "/help-center" },
-                      { name: "Masuk", path: "/login" },
-                    ].map((item) => (
-                      <Link
-                        key={item.path}
-                        href={item.path}
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <Button
-                          variant="ghost"
-                          className={`w-full justify-start font-medium text-lg py-4 px-6 rounded-xl transition-colors ${
-                            isActive(item.path)
-                              ? "bg-pink-50 text-pink-600"
-                              : "text-gray-600 hover:bg-pink-50 hover:text-pink-600"
-                          }`}
-                        >
-                          {item.name}
-                        </Button>
-                      </Link>
-                    ))}
-                    <Link href="/register" onClick={() => setIsOpen(false)}>
-                      <Button
-                        className={`w-full justify-center font-bold text-lg py-6 rounded-xl shadow-lg mt-4 ${
-                          isActive("/register")
-                            ? "bg-linear-to-r from-pink-600 to-purple-700"
-                            : "bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
-                        }`}
-                      >
-                        Daftar Gratis Sekarang
-                      </Button>
-                    </Link>
-                  </nav>
-                </div>
-              </div>
-            </>
+            <div
+              className="fixed inset-0 bg-black/70 z-[9998] md:hidden"
+              onClick={() => setIsOpen(false)}
+            />
           )}
+
+          {/* Mobile Menu Drawer */}
+          <div
+            className={`fixed inset-y-0 right-0 h-[100dvh] w-[85%] max-w-sm bg-white dark:bg-gray-900 shadow-2xl md:hidden z-[9999] transform transition-transform duration-300 ease-out ${
+              isOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            <div className="flex h-full flex-col p-6">
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center gap-3">
+                  <img
+                    src="/logo.png"
+                    alt="Red Calender Logo"
+                    className="h-8 w-8 object-contain"
+                  />
+                  <span className="font-extrabold text-xl tracking-tight text-pink-600">
+                    Red Calender
+                  </span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  <XIcon className="h-5 w-5" />
+                </Button>
+              </div>
+
+              <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pr-1">
+                {[
+                  { name: "Home", path: "/" },
+                  { name: "Fitur", path: "/#features" },
+                  { name: "Bantuan", path: "/help-center" },
+                ].map((item, index) => (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    onClick={() => setIsOpen(false)}
+                    className="block"
+                  >
+                    <div
+                      className={`flex items-center justify-between p-4 rounded-xl transition-all duration-200 ${
+                        isActive(item.path)
+                          ? "bg-pink-50 dark:bg-pink-900/20 text-pink-600"
+                          : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                      }`}
+                    >
+                      <Text variant="body-lg" className="font-medium">
+                        {item.name}
+                      </Text>
+                      {isActive(item.path) && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-pink-600"></div>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              <div className="mt-auto pt-6 border-t border-gray-100 dark:border-gray-800 space-y-4">
+                <Link
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="block"
+                >
+                  <Button
+                    variant="outline"
+                    className="w-full justify-center h-12 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold text-lg"
+                  >
+                    Masuk
+                  </Button>
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setIsOpen(false)}
+                  className="block"
+                >
+                  <Button className="w-full h-12 rounded-xl bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-lg shadow-pink-200/50 font-semibold text-lg active:scale-95 transition-all">
+                    Daftar Gratis Sekarang
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </header>

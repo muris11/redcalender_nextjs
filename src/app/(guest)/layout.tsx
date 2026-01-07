@@ -1,6 +1,6 @@
 "use client";
 
-import GuestFooter from "@/components/GuestFooter";
+import { GuestFooter } from "@/components/GuestFooter";
 import { GuestNavbar } from "@/components/GuestNavbar";
 
 export default function GuestLayout({
@@ -11,7 +11,7 @@ export default function GuestLayout({
   return (
     <div className="flex flex-col min-h-screen">
       <GuestNavbar />
-      <main className="flex-1 pt-16">{children}</main>
+      <main className="flex-1 pt-0">{children}</main>
       <GuestFooter />
     </div>
   );

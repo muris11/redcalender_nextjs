@@ -1,6 +1,5 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -12,6 +11,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProfileSkeleton, UnifiedPageLoading } from "@/components/ui/loading-skeletons";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
 import {
     Select,
     SelectContent,
@@ -19,6 +20,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useTheme } from "@/components/ThemeProvider";
 import { useAuthStore } from "@/store/authStore";
 import {
     Calendar,
@@ -30,13 +32,15 @@ import {
     User,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
 
 export default function ProfileContent() {
   const router = useRouter();
   const { user, isAuthenticated, isLoading, setUser, logout } = useAuthStore();
+  const { setTheme } = useTheme();
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -49,10 +53,29 @@ export default function ProfileContent() {
     menstrualStatus: "",
   });
 
-  useEffect(() => {
-    // Set page title
-    // document.title = "Profil Saya - Red Calendar"; // Handled by metadata
+  // Function to fetch latest user data from database
+  const fetchUserProfile = useCallback(async (userId: string) => {
+    try {
+      setIsLoadingProfile(true);
+      const response = await fetch(`/api/user/profile?userId=${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.user) {
+          // Update the auth store with fresh data from DB
+          setUser(data.user);
+          return data.user;
+        }
+      }
+      return null;
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+      return null;
+    } finally {
+      setIsLoadingProfile(false);
+    }
+  }, [setUser]);
 
+  useEffect(() => {
     // wait for auth to initialize
     if (isLoading) return;
     if (!isAuthenticated) {
@@ -60,22 +83,26 @@ export default function ProfileContent() {
       return;
     }
 
-    if (user) {
-      setFormData({
-        name: user.name || "",
-        email: user.email || "",
-        phone: user.phone || "",
-        birthDate: user.birthDate
-          ? new Date(user.birthDate).toISOString().split("T")[0]
-          : "",
-        avgCycleLength: user.avgCycleLength?.toString() || "28",
-        avgPeriodLength: user.avgPeriodLength?.toString() || "6",
-        theme: user.theme || "kucing",
-        currentlyMenstruating: (user as any).currentlyMenstruating || "",
-        menstrualStatus: user.menstrualStatus || "",
+    if (user?.id) {
+      // Fetch fresh data from database on page load
+      fetchUserProfile(user.id).then((freshUser) => {
+        const userData = freshUser || user;
+        setFormData({
+          name: userData.name || "",
+          email: userData.email || "",
+          phone: userData.phone || "",
+          birthDate: userData.birthDate
+            ? new Date(userData.birthDate).toISOString().split("T")[0]
+            : "",
+          avgCycleLength: userData.avgCycleLength?.toString() || "28",
+          avgPeriodLength: userData.avgPeriodLength?.toString() || "6",
+          theme: userData.theme || "kucing",
+          currentlyMenstruating: userData.currentlyMenstruating || "",
+          menstrualStatus: userData.menstrualStatus || "",
+        });
       });
     }
-  }, [isAuthenticated, user, router, isLoading]);
+  }, [isAuthenticated, user?.id, router, isLoading, fetchUserProfile]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -98,7 +125,18 @@ export default function ProfileContent() {
       const data = await response.json();
 
       if (response.ok) {
-        setUser(data.user);
+        // Merge current formData with returned user data to preserve form state
+        const updatedUser = {
+          ...user,
+          ...data.user,
+          // Preserve the formData values for fields that might be empty in response
+          avgCycleLength: data.user.avgCycleLength ?? parseInt(formData.avgCycleLength),
+          avgPeriodLength: data.user.avgPeriodLength ?? parseInt(formData.avgPeriodLength),
+          theme: data.user.theme || formData.theme,
+          currentlyMenstruating: data.user.currentlyMenstruating || formData.currentlyMenstruating,
+          menstrualStatus: data.user.menstrualStatus || formData.menstrualStatus,
+        };
+        setUser(updatedUser);
         toast.success("Profil berhasil diperbarui");
       } else {
         toast.error(data.error || "Gagal memperbarui profil");
@@ -112,7 +150,7 @@ export default function ProfileContent() {
 
   const handleLogout = () => {
     logout();
-    router.push("/login");
+    router.push("/");
   };
 
   // Show unified auth loading
@@ -125,158 +163,118 @@ export default function ProfileContent() {
   // If user data is not yet loaded but auth is done, show skeleton
   if (!user) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-purple-50 via-white to-pink-50">
-        <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-          <ProfileSkeleton />
-        </main>
-      </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <ProfileSkeleton />
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-purple-50 via-white to-pink-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Page Header */}
-        <div className="mb-8 sm:mb-10 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-3 sm:mb-4">
-            👤 Profil Saya
-          </h1>
-          <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4">
-            Kelola informasi pribadi dan pengaturan akun Anda
-          </p>
-        </div>
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      {/* Page Header */}
+      <div className="mb-6 sm:mb-8">
+        <Heading level="1" size="heading-xl" className="mb-2">
+          Profil Saya
+        </Heading>
+        <Text variant="body-md" className="text-muted-foreground">
+          Kelola informasi pribadi dan pengaturan akun Anda
+        </Text>
+      </div>
 
-        {/* Status Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8 lg:mb-10">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1 sm:h-2 bg-linear-to-r from-green-400 to-green-600"></div>
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center space-x-3 sm:space-x-4">
-                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-green-100 flex items-center justify-center shrink-0">
-                  <User className="h-5 w-5 sm:h-7 sm:w-7 text-green-600" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
-                    Status Akun
-                  </p>
-                  <p className="text-xl sm:text-2xl font-bold text-green-600">
-                    ✓ Aktif
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      {/* Status Cards - 2 columns on mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <Card className="text-center">
+          <CardContent className="pt-5 pb-4">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+              <User className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
+            </div>
+            <Text variant="display-sm" className="font-bold text-green-600 mb-1">
+              Aktif
+            </Text>
+            <Text variant="body-xs" className="text-muted-foreground">
+              Status Akun
+            </Text>
+          </CardContent>
+        </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1 sm:h-2 bg-linear-to-r from-blue-400 to-blue-600"></div>
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center space-x-3 sm:space-x-4">
-                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
-                  <Calendar className="h-5 w-5 sm:h-7 sm:w-7 text-blue-600" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
-                    Onboarding
-                  </p>
-                  <p className="text-xl sm:text-2xl font-bold text-blue-600">
-                    {user?.isOnboarded ? "✓ Selesai" : "⏳ Belum"}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <Card className="text-center">
+          <CardContent className="pt-5 pb-4">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-3">
+              <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
+            </div>
+            <Text variant="display-sm" className="font-bold text-blue-600 mb-1">
+              {user?.isOnboarded ? "Selesai" : "Belum"}
+            </Text>
+            <Text variant="body-xs" className="text-muted-foreground">
+              Onboarding
+            </Text>
+          </CardContent>
+        </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1 sm:h-2 bg-linear-to-r from-purple-400 to-purple-600"></div>
-            <CardContent className="p-4 sm:p-6">
-              <div className="flex items-center space-x-3 sm:space-x-4">
-                <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-purple-100 flex items-center justify-center shrink-0">
-                  <Settings className="h-5 w-5 sm:h-7 sm:w-7 text-purple-600" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-bold text-gray-600 mb-1">
-                    Siklus Rata-rata
-                  </p>
-                  <p className="text-xl sm:text-2xl font-bold text-purple-600">
-                    {user?.avgCycleLength || 28} hari
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <Card className="text-center">
+          <CardContent className="pt-5 pb-4">
+            <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-3">
+              <Settings className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
+            </div>
+            <Text variant="display-sm" className="font-bold text-purple-600 mb-1">
+              {user?.avgCycleLength || 28}
+            </Text>
+            <Text variant="body-xs" className="text-muted-foreground">
+              Siklus (hari)
+            </Text>
+          </CardContent>
+        </Card>
+      </div>
 
         {/* Data Confirmation */}
         {user?.isOnboarded && (
-          <Card className="mb-8 bg-linear-to-r from-green-50 to-emerald-50 border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden glass-card">
-            <div className="h-2 bg-linear-to-r from-green-400 via-green-500 to-emerald-500"></div>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4 flex-wrap gap-4">
-                <div className="flex items-center space-x-4">
-                  <div className="h-14 w-14 rounded-full bg-linear-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg">
-                    <CheckCircle className="h-7 w-7 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold bg-linear-to-r from-green-700 to-emerald-700 bg-clip-text text-transparent">
-                      Data Onboarding Lengkap
-                    </h3>
-                    <p className="text-sm text-green-600 font-medium mt-1">
-                      Terima kasih telah melengkapi profil Anda!
-                    </p>
-                  </div>
-                </div>
+          <Card className="mb-6">
+            <CardHeader className="pb-4">
+              <div className="flex items-center justify-between flex-wrap gap-4">
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span>Data Onboarding Lengkap</span>
+                </CardTitle>
                 <Button
                   onClick={() => router.push("/onboarding")}
                   size="sm"
-                  className="border-0 bg-linear-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                  variant="outline"
                 >
                   <Settings className="h-4 w-4 mr-2" />
                   Edit Onboarding
                 </Button>
               </div>
-              <div className="grid gap-6 md:grid-cols-2">
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 sm:grid-cols-3">
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="menstrualStatus"
-                    className="text-base font-semibold"
-                  >
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Status Menstruasi
                   </Label>
                   <Input
-                    id="menstrualStatus"
                     value={user.menstrualStatus || "Belum diisi"}
                     disabled
-                    className="h-12 border-2 bg-gray-50 cursor-not-allowed"
+                    className="bg-muted"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="onboarding-avgPeriodLength"
-                    className="text-base font-semibold"
-                  >
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Durasi Periode (hari)
                   </Label>
                   <Input
-                    id="onboarding-avgPeriodLength"
                     value={`${user.avgPeriodLength || 6} hari`}
                     disabled
-                    className="h-12 border-2 bg-gray-50 cursor-not-allowed"
+                    className="bg-muted"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="onboarding-avgCycleLength"
-                    className="text-base font-semibold"
-                  >
+                  <Label className="text-sm font-medium text-muted-foreground">
                     Panjang Siklus (hari)
                   </Label>
                   <Input
-                    id="onboarding-avgCycleLength"
                     value={`${user.avgCycleLength || 28} hari`}
                     disabled
-                    className="h-12 border-2 bg-gray-50 cursor-not-allowed"
+                    className="bg-muted"
                   />
                 </div>
               </div>
@@ -286,61 +284,52 @@ export default function ProfileContent() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Personal Info */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden glass-card">
-            <div className="h-2 bg-linear-to-r from-pink-400 to-pink-600"></div>
-            <CardHeader className="bg-pink-50/50">
-              <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 rounded-full bg-linear-to-br from-pink-400 to-pink-600 flex items-center justify-center shadow-md">
-                  <User className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl text-pink-700">
-                    Informasi Pribadi
-                  </CardTitle>
-                  <CardDescription className="text-pink-600/80">
-                    Update informasi dasar akun Anda
-                  </CardDescription>
-                </div>
-              </div>
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2">
+                <User className="h-5 w-5 text-primary" />
+                <span>Informasi Pribadi</span>
+              </CardTitle>
+              <CardDescription>
+                Update informasi dasar akun Anda
+              </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-6 md:grid-cols-2 pt-6">
+            <CardContent className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-base font-semibold">
+                <Label htmlFor="name">
                   Nama Lengkap
                 </Label>
                 <Input
                   id="name"
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
-                  className="h-12 border-2 focus:border-pink-500 transition-all"
                   placeholder="Masukkan nama lengkap"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-base font-semibold">
+                <Label htmlFor="email">
                   Email
                 </Label>
                 <Input
                   id="email"
                   value={formData.email}
                   disabled
-                  className="h-12 bg-gray-50 border-2"
+                  className="bg-muted"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone" className="text-base font-semibold">
+                <Label htmlFor="phone">
                   Nomor Telepon
                 </Label>
                 <Input
                   id="phone"
                   value={formData.phone}
                   onChange={(e) => handleInputChange("phone", e.target.value)}
-                  className="h-12 border-2 focus:border-pink-500 transition-all"
                   placeholder="Contoh: 08123456789"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="birthDate" className="text-base font-semibold">
+                <Label htmlFor="birthDate">
                   Tanggal Lahir
                 </Label>
                 <Input
@@ -350,36 +339,25 @@ export default function ProfileContent() {
                   onChange={(e) =>
                     handleInputChange("birthDate", e.target.value)
                   }
-                  className="h-12 border-2 focus:border-pink-500 transition-all"
                 />
               </div>
             </CardContent>
           </Card>
 
           {/* Cycle Settings */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden glass-card">
-            <div className="h-2 bg-linear-to-r from-purple-400 to-purple-600"></div>
-            <CardHeader className="bg-purple-50/50">
-              <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 rounded-full bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center shadow-md">
-                  <Calendar className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl text-purple-700">
-                    Pengaturan Siklus
-                  </CardTitle>
-                  <CardDescription className="text-purple-600/80">
-                    Sesuaikan perhitungan siklus menstruasi Anda
-                  </CardDescription>
-                </div>
-              </div>
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-primary" />
+                <span>Pengaturan Siklus</span>
+              </CardTitle>
+              <CardDescription>
+                Sesuaikan perhitungan siklus menstruasi Anda
+              </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-6 md:grid-cols-2 pt-6">
+            <CardContent className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label
-                  htmlFor="avgCycleLength"
-                  className="text-base font-semibold"
-                >
+                <Label htmlFor="avgCycleLength">
                   Rata-rata Panjang Siklus (hari)
                 </Label>
                 <Select
@@ -388,7 +366,7 @@ export default function ProfileContent() {
                     handleInputChange("avgCycleLength", value)
                   }
                 >
-                  <SelectTrigger className="h-12 border-2 focus:border-purple-500">
+                  <SelectTrigger>
                     <SelectValue placeholder="Pilih" />
                   </SelectTrigger>
                   <SelectContent>
@@ -426,29 +404,19 @@ export default function ProfileContent() {
           </Card>
 
           {/* Menstruation Status */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden glass-card">
-            <div className="h-2 bg-linear-to-r from-rose-400 to-rose-600"></div>
-            <CardHeader className="bg-rose-50/50">
-              <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 rounded-full bg-linear-to-br from-rose-400 to-rose-600 flex items-center justify-center shadow-md">
-                  <span className="text-white text-lg">🩸</span>
-                </div>
-                <div>
-                  <CardTitle className="text-xl text-rose-700">
-                    Status Menstruasi
-                  </CardTitle>
-                  <CardDescription className="text-rose-600/80">
-                    Update status menstruasi Anda saat ini
-                  </CardDescription>
-                </div>
-              </div>
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-primary" />
+                <span>Status Menstruasi</span>
+              </CardTitle>
+              <CardDescription>
+                Update status menstruasi Anda saat ini
+              </CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-6 md:grid-cols-2 pt-6">
+            <CardContent className="grid gap-6 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label
-                  htmlFor="currentlyMenstruating"
-                  className="text-base font-semibold"
-                >
+                <Label htmlFor="currentlyMenstruating">
                   Apakah Sedang Menstruasi?
                 </Label>
                 <Select
@@ -457,22 +425,19 @@ export default function ProfileContent() {
                     handleInputChange("currentlyMenstruating", value)
                   }
                 >
-                  <SelectTrigger className="h-12 border-2 focus:border-rose-500">
+                  <SelectTrigger>
                     <SelectValue placeholder="Pilih status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="yes">🩸 Ya, sedang menstruasi</SelectItem>
-                    <SelectItem value="no">✨ Tidak sedang menstruasi</SelectItem>
-                    <SelectItem value="unsure">🤔 Tidak yakin</SelectItem>
-                    <SelectItem value="prefer_not">🔒 Tidak ingin menjawab</SelectItem>
+                    <SelectItem value="yes">Ya, sedang menstruasi</SelectItem>
+                    <SelectItem value="no">Tidak sedang menstruasi</SelectItem>
+                    <SelectItem value="unsure">Tidak yakin</SelectItem>
+                    <SelectItem value="prefer_not">Tidak ingin menjawab</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label
-                  htmlFor="menstrualStatus"
-                  className="text-base font-semibold"
-                >
+                <Label htmlFor="menstrualStatus">
                   Keteraturan Siklus (3 bulan terakhir)
                 </Label>
                 <Select
@@ -481,14 +446,14 @@ export default function ProfileContent() {
                     handleInputChange("menstrualStatus", value)
                   }
                 >
-                  <SelectTrigger className="h-12 border-2 focus:border-rose-500">
+                  <SelectTrigger>
                     <SelectValue placeholder="Pilih status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="regular">✅ Teratur (siklus 21-35 hari)</SelectItem>
-                    <SelectItem value="irregular">📊 Tidak teratur</SelectItem>
-                    <SelectItem value="never">🌸 Belum pernah menstruasi</SelectItem>
-                    <SelectItem value="prefer_not">🔒 Tidak ingin menjawab</SelectItem>
+                    <SelectItem value="regular">Teratur (siklus 21-35 hari)</SelectItem>
+                    <SelectItem value="irregular">Tidak teratur</SelectItem>
+                    <SelectItem value="never">Belum pernah menstruasi</SelectItem>
+                    <SelectItem value="prefer_not">Tidak ingin menjawab</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -496,63 +461,87 @@ export default function ProfileContent() {
           </Card>
 
           {/* App Settings */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden glass-card">
-            <div className="h-2 bg-linear-to-r from-teal-400 to-teal-600"></div>
-            <CardHeader className="bg-teal-50/50">
-              <div className="flex items-center space-x-3">
-                <div className="h-10 w-10 rounded-full bg-linear-to-br from-teal-400 to-teal-600 flex items-center justify-center shadow-md">
-                  <Settings className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <CardTitle className="text-xl text-teal-700">
-                    Tampilan Aplikasi
-                  </CardTitle>
-                  <CardDescription className="text-teal-600/80">
-                    Personalisasi pengalaman Anda
-                  </CardDescription>
-                </div>
-              </div>
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-primary" />
+                <span>Tampilan Aplikasi</span>
+              </CardTitle>
+              <CardDescription>
+                Personalisasi pengalaman Anda
+              </CardDescription>
             </CardHeader>
-            <CardContent className="pt-6">
+            <CardContent>
               <div className="space-y-2">
-                <Label htmlFor="theme" className="text-base font-semibold">
-                  Tema Favorit
-                </Label>
+                <Label htmlFor="theme">Tema Favorit</Label>
                 <Select
                   value={formData.theme}
-                  onValueChange={(value) => handleInputChange("theme", value)}
+                  onValueChange={(value) => {
+                    handleInputChange("theme", value);
+                    setTheme(value as "kucing" | "gajah" | "unicorn");
+                    const themeNames = {
+                      kucing: "Kucing (Pink & Rose)",
+                      gajah: "Gajah (Purple & Lavender)",
+                      unicorn: "Unicorn (Teal & Cyan)"
+                    };
+                    toast.success("Tema Berhasil Diubah!", {
+                      description: `Tema ${themeNames[value as keyof typeof themeNames]} telah diterapkan. Jangan lupa klik "Simpan Perubahan" di bawah!`,
+                    });
+                  }}
                 >
-                  <SelectTrigger className="h-12 border-2 focus:border-teal-500">
+                  <SelectTrigger>
                     <SelectValue placeholder="Pilih Tema" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="kucing">🐱 Kucing</SelectItem>
-                    <SelectItem value="gajah">🐘 Gajah</SelectItem>
-                    <SelectItem value="unicorn">🦄 Unicorn</SelectItem>
+                    <SelectItem value="kucing">
+                      <div className="flex items-center gap-2">
+                        <span>🐱</span>
+                        <span>Kucing</span>
+                        <span className="text-xs text-muted-foreground">(Pink & Rose)</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="gajah">
+                      <div className="flex items-center gap-2">
+                        <span>🐘</span>
+                        <span>Gajah</span>
+                        <span className="text-xs text-muted-foreground">(Purple & Lavender)</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="unicorn">
+                      <div className="flex items-center gap-2">
+                        <span>🦄</span>
+                        <span>Unicorn</span>
+                        <span className="text-xs text-muted-foreground">(Teal & Cyan)</span>
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
+                
+                <div className="mt-3 p-3 rounded-lg bg-muted border">
+                  <p className="text-sm text-muted-foreground">
+                    Tema akan langsung diterapkan ke seluruh aplikasi. Klik <strong>"Simpan Perubahan"</strong> untuk menyimpan pilihan Anda secara permanen.
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          <div className="flex justify-end pt-2">
+          <div className="flex justify-end">
             <Button
               type="submit"
               size="lg"
-              className="border-0 bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 px-8 py-6"
+              className="text-white"
               disabled={isSaving}
             >
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  <span className="text-base font-semibold">Menyimpan...</span>
+                  Menyimpan...
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-5 w-5" />
-                  <span className="text-base font-semibold">
-                    Simpan Perubahan
-                  </span>
+                  Simpan Perubahan
                 </>
               )}
             </Button>
@@ -586,7 +575,6 @@ export default function ProfileContent() {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+    </main>
   );
 }

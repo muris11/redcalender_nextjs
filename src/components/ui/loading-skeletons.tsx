@@ -1,26 +1,22 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Heart } from "lucide-react";
+import { Heading } from "@/components/ui/heading";
+import { Text } from "@/components/ui/text";
 
 // --- Unified Page Loading ---
 export function UnifiedPageLoading() {
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/80 backdrop-blur-md">
-      <div className="relative flex flex-col items-center">
-        {/* Animated Logo Container */}
-        <div className="relative mb-6">
-          <div className="absolute inset-0 animate-ping rounded-full bg-pink-200 opacity-75 duration-1000" />
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-rose-600 shadow-xl">
-            <Heart className="h-10 w-10 animate-pulse text-white" fill="currentColor" />
-          </div>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm">
+      <div className="flex flex-col items-center gap-4">
+        {/* Simple spinner */}
+        <div className="h-12 w-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
         
-        {/* Text with gradient */}
-        <h2 className="animate-pulse text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-          Red Calendar
-        </h2>
-        <p className="mt-2 text-sm font-medium text-gray-500">
-          Memuat pengalaman Anda...
-        </p>
+        {/* Text */}
+        <div className="text-center">
+          <Heading level="3" size="heading-sm">Red Calender</Heading>
+          <Text variant="body-sm" className="text-muted-foreground mt-1">
+            Memuat...
+          </Text>
+        </div>
       </div>
     </div>
   );

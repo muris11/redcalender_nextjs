@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { requireUserAccess } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,6 +13,12 @@ export async function GET(request: NextRequest) {
         { error: 'User ID is required' },
         { status: 400 }
       );
+    }
+
+    // Verify user can only access their own data
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     let whereClause: any = { userId };
@@ -75,6 +82,12 @@ export async function POST(request: NextRequest) {
         { error: 'User ID and date are required' },
         { status: 400 }
       );
+    }
+
+    // Verify user can only create their own logs
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     // Create or update daily log

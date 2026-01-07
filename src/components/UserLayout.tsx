@@ -1,6 +1,9 @@
 "use client";
 
+import { AppSidebar } from "@/components/AppSidebar";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { UnifiedPageLoading } from "@/components/ui/loading-skeletons";
+import { BottomNavigation } from "@/components/BottomNavigation";
 import { useAuthStore } from "@/store/authStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,87 +14,66 @@ interface UserLayoutProps {
 
 export default function UserLayout({ children }: UserLayoutProps) {
   const router = useRouter();
-  const { user, isAuthenticated, isLoading } = useAuthStore();
+  const { user, isAuthenticated, isLoading, setUser } = useAuthStore();
   const [isAuthorized, setIsAuthorized] = useState(false);
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
 
   useEffect(() => {
-    // Initialize auth state from localStorage once on mount
-    useAuthStore.getState().initialize();
-
-    // Failsafe: If still loading after 3 seconds, force stop loading
-    const timeout = setTimeout(() => {
-      if (useAuthStore.getState().isLoading) {
-        console.warn("Auth loading timeout - forcing initialization");
-        useAuthStore.setState({ isLoading: false, initialized: true });
-        setLoadingTimeout(true);
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/auth/session", {
+          credentials: "include",
+        });
+        const data = await response.json();
+        
+        if (data.authenticated && data.user) {
+          setUser(data.user);
+          setIsCheckingSession(false);
+        } else {
+          useAuthStore.getState().initialize();
+          setIsCheckingSession(false);
+        }
+      } catch (error) {
+        useAuthStore.getState().initialize();
+        setIsCheckingSession(false);
       }
-    }, 3000);
-
-    return () => clearTimeout(timeout);
-  }, []);
+    };
+    
+    checkSession();
+  }, [setUser]);
 
   useEffect(() => {
-    // Wait for auth to load
-    if (isLoading) {
-      console.log("UserLayout: Still loading auth state...");
+    if (isCheckingSession) {
       return;
     }
 
-    console.log("UserLayout: Auth loaded", {
-      isAuthenticated,
-      user: user?.email,
-      role: user?.role,
-    });
+    if (isLoading) {
+      return;
+    }
 
     if (!isAuthenticated) {
-      console.log("UserLayout: Not authenticated, redirecting to login");
       router.push("/login");
       return;
     }
 
-    // Prevent admin users from accessing user pages
     if (user?.role === "ADMIN") {
-      console.log(
-        "UserLayout: Admin user detected, redirecting to admin panel"
-      );
       router.push("/admin");
       return;
     }
 
-    // Allow access to onboarding page for users who haven't completed it
     const isOnOnboardingPage = window.location.pathname === "/onboarding";
 
-    // Only check onboarding status if user data is fully loaded
     if (user && typeof user.isOnboarded === "boolean") {
-      console.log("UserLayout: Checking onboarding status", {
-        isOnboarded: user.isOnboarded,
-        isOnOnboardingPage,
-      });
-
       if (!user.isOnboarded && !isOnOnboardingPage) {
-        console.log(
-          "UserLayout: User not onboarded, redirecting to onboarding"
-        );
         router.push("/onboarding");
         return;
       }
-
-      // If user is already onboarded and on onboarding page, allow them to stay
-      // (they might be editing their data)
-      if (user.isOnboarded && isOnOnboardingPage) {
-        console.log(
-          "UserLayout: User already onboarded but on onboarding page (allowing for editing)"
-        );
-      }
     }
 
-    console.log("UserLayout: Authorization granted");
     setIsAuthorized(true);
-  }, [isAuthenticated, user, isLoading, router]);
+  }, [isAuthenticated, user, isLoading, isCheckingSession, router]);
 
-  // Show loading with timeout warning
-  if (isLoading) {
+  if (isCheckingSession || isLoading) {
     return <UnifiedPageLoading />;
   }
 
@@ -99,5 +81,47 @@ export default function UserLayout({ children }: UserLayoutProps) {
     return <UnifiedPageLoading />;
   }
 
-  return <>{children}</>;
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <header className="
+          flex md:hidden 
+          h-14 sm:h-16 shrink-0 
+          items-center gap-2 
+          border-b border-border/40 
+          bg-background/95 backdrop-blur 
+          supports-[backdrop-filter]:bg-background/60 
+          px-4 sticky top-0 z-40
+          safe-area-pt
+        ">
+          <SidebarTrigger className="-ml-1" />
+          <div className="flex items-center gap-2">
+            <img
+              src="/logo.png"
+              alt="Red Calender"
+              className="h-6 w-6 object-contain"
+            />
+            <span className="font-bold text-gradient">Red Calender</span>
+          </div>
+        </header>
+
+        <main className="
+          flex-1 overflow-auto scroll-smooth
+          scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent
+          pb-20 md:pb-0
+        ">
+          <div className="
+            min-h-screen bg-background
+            bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))]
+            from-transparent via-transparent to-muted/20
+          ">
+            {children}
+          </div>
+        </main>
+      </SidebarInset>
+      
+      <BottomNavigation />
+    </SidebarProvider>
+  );
 }

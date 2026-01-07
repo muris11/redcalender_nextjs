@@ -13,6 +13,7 @@ interface User {
   theme?: string;
   isOnboarded: boolean;
   menstrualStatus?: string;
+  currentlyMenstruating?: string;
   lastPeriodDate?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -27,7 +28,7 @@ interface AuthState {
   login: (
     email: string,
     password: string
-  ) => Promise<{ success: boolean; error?: string }>;
+  ) => Promise<{ success: boolean; error?: string; redirectUrl?: string }>;
   register: (
     userData: RegisterData
   ) => Promise<{ success: boolean; error?: string }>;
@@ -57,14 +58,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const current = get();
       if (current.initialized) {
-        console.log("AuthStore: Already initialized, skipping");
         return;
       }
     } catch (err) {
       // Ignore - fallback to performing init
     }
-
-    console.log("AuthStore: Initializing...");
 
     if (typeof window !== "undefined") {
       const savedUser = localStorage.getItem("redcalendar_user");
@@ -72,7 +70,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         try {
           const user = JSON.parse(savedUser);
           if (user && user.id && user.email) {
-            console.log("AuthStore: User found in localStorage", user.email);
             set({
               user,
               isAuthenticated: true,
@@ -80,21 +77,17 @@ export const useAuthStore = create<AuthState>((set, get) => ({
               initialized: true,
             });
           } else {
-            console.warn("AuthStore: Invalid user data in localStorage");
             localStorage.removeItem("redcalendar_user");
             set({ isLoading: false, initialized: true });
           }
         } catch (error) {
-          console.error("AuthStore: Error parsing saved user:", error);
           localStorage.removeItem("redcalendar_user");
           set({ isLoading: false, initialized: true });
         }
       } else {
-        console.log("AuthStore: No saved user found");
         set({ isLoading: false, initialized: true });
       }
     } else {
-      console.log("AuthStore: Running on server, skipping localStorage");
       set({ isLoading: false, initialized: true });
     }
   },
@@ -107,6 +100,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -118,9 +112,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           isAuthenticated: true,
           isLoading: false,
         });
-        // Simpan ke localStorage
         localStorage.setItem("redcalendar_user", JSON.stringify(data.user));
-        return { success: true };
+        return { success: true, redirectUrl: data.redirectUrl };
       } else {
         set({ isLoading: false });
         return { success: false, error: data.error };
@@ -139,6 +132,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(userData),
       });
 
@@ -165,6 +159,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: () => {
+    // Call logout API to clear HTTP-only cookie
+    fetch("/api/auth/logout", { method: "POST", credentials: "include" }).catch(console.error);
+    
     set({
       user: null,
       isAuthenticated: false,
@@ -177,13 +174,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       user,
       isAuthenticated: true,
     });
-    // PENTING: Update localStorage juga agar data tetap sinkron
     if (typeof window !== "undefined") {
       localStorage.setItem("redcalendar_user", JSON.stringify(user));
-      console.log("AuthStore: User updated in state and localStorage", {
-        email: user.email,
-        isOnboarded: user.isOnboarded,
-      });
     }
   },
 }));

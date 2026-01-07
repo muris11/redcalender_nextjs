@@ -1,7 +1,14 @@
 import { db } from "@/lib/db";
+import { requireAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  // Verify admin access
+  const auth = await requireAuth("ADMIN");
+  if (!auth.user) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -41,6 +48,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Verify admin access
+  const auth = await requireAuth("ADMIN");
+  if (!auth.user) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
+
   try {
     const body = await request.json();
     const { title, content, categoryId, thumbnail, createdBy } = body;

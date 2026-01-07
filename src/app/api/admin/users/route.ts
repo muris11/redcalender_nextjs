@@ -1,8 +1,15 @@
 import { db, testDatabaseConnection } from "@/lib/db";
+import { requireAuth } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  // Verify admin access
+  const auth = await requireAuth("ADMIN");
+  if (!auth.user) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
+
   try {
     const ok = await testDatabaseConnection();
     if (!ok) {
@@ -60,6 +67,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  // Verify admin access
+  const auth = await requireAuth("ADMIN");
+  if (!auth.user) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
+
   try {
     const ok = await testDatabaseConnection();
     if (!ok) {
@@ -96,6 +109,12 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Verify admin access
+  const auth = await requireAuth("ADMIN");
+  if (!auth.user) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
+
   try {
     const ok = await testDatabaseConnection();
     if (!ok) {
@@ -168,6 +187,12 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  // Verify admin access
+  const auth = await requireAuth("ADMIN");
+  if (!auth.user) {
+    return NextResponse.json({ error: auth.error }, { status: 401 });
+  }
+
   try {
     const ok = await testDatabaseConnection();
     if (!ok) {

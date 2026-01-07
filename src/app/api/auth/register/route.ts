@@ -2,6 +2,34 @@ import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
+const AUTH_COOKIE_NAME = "redcalendar_session";
+const AUTH_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
+
+// Use the same encoding as middleware (Edge-compatible)
+const encodeBase64 = (value: string): string => {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
+};
+
+interface SessionUser {
+  id: string;
+  email: string;
+  name: string;
+  role: "USER" | "ADMIN";
+  isOnboarded: boolean;
+}
+
+function createToken(payload: SessionUser): string {
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "redcalendar-secret-key-change-in-production";
+  const data = JSON.stringify(payload);
+  const signature = encodeBase64(`${data}:${secret}`);
+  return encodeBase64(JSON.stringify({ data, signature }));
+}
+
 export async function POST(request: NextRequest) {
   console.log("🔄 [REGISTRATION] API called at", new Date().toISOString());
   try {
@@ -94,13 +122,34 @@ export async function POST(request: NextRequest) {
     // Optional: Log created user id for debugging (avoid heavy queries in hot paths)
     console.info(`📊 [REGISTRATION] New user created: ${user.id}`);
 
+    // Create session data and set HTTP-only cookie
+    const sessionUser: SessionUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      isOnboarded: user.isOnboarded,
+    };
+    const token = createToken(sessionUser);
+
     // Remove password dari response
     const { password: _, ...userWithoutPassword } = user;
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "Registrasi berhasil",
       user: userWithoutPassword,
+      redirectUrl: "/onboarding"
     });
+
+    response.cookies.set(AUTH_COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: AUTH_COOKIE_MAX_AGE,
+      path: "/",
+    });
+
+    return response;
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json(

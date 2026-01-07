@@ -1,12 +1,13 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Loading } from "@/components/ui/loading";
 import { ArticleCardSkeleton, UnifiedPageLoading } from "@/components/ui/loading-skeletons";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
 import {
     Select,
     SelectContent,
@@ -249,30 +250,27 @@ export default function EducationContent() {
 
   if (isDataLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-pink-50 via-white to-purple-50">
-        <Navbar />
-        <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
-          {/* Header Skeleton */}
-          <div className="h-64 w-full bg-gray-200 animate-pulse rounded-3xl mb-10"></div>
-          
-          {/* Search Skeleton */}
-          <div className="h-20 w-full bg-gray-200 animate-pulse rounded-2xl mb-10"></div>
-          
-          {/* Stats Skeleton */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 animate-pulse rounded-2xl"></div>
-            ))}
-          </div>
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
+        {/* Header Skeleton */}
+        <div className="h-64 w-full bg-gray-200 animate-pulse rounded-3xl mb-10"></div>
+        
+        {/* Search Skeleton */}
+        <div className="h-20 w-full bg-gray-200 animate-pulse rounded-2xl mb-10"></div>
+        
+        {/* Stats Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-32 bg-gray-200 animate-pulse rounded-2xl"></div>
+          ))}
+        </div>
 
-          {/* Articles Grid Skeleton */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <ArticleCardSkeleton key={i} />
-            ))}
-          </div>
-        </main>
-      </div>
+        {/* Articles Grid Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <ArticleCardSkeleton key={i} />
+          ))}
+        </div>
+      </main>
     );
   }
 
@@ -289,7 +287,6 @@ export default function EducationContent() {
           <p className="text-gray-600 mb-4">{error}</p>
           <Button
             onClick={loadArticles}
-            className="bg-pink-600 hover:bg-pink-700"
           >
             Coba Lagi
           </Button>
@@ -299,61 +296,39 @@ export default function EducationContent() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-pink-50 via-white to-purple-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
-        {/* Header Section - Enhanced Education Hero */}
-        <div className="relative overflow-hidden bg-linear-to-r from-pink-600 via-pink-500 to-rose-500 rounded-xl sm:rounded-2xl lg:rounded-3xl mb-6 sm:mb-8 lg:mb-10 p-6 sm:p-8 lg:p-10 xl:p-12 text-white shadow-2xl">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative z-10">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 sm:gap-8">
-              <div className="flex-1">
-                <div className="flex items-center mb-3 sm:mb-4">
-                  <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 mr-3 text-pink-200" />
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight">
-                    Edukasi Kesehatan
-                  </h1>
-                </div>
-                <p className="text-pink-100 text-sm sm:text-base lg:text-lg opacity-90 max-w-2xl leading-relaxed">
-                  Dapatkan informasi terpercaya dari tenaga kesehatan
-                  profesional tentang kesehatan menstruasi, tips PMS, nutrisi
-                  untuk keseimbangan hormon, dan panduan kesehatan reproduksi.
-                </p>
-                <div className="flex flex-wrap gap-2 mt-4 sm:mt-6">
-                  <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 py-1">
-                    <Sparkles className="h-3 w-3 mr-1" />
-                    Terpercaya
-                  </Badge>
-                  <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 py-1">
-                    <Heart className="h-3 w-3 mr-1" />
-                    Ahli Kesehatan
-                  </Badge>
-                  <Badge className="bg-white/20 text-white border-white/30 text-xs sm:text-sm px-3 py-1">
-                    <BookOpen className="h-3 w-3 mr-1" />
-                    Update Terbaru
-                  </Badge>
-                </div>
-              </div>
-              <div className="hidden lg:flex items-center justify-center">
-                <div className="relative">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
-                    <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 text-white" />
-                  </div>
-                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center animate-pulse">
-                    <Sparkles className="h-4 w-4 text-yellow-800" />
-                  </div>
-                </div>
-              </div>
-            </div>
+    <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
+      {/* Header Section */}
+      <div className="bg-primary rounded-lg mb-6 sm:mb-8 lg:mb-10 p-6 sm:p-8 text-white">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center">
+            <GraduationCap className="h-5 w-5 text-white" />
           </div>
-          {/* Enhanced Decorative Elements */}
-          <div className="absolute -top-4 -right-4 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full blur-2xl"></div>
-          <div className="absolute -bottom-6 -left-6 w-32 h-32 sm:w-40 sm:h-40 bg-white/10 rounded-full blur-2xl"></div>
-          <div className="absolute top-1/2 left-1/4 w-16 h-16 sm:w-20 sm:h-20 bg-white/5 rounded-full blur-xl"></div>
+          <Heading level="1" variant="display-lg" className="text-white">
+            Edukasi Kesehatan
+          </Heading>
         </div>
+        <Text variant="body-lg" className="text-white/90 max-w-2xl mb-4">
+          Dapatkan informasi terpercaya dari tenaga kesehatan profesional tentang kesehatan menstruasi, tips PMS, nutrisi untuk keseimbangan hormon, dan panduan kesehatan reproduksi.
+        </Text>
+        <div className="flex flex-wrap gap-2">
+          <Badge className="bg-white text-primary">
+            <Sparkles className="h-3 w-3 mr-1" />
+            Terpercaya
+          </Badge>
+          <Badge className="bg-white text-primary">
+            <Heart className="h-3 w-3 mr-1" />
+            Ahli Kesehatan
+          </Badge>
+          <Badge className="bg-white text-primary">
+            <BookOpen className="h-3 w-3 mr-1" />
+            Update Terbaru
+          </Badge>
+        </div>
+      </div>
 
-        {/* Enhanced Search and Filter Section */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-xl border-0 p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8 lg:mb-10">
+        {/* Search and Filter Section */}
+        <Card className="mb-6 sm:mb-8 lg:mb-10">
+          <CardContent className="pt-6">
           <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
             <div className="flex-1">
               <div className="relative">
@@ -362,7 +337,7 @@ export default function EducationContent() {
                   placeholder="Cari materi edukasi, topik kesehatan, atau kata kunci..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 sm:pl-12 h-10 sm:h-12 border-2 border-gray-200 focus:border-pink-400 text-sm sm:text-base rounded-lg sm:rounded-xl"
+                  className="pl-10 sm:pl-12 h-10 sm:h-12 border-2 border-gray-200 focus:ring-theme text-sm sm:text-base rounded-lg sm:rounded-xl"
                 />
               </div>
             </div>
@@ -372,13 +347,13 @@ export default function EducationContent() {
                 value={selectedCategory}
                 onValueChange={setSelectedCategory}
               >
-                <SelectTrigger className="h-10 sm:h-12 border-2 border-gray-200 hover:border-pink-300 rounded-lg sm:rounded-xl">
+                <SelectTrigger className="h-10 sm:h-12 border-2 border-gray-200 hover:border-primary rounded-lg">
                   <Filter className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                   <SelectValue placeholder="Pilih Kategori" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all" className="text-sm sm:text-base">
-                    📚 Semua Kategori
+                    Semua Kategori
                   </SelectItem>
                   {categories.map((category) => (
                     <SelectItem
@@ -397,9 +372,9 @@ export default function EducationContent() {
 
           {/* Quick Filter Tags */}
           <div className="flex flex-wrap gap-2 mt-4 sm:mt-6">
-            <span className="text-xs sm:text-sm text-gray-600 mr-2 self-center">
+            <Text variant="body-sm" className="text-gray-600 mr-2 self-center">
               Filter Cepat:
-            </span>
+            </Text>
             {categories.slice(0, 4).map((category) => (
               <Button
                 key={category.id}
@@ -412,94 +387,94 @@ export default function EducationContent() {
                     selectedCategory === category.slug ? "all" : category.slug
                   )
                 }
-                className={`text-xs sm:text-sm px-3 py-1 h-7 sm:h-8 rounded-full transition-all duration-200 ${
-                  selectedCategory === category.slug
-                    ? "bg-pink-500 hover:bg-pink-600 text-white shadow-md"
-                    : "border-pink-200 text-pink-600 hover:bg-pink-50"
-                }`}
+                className="transition-colors"
               >
                 {getCategoryIcon(category.slug)}
                 <span className="ml-1">{category.name}</span>
               </Button>
             ))}
           </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        {/* Enhanced Stats Cards */}
-        <div className="px-0 mb-6 sm:mb-8 lg:mb-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
-                    Total Materi
-                  </p>
-                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
+        {/* Stats Cards - Mobile App Style */}
+        <div className="mb-6 sm:mb-8 lg:mb-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            <Card className="bg-white">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+                    <BookOpen className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+                  </div>
+                  <Text variant="display-sm" className="font-bold text-gray-900 mb-1">
                     {articles.length}
-                  </p>
+                  </Text>
+                  <Text variant="body-sm" className="text-gray-600 font-medium">
+                    Total Materi
+                  </Text>
                 </div>
-                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-pink-500 to-rose-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
-                  <BookOpen className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
-                </div>
-              </div>
-            </div>
-            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
-                    Materi Terpublikasi
-                  </p>
-                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+                    <Heart className="h-6 w-6 sm:h-7 sm:w-7 text-blue-600" />
+                  </div>
+                  <Text variant="display-sm" className="font-bold text-gray-900 mb-1">
                     {articles.filter((a) => a.published).length}
-                  </p>
+                  </Text>
+                  <Text variant="body-sm" className="text-gray-600 font-medium">
+                    Terpublikasi
+                  </Text>
                 </div>
-                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-blue-500 to-cyan-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
-                  <Heart className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
-                </div>
-              </div>
-            </div>
-            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
-                    Penulis Ahli
-                  </p>
-                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-orange-100 flex items-center justify-center mb-3">
+                    <User className="h-6 w-6 sm:h-7 sm:w-7 text-orange-600" />
+                  </div>
+                  <Text variant="display-sm" className="font-bold text-gray-900 mb-1">
                     {
                       Array.from(new Set(articles.map((a) => a.author.name)))
                         .length
                     }
-                  </p>
+                  </Text>
+                  <Text variant="body-sm" className="text-gray-600 font-medium">
+                    Penulis Ahli
+                  </Text>
                 </div>
-                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-orange-500 to-red-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
-                  <User className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
-                </div>
-              </div>
-            </div>
-            <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 rounded-lg sm:rounded-xl lg:rounded-2xl p-4 sm:p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-xs sm:text-sm font-bold text-slate-600 mb-1 sm:mb-2">
-                    Kategori
-                  </p>
-                  <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-800">
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white">
+              <CardContent className="p-4 sm:p-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-green-100 flex items-center justify-center mb-3">
+                    <GraduationCap className="h-6 w-6 sm:h-7 sm:w-7 text-green-600" />
+                  </div>
+                  <Text variant="display-sm" className="font-bold text-gray-900 mb-1">
                     {categories.length}
-                  </p>
+                  </Text>
+                  <Text variant="body-sm" className="text-gray-600 font-medium">
+                    Kategori
+                  </Text>
                 </div>
-                <div className="p-2 sm:p-3 lg:p-4 bg-linear-to-br from-green-500 to-teal-500 rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg ml-3 sm:ml-4">
-                  <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6 lg:h-7 lg:w-7 text-white" />
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
-        {/* Enhanced Results Summary */}
+        {/* Results Summary */}
         <div className="mb-4 sm:mb-6 lg:mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-            <p className="text-gray-700 text-sm sm:text-base font-medium">
+            <Text variant="body-base" className="font-medium">
               Menampilkan{" "}
-              <span className="font-bold text-pink-600">
+              <span className="font-bold text-primary">
                 {filteredArticles.length}
               </span>{" "}
               dari <span className="font-bold">{articles.length}</span> materi
@@ -510,7 +485,7 @@ export default function EducationContent() {
                   selectedCategory
                 }"`}
               {searchTerm && ` untuk "${searchTerm}"`}
-            </p>
+            </Text>
             {(searchTerm || selectedCategory !== "all") && (
               <Button
                 onClick={() => {
@@ -519,30 +494,29 @@ export default function EducationContent() {
                 }}
                 variant="outline"
                 size="sm"
-                className="border-pink-200 text-pink-600 hover:bg-pink-50 hover:border-pink-300 text-xs sm:text-sm px-3 py-2 h-auto"
               >
-                🔄 Reset Filter
+                Reset Filter
               </Button>
             )}
           </div>
         </div>
 
-        {/* Enhanced Education Articles Grid */}
+        {/* Education Articles Grid */}
         {filteredArticles.length === 0 ? (
           <div className="text-center py-12 sm:py-16 lg:py-20">
-            <Card className="border-0 shadow-xl bg-linear-to-br from-pink-50 to-purple-50 max-w-lg mx-auto">
+            <Card className="max-w-lg mx-auto">
               <CardContent className="p-8 sm:p-12">
                 <div className="mb-6">
-                  <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-linear-to-br from-pink-400 to-purple-500 flex items-center justify-center mx-auto shadow-lg">
-                    <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                  <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg bg-primary/10 flex items-center justify-center mx-auto">
+                    <GraduationCap className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
                   </div>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
+                <Heading level="3" variant="heading-lg" className="mb-3">
                   {articles.length === 0
                     ? "Materi Edukasi Akan Segera Ditambahkan"
                     : "Tidak Ada Hasil Ditemukan"}
-                </h3>
-                <p className="text-gray-600 mb-6 text-sm sm:text-base leading-relaxed">
+                </Heading>
+                <Text variant="body-base" className="text-gray-600 mb-6 leading-relaxed">
                   {articles.length === 0
                     ? "Materi edukasi kesehatan akan segera ditambahkan oleh tenaga ahli. Silakan cek kembali nanti untuk update terbaru!"
                     : searchTerm
@@ -551,23 +525,22 @@ export default function EducationContent() {
                         categories.find((c) => c.slug === selectedCategory)
                           ?.name || selectedCategory
                       }`}
-                </p>
+                </Text>
                 {(searchTerm || selectedCategory !== "all") && (
                   <Button
                     onClick={() => {
                       setSearchTerm("");
                       setSelectedCategory("all");
                     }}
-                    className="bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-md"
                   >
-                    🔄 Reset dan Lihat Semua
+                    Reset dan Lihat Semua
                   </Button>
                 )}
               </CardContent>
             </Card>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-10 lg:mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-8 sm:mb-10 lg:mb-12">
             {filteredArticles.map((article) => {
               const imageSrc =
                 (thumbnailMap[article.id] || article.thumbnail) ?? undefined;
@@ -578,93 +551,72 @@ export default function EducationContent() {
                   onClick={() => router.push(`/education/${article.id}`)}
                   role="button"
                   tabIndex={0}
-                  className="hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 cursor-pointer overflow-hidden border-0 shadow-lg bg-white group"
+                  className="hover:border-primary transition-colors cursor-pointer overflow-hidden group bg-white"
                 >
-                  <div className="w-full h-40 sm:h-48 lg:h-44 xl:h-52 bg-slate-100 overflow-hidden relative">
+                  {/* Image with better aspect ratio */}
+                  <div className="w-full aspect-[4/3] sm:aspect-video bg-gray-100 overflow-hidden relative">
                     {imageSrc ? (
                       <img
                         src={imageSrc}
                         alt={`Thumbnail materi: ${article.title}`}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-500 group-hover:brightness-110"
+                        className="w-full h-full object-cover"
                         loading="lazy"
                         decoding="async"
                       />
                     ) : (
-                      <div className="w-full h-full bg-linear-to-br from-pink-100 to-purple-100 flex items-center justify-center">
-                        <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 text-pink-300" />
+                      <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                        <GraduationCap className="h-12 w-12 sm:h-16 sm:w-16 text-gray-300" />
                       </div>
                     )}
-                    <div className="absolute top-2 sm:top-3 right-2 sm:right-3">
+                    {/* Preloading Overlay */}
+                    {preloadingArticle === article.id && (
+                      <div className="absolute inset-0 bg-white/90 flex items-center justify-center z-20">
+                        <Loading size="sm" text="Memuat artikel..." />
+                      </div>
+                    )}
+                  </div>
+
+                  <CardContent className="p-3 sm:p-4">
+                    {/* Category Badge - Inside Card */}
+                    <div className="mb-2">
                       <Badge
-                        style={getCategoryColor(article.category.color)}
-                        className="text-xs font-semibold shadow-lg backdrop-blur-sm"
+                        variant="secondary"
+                        className="text-[10px] sm:text-xs font-medium bg-primary/10 text-primary border-0 hover:bg-primary/20"
                       >
                         {getCategoryIcon(article.category.slug)}
                         <span className="ml-1">{article.category.name}</span>
                       </Badge>
                     </div>
-                    {/* Overlay on hover */}
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
-                    {/* Preloading Overlay */}
-                    {preloadingArticle === article.id && (
-                      <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-20">
-                        <Loading size="sm" text="Memuat artikel..." />
-                      </div>
-                    )}
-                  </div>
-                  <CardHeader className="pt-3 sm:pt-4 pb-2 sm:pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 pr-2">
-                        <h3 className="text-base sm:text-lg font-bold line-clamp-2 text-gray-800 hover:text-pink-600 transition-colors group-hover:text-pink-600">
-                          {article.title}
-                        </h3>
-                      </div>
-                    </div>
-                  </CardHeader>
 
-                  <CardContent className="pt-0">
-                    <p className="text-gray-600 mb-3 sm:mb-4 line-clamp-3 text-sm leading-relaxed">
+                    {/* Title */}
+                    <Heading level="3" variant="heading-sm" className="line-clamp-2 text-sm sm:text-base mb-2 group-hover:text-primary transition-colors leading-tight">
+                      {article.title}
+                    </Heading>
+
+                    {/* Excerpt - Hidden on mobile for cleaner look */}
+                    <Text variant="body-sm" className="hidden sm:block text-gray-600 mb-3 line-clamp-2 leading-relaxed text-xs">
                       {article.excerpt}
-                    </p>
+                    </Text>
 
-                    <div className="flex items-center justify-between text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 pb-3 sm:pb-4 border-b border-gray-100">
-                      <div className="flex items-center space-x-1 sm:space-x-2 min-w-0 flex-1">
-                        <User className="h-3 w-3 sm:h-4 sm:w-4 text-pink-500 shrink-0" />
+                    {/* Meta Information - Compact */}
+                    <div className="flex items-center justify-between text-[10px] text-gray-500 mb-3 pb-3 border-b border-gray-100">
+                      <div className="flex items-center space-x-1 min-w-0 flex-1">
+                        <User className="h-3 w-3 text-primary shrink-0" />
                         <span className="font-medium truncate">
                           {article.author.name}
                         </span>
                       </div>
-                      <div className="flex items-center space-x-2 sm:space-x-3 shrink-0 ml-2 sm:ml-3">
+                      <div className="flex items-center space-x-2 shrink-0">
                         <div className="flex items-center space-x-1">
-                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
-                          <span className="hidden sm:inline">
-                            {new Date(article.createdAt).toLocaleDateString(
-                              "id-ID",
-                              {
-                                day: "numeric",
-                                month: "short",
-                              }
-                            )}
-                          </span>
-                          <span className="sm:hidden">
-                            {new Date(article.createdAt).toLocaleDateString(
-                              "id-ID",
-                              {
-                                day: "numeric",
-                                month: "numeric",
-                              }
-                            )}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />
+                          <Clock className="h-3 w-3 text-primary" />
                           <span>{article.readTime} min</span>
                         </div>
                       </div>
                     </div>
 
+                    {/* Button with white text */}
                     <Button
-                      className="w-full bg-linear-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 border-0 py-2 sm:py-3 text-sm sm:text-base font-semibold"
+                      className="w-full text-white text-xs sm:text-sm h-8 sm:h-9 font-medium"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleReadMore(article.id);
@@ -673,14 +625,11 @@ export default function EducationContent() {
                     >
                       {preloadingArticle === article.id ? (
                         <div className="flex items-center justify-center">
-                          <div className="relative mr-2">
-                            <div className="animate-spin rounded-full h-4 w-4 border-4 border-pink-200 border-t-pink-600" />
-                            <div className="absolute inset-0 animate-pulse rounded-full bg-pink-100 opacity-50 h-4 w-4" />
-                          </div>
-                          Memuat...
+                          <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white mr-2" />
+                          <span className="text-white">Memuat...</span>
                         </div>
                       ) : (
-                        <>Baca Selengkapnya</>
+                        <span className="text-white">Baca Selengkapnya</span>
                       )}
                     </Button>
                   </CardContent>
@@ -689,7 +638,6 @@ export default function EducationContent() {
             })}
           </div>
         )}
-      </main>
-    </div>
+    </main>
   );
 }

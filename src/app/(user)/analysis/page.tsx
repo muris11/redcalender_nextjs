@@ -1,9 +1,10 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSkeleton, UnifiedPageLoading } from "@/components/ui/loading-skeletons";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
 import { useAuthStore } from "@/store/authStore";
 import {
   Activity,
@@ -13,6 +14,9 @@ import {
   Heart,
   Thermometer,
   TrendingUp,
+  BarChart3,
+  Brain,
+  Lightbulb,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -208,153 +212,124 @@ export default function AnalysisContent() {
 
   if (isDataLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
-        <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
-          <ChartSkeleton />
-        </main>
-      </div>
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
+        <ChartSkeleton />
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 sm:py-6 lg:py-8 xl:py-12">
-        {/* Page Header */}
-        <div className="mb-6 sm:mb-8 lg:mb-10 text-center">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2 sm:mb-3">
-            Analisis Kesehatan
-          </h1>
-          <p className="text-gray-600 text-sm sm:text-base lg:text-lg xl:text-xl max-w-2xl mx-auto px-2">
-            Pantau tren siklus dan kesehatan Anda
-          </p>
-        </div>
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      {/* Page Header */}
+      <div className="mb-6 sm:mb-8">
+        <Heading level="1" size="heading-xl" className="mb-2">
+          Analisis Kesehatan
+        </Heading>
+        <Text variant="body-md" className="text-muted-foreground">
+          Pantau tren siklus dan kesehatan Anda
+        </Text>
+      </div>
 
         {(isAbnormal || isVariationHigh) && (
-          <Alert className="mb-6 sm:mb-8 lg:mb-10 bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-orange-200 shadow-lg rounded-xl">
-            <AlertDescription className="text-orange-900 text-sm sm:text-base leading-relaxed">
-              <strong className="font-bold">⚠️ Perhatian:</strong>{" "}
-              <span className="block sm:inline mt-1 sm:mt-0">
-                {isVariationHigh
-                  ? "Siklus Anda fluktuatif melebihi variasi tipikal. Penting untuk tetap waspada. Jika Anda merasa khawatir, jangan ragu untuk berbicara dengan penyedia perawatan kesehatan."
-                  : "Rata-rata siklus Anda berada di luar rentang normal (21-35 hari). Disarankan untuk berkonsultasi dengan dokter."}
-              </span>
+          <Alert className="mb-6 bg-orange-50 border-l-4 border-orange-500">
+            <AlertTriangle className="h-4 w-4 text-orange-600" />
+            <AlertDescription className="text-sm text-orange-900 leading-relaxed">
+              {isVariationHigh
+                ? "Siklus Anda fluktuatif melebihi variasi tipikal. Disarankan berkonsultasi dengan dokter."
+                : "Rata-rata siklus Anda berada di luar rentang normal (21-35 hari). Disarankan berkonsultasi dengan dokter."}
             </AlertDescription>
           </Alert>
         )}
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-10">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1.5 sm:h-2 bg-gradient-to-r from-blue-400 to-blue-600"></div>
-            <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6 pt-4 sm:pt-6">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-blue-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                </div>
-                <span className="text-sm sm:text-base">Rata-rata Siklus</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-2xl sm:text-3xl font-bold text-blue-600">
-                  {avgCycleLength} hari
-                </span>
-                {isAbnormal && (
-                  <AlertTriangle className="h-5 w-5 sm:h-6 sm:w-6 text-orange-500 shrink-0" />
-                )}
+        {/* Summary Cards - 2 columns on mobile */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
-              <p
-                className={`text-xs sm:text-sm font-medium ${
-                  isAbnormal ? "text-orange-600" : "text-green-600"
-                }`}
+              <Text variant="display-sm" className="font-bold text-primary mb-1">
+                {avgCycleLength}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Rata-rata Siklus
+              </Text>
+              <Text
+                variant="label-xs"
+                className={isAbnormal ? "text-orange-600" : "text-green-600"}
               >
-                {isAbnormal
-                  ? "Di luar rentang normal"
-                  : "Normal (21-35 hari)"}
-              </p>
+                {isAbnormal ? "Abnormal" : "Normal"}
+              </Text>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1.5 sm:h-2 bg-gradient-to-r from-red-400 to-red-600"></div>
-            <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6 pt-4 sm:pt-6">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-red-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
-                </div>
-                <span className="text-sm sm:text-base">Rata-rata Haid</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-              <div className="text-2xl sm:text-3xl font-bold text-red-600 mb-2">
-                {avgPeriodLength} hari
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
               </div>
-              <p className="text-xs sm:text-sm font-medium text-green-600">
-                Normal (3-7 hari)
-              </p>
+              <Text variant="display-sm" className="font-bold text-red-600 mb-1">
+                {avgPeriodLength}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Rata-rata Haid
+              </Text>
+              <Text variant="label-xs" className="text-green-600">
+                Normal
+              </Text>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1.5 sm:h-2 bg-gradient-to-r from-green-400 to-green-600"></div>
-            <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6 pt-4 sm:pt-6">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-green-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
-                </div>
-                <span className="text-sm sm:text-base">Variasi Siklus</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-2">
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
+              </div>
+              <Text variant="display-sm" className="font-bold text-green-600 mb-1">
                 {Math.max(...cycleData.map((c) => c.cycleLength)) -
-                  Math.min(...cycleData.map((c) => c.cycleLength))}{" "}
-                hari
-              </div>
-              <p
-                className={`text-xs sm:text-sm font-medium ${
-                  isVariationHigh ? "text-orange-600" : "text-green-600"
-                }`}
+                  Math.min(...cycleData.map((c) => c.cycleLength))}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Variasi Siklus
+              </Text>
+              <Text
+                variant="label-xs"
+                className={isVariationHigh ? "text-orange-600" : "text-green-600"}
               >
-                {isVariationHigh ? "Variasi tinggi" : "Variasi normal"}
-              </p>
+                {isVariationHigh ? "Tinggi" : "Normal"}
+              </Text>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1.5 sm:h-2 bg-gradient-to-r from-purple-400 to-purple-600"></div>
-            <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-6 pt-4 sm:pt-6">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-purple-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <Heart className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
-                </div>
-                <span className="text-sm sm:text-base">Total Siklus</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6">
-              <div className="text-2xl sm:text-3xl font-bold text-purple-600 mb-2">
-                {cycleData.length}
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-3">
+                <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
               </div>
-              <p className="text-xs sm:text-sm font-medium text-gray-600">
+              <Text variant="display-sm" className="font-bold text-purple-600 mb-1">
+                {cycleData.length}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Total Siklus
+              </Text>
+              <Text variant="label-xs" className="text-muted-foreground">
                 6 bulan terakhir
-              </p>
+              </Text>
             </CardContent>
           </Card>
         </div>
 
         {/* Charts */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 mb-6 sm:mb-8 lg:mb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
           {/* Cycle Length Trend */}
-          <Card className="border-0 shadow-lg glass-card">
-            <CardHeader className="bg-gradient-to-r from-pink-50 to-rose-50 border-b border-pink-100 p-4 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl text-pink-900 flex items-center">
-                <span className="text-xl sm:text-2xl mr-2">📈</span>
-                <span className="text-sm sm:text-base lg:text-lg">Tren Panjang Siklus</span>
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <TrendingUp className="h-5 w-5 text-primary" />
+                <span>Tren Panjang Siklus</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="pt-0">
               {hasInsufficientData || cycleData.length < 2 ? (
                 <div className="h-[280px] flex flex-col items-center justify-center text-gray-500">
                   <Calendar className="h-12 w-12 mb-4 text-pink-300" />
@@ -406,21 +381,21 @@ export default function AnalysisContent() {
               )}
               {cycleData.length >= 2 && (
                 <p className="text-center text-xs text-gray-500 mt-2">
-                  Rata-rata: <span className="font-semibold text-pink-600">{avgCycleLength} hari</span>
+                  Rata-rata: <span className="font-semibold text-theme">{avgCycleLength} hari</span>
                 </p>
               )}
             </CardContent>
           </Card>
 
           {/* Period Length Trend */}
-          <Card className="border-0 shadow-lg glass-card">
-            <CardHeader className="bg-gradient-to-r from-red-50 to-pink-50 border-b border-red-100 p-4 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl text-red-900 flex items-center">
-                <span className="text-xl sm:text-2xl mr-2">📊</span>
-                <span className="text-sm sm:text-base lg:text-lg">Tren Durasi Haid</span>
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <BarChart3 className="h-5 w-5 text-red-600" />
+                <span>Tren Durasi Haid</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="pt-0">
               {hasInsufficientData || cycleData.length < 2 ? (
                 <div className="h-[280px] flex flex-col items-center justify-center text-gray-500">
                   <Activity className="h-12 w-12 mb-4 text-red-300" />
@@ -477,29 +452,29 @@ export default function AnalysisContent() {
         </div>
 
         {/* Symptom and Mood Analysis */}
-        <div className="mb-6 sm:mb-8 lg:mb-10">
-          <Card className="border-0 shadow-lg glass-card">
-            <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b border-purple-100 p-4 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl lg:text-2xl text-gray-800 flex items-center justify-center">
-                <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">💭</span>
-                <span className="text-sm sm:text-base lg:text-lg">Analisis Gejala dan Suasana Hati</span>
+        <div className="mb-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Brain className="h-5 w-5 text-purple-600" />
+                <span>Analisis Gejala dan Suasana Hati</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 lg:p-8">
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Mood Analysis */}
                 <div className="space-y-4 sm:space-y-6">
-                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-purple-900 flex items-center justify-center sm:justify-start">
-                    <span className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-purple-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0 text-sm sm:text-base">
-                      💜
-                    </span>
-                    <span className="text-sm sm:text-base lg:text-lg">Suasana Hati</span>
-                  </h3>
-                  <div className="flex flex-col space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-3 justify-center sm:justify-start">
+                    <div className="h-8 w-8 rounded-lg bg-purple-100 flex items-center justify-center">
+                      <Heart className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <Text variant="body-lg" className="font-bold">Suasana Hati</Text>
+                  </div>
+                  <div className="flex flex-col space-y-4">
                     {moodData.slice(0, 5).map((mood, index) => (
                       <div
                         key={index}
-                        className="p-3 sm:p-4 bg-purple-50/50 rounded-lg sm:rounded-xl border border-purple-100 hover:shadow-md transition-all duration-200 hover:scale-[1.02]"
+                        className="p-4 bg-purple-50 rounded-lg border border-purple-100 hover:border-purple-200 transition-colors"
                       >
                         <div className="flex items-center justify-between mb-2 sm:mb-3">
                           <span className="text-xs sm:text-sm font-semibold text-gray-800 truncate mr-2">
@@ -509,9 +484,9 @@ export default function AnalysisContent() {
                             {mood.count}
                           </span>
                         </div>
-                        <div className="w-full bg-purple-200 rounded-full h-2 sm:h-3">
+                        <div className="w-full bg-purple-200 rounded-full h-3">
                           <div
-                            className="bg-gradient-to-r from-purple-500 to-purple-600 h-2 sm:h-3 rounded-full transition-all duration-500 shadow-sm"
+                            className="bg-purple-600 h-3 rounded-full transition-all"
                             style={{
                               width: `${
                                 (mood.count /
@@ -528,17 +503,17 @@ export default function AnalysisContent() {
 
                 {/* Symptom Analysis */}
                 <div className="space-y-4 sm:space-y-6">
-                  <h3 className="text-base sm:text-lg lg:text-xl font-bold text-red-900 flex items-center justify-center sm:justify-start">
-                    <span className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-red-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0 text-sm sm:text-base">
-                      🩺
-                    </span>
-                    <span className="text-sm sm:text-base lg:text-lg">Gejala Fisik</span>
-                  </h3>
-                  <div className="flex flex-col space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-3 justify-center sm:justify-start">
+                    <div className="h-8 w-8 rounded-lg bg-red-100 flex items-center justify-center">
+                      <Activity className="h-4 w-4 text-red-600" />
+                    </div>
+                    <Text variant="body-lg" className="font-bold">Gejala Fisik</Text>
+                  </div>
+                  <div className="flex flex-col space-y-4">
                     {symptomData.slice(0, 5).map((symptom, index) => (
                       <div
                         key={index}
-                        className="p-3 sm:p-4 bg-red-50/50 rounded-lg sm:rounded-xl border border-red-100 hover:shadow-md transition-all duration-200 hover:scale-[1.02]"
+                        className="p-4 bg-red-50 rounded-lg border border-red-100 hover:border-red-200 transition-colors"
                       >
                         <div className="flex items-center justify-between mb-2 sm:mb-3">
                           <span className="text-xs sm:text-sm font-semibold text-gray-800 truncate mr-2">
@@ -548,9 +523,9 @@ export default function AnalysisContent() {
                             {symptom.count}
                           </span>
                         </div>
-                        <div className="w-full bg-red-200 rounded-full h-2 sm:h-3">
+                        <div className="w-full bg-red-200 rounded-full h-3">
                           <div
-                            className="bg-gradient-to-r from-red-500 to-red-600 h-2 sm:h-3 rounded-full transition-all duration-500 shadow-sm"
+                            className="bg-red-600 h-3 rounded-full transition-all"
                             style={{
                               width: `${
                                 (symptom.count /
@@ -572,18 +547,18 @@ export default function AnalysisContent() {
         </div>
 
         {/* Recommendations */}
-        <div className="mb-6 sm:mb-8 lg:mb-10">
-          <Card className="border-0 shadow-lg glass-card">
-            <CardHeader className="bg-gradient-to-r from-green-50 to-teal-50 border-b border-green-100 p-4 sm:p-6">
-              <CardTitle className="text-lg sm:text-xl lg:text-2xl text-gray-800 flex items-center justify-center">
-                <span className="text-2xl sm:text-3xl mr-2 sm:mr-3">💡</span>
-                <span className="text-sm sm:text-base lg:text-lg">Rekomendasi Kesehatan</span>
+        <div className="mb-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <Lightbulb className="h-5 w-5 text-blue-600" />
+                <span>Rekomendasi Kesehatan</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 lg:p-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
-                <div className="flex items-start space-x-3 sm:space-x-4 p-3 sm:p-4 bg-white/50 rounded-lg sm:rounded-xl border-2 border-red-100 hover:border-red-200 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+            <CardContent className="pt-0">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex items-start space-x-4 p-4 bg-white rounded-lg border border-red-100 hover:border-red-200 transition-colors">
+                  <div className="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center shrink-0">
                     <Thermometer className="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -597,8 +572,8 @@ export default function AnalysisContent() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3 sm:space-x-4 p-3 sm:p-4 bg-white/50 rounded-lg sm:rounded-xl border-2 border-blue-100 hover:border-blue-200 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
+                <div className="flex items-start space-x-4 p-4 bg-white rounded-lg border border-blue-100 hover:border-blue-200 transition-colors">
+                  <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center shrink-0">
                     <Droplets className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -612,8 +587,8 @@ export default function AnalysisContent() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3 sm:space-x-4 p-3 sm:p-4 bg-white/50 rounded-lg sm:rounded-xl border-2 border-green-100 hover:border-green-200 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                <div className="flex items-start space-x-4 p-4 bg-white rounded-lg border border-green-100 hover:border-green-200 transition-colors">
+                  <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center shrink-0">
                     <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -627,9 +602,9 @@ export default function AnalysisContent() {
                   </div>
                 </div>
 
-                <div className="flex items-start space-x-3 sm:space-x-4 p-3 sm:p-4 bg-white/50 rounded-lg sm:rounded-xl border-2 border-pink-100 hover:border-pink-200 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
-                  <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
-                    <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-pink-600" />
+                <div className="flex items-start space-x-4 p-4 bg-white rounded-lg border border-pink-100 hover:border-pink-200 transition-colors">
+                  <div className="h-12 w-12 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
+                    <Heart className="h-5 w-5 sm:h-6 sm:w-6 text-theme" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h4 className="font-bold text-gray-800 mb-1 text-sm sm:text-base">Kelola Stres</h4>
@@ -643,7 +618,6 @@ export default function AnalysisContent() {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+    </main>
   );
 }

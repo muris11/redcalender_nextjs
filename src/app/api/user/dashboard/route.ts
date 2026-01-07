@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { requireUserAccess } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -11,6 +12,12 @@ export async function GET(request: NextRequest) {
         { error: "User ID is required" },
         { status: 400 }
       );
+    }
+
+    // Verify user can only access their own data
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     // Get user data
@@ -124,8 +131,15 @@ export async function GET(request: NextRequest) {
     // Generate health alerts
     const alerts = generateHealthAlerts(cycleMetrics, todayData, quickStats);
 
+    // Generate upcoming events based on cycle predictions
+    const upcomingEvents = generateUpcomingEvents(user, cycleMetrics, latestCycle);
+
+    // Check if there's an active period (cycle without endDate)
+    const hasActivePeriod = latestCycle && !latestCycle.endDate;
+
     const dashboardData = {
       currentCycle: cycleMetrics,
+      hasActivePeriod,
       recentCycles: {
         averageLength: user.avgCycleLength || 28,
         averagePeriodLength: user.avgPeriodLength || 6,
@@ -135,6 +149,7 @@ export async function GET(request: NextRequest) {
       todayLog: todayData,
       stats: quickStats,
       alerts,
+      upcomingEvents,
       healthMetrics,
     };
 
@@ -407,4 +422,117 @@ function calculateHealthMetrics(logs: any[]) {
     averageWater,
     moodScore
   };
+}
+
+// Generate upcoming events based on cycle predictions
+function generateUpcomingEvents(user: any, cycleMetrics: any, latestCycle: any) {
+  const events: Array<{
+    title: string;
+    date: Date;
+    type: "period" | "fertile" | "ovulation" | "pms";
+    description: string;
+  }> = [];
+
+  const now = new Date();
+  const avgCycleLength = user.avgCycleLength || 28;
+  const avgPeriodLength = user.avgPeriodLength || 6;
+
+  // Calculate base date from latest cycle or last period date
+  let baseDate: Date | null = null;
+  if (latestCycle?.startDate) {
+    baseDate = new Date(latestCycle.startDate);
+  } else if (user.lastPeriodDate) {
+    baseDate = new Date(user.lastPeriodDate);
+  }
+
+  if (!baseDate) {
+    return events;
+  }
+
+  // Predict next 2 cycles
+  for (let cycle = 0; cycle < 2; cycle++) {
+    const cycleOffset = cycle * avgCycleLength;
+
+    // Next Period Start
+    const nextPeriodStart = new Date(baseDate);
+    nextPeriodStart.setDate(baseDate.getDate() + avgCycleLength + cycleOffset);
+    
+    if (nextPeriodStart > now) {
+      events.push({
+        title: "Prediksi Menstruasi",
+        date: nextPeriodStart,
+        type: "period",
+        description: `Perkiraan mulai haid berikutnya (siklus ke-${cycle + 1})`
+      });
+    }
+
+    // Next Period End (estimated)
+    const nextPeriodEnd = new Date(nextPeriodStart);
+    nextPeriodEnd.setDate(nextPeriodStart.getDate() + avgPeriodLength);
+    
+    if (nextPeriodEnd > now) {
+      events.push({
+        title: "Perkiraan Selesai Haid",
+        date: nextPeriodEnd,
+        type: "period",
+        description: `Perkiraan haid selesai`
+      });
+    }
+
+    // Fertile Window (typically days 10-17 of cycle, with ovulation around day 14)
+    const fertileStart = new Date(baseDate);
+    fertileStart.setDate(baseDate.getDate() + 10 + cycleOffset);
+    
+    if (fertileStart > now) {
+      events.push({
+        title: "Masa Subur Dimulai",
+        date: fertileStart,
+        type: "fertile",
+        description: "Awal masa subur - peluang kehamilan meningkat"
+      });
+    }
+
+    // Ovulation Day (typically day 14)
+    const ovulationDay = new Date(baseDate);
+    ovulationDay.setDate(baseDate.getDate() + 14 + cycleOffset);
+    
+    if (ovulationDay > now) {
+      events.push({
+        title: "Hari Ovulasi",
+        date: ovulationDay,
+        type: "ovulation",
+        description: "Puncak kesuburan - ovulasi terjadi"
+      });
+    }
+
+    // Fertile Window End
+    const fertileEnd = new Date(baseDate);
+    fertileEnd.setDate(baseDate.getDate() + 17 + cycleOffset);
+    
+    if (fertileEnd > now) {
+      events.push({
+        title: "Masa Subur Berakhir",
+        date: fertileEnd,
+        type: "fertile",
+        description: "Akhir masa subur"
+      });
+    }
+
+    // PMS Window (typically 7 days before period)
+    const pmsStart = new Date(baseDate);
+    pmsStart.setDate(baseDate.getDate() + avgCycleLength - 7 + cycleOffset);
+    
+    if (pmsStart > now) {
+      events.push({
+        title: "Fase PMS",
+        date: pmsStart,
+        type: "pms",
+        description: "Kemungkinan gejala PMS mulai muncul"
+      });
+    }
+  }
+
+  // Sort events by date and take next 5
+  events.sort((a, b) => a.date.getTime() - b.date.getTime());
+  return events.slice(0, 5);
 }

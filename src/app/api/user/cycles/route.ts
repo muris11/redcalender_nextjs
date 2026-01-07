@@ -1,4 +1,5 @@
 import { db } from '@/lib/db';
+import { requireUserAccess } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -11,6 +12,12 @@ export async function GET(request: NextRequest) {
         { error: 'User ID is required' },
         { status: 400 }
       );
+    }
+
+    // Verify user can only access their own data
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     const cycles = await db.cycle.findMany({
@@ -39,6 +46,12 @@ export async function POST(request: NextRequest) {
         { error: 'User ID and start date are required' },
         { status: 400 }
       );
+    }
+
+    // Verify user can only create their own cycles
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     // Create new cycle
@@ -110,6 +123,12 @@ export async function PATCH(request: NextRequest) {
         { error: 'User ID is required' },
         { status: 400 }
       );
+    }
+
+    // Verify user can only update their own cycles
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     // Find the latest cycle without an end date

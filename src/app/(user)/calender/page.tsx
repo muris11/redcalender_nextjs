@@ -1,11 +1,12 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarSkeleton, UnifiedPageLoading } from "@/components/ui/loading-skeletons";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
 import { useAuthStore } from "@/store/authStore";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info, Droplet, Sprout, Flower2, Moon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -185,28 +186,28 @@ export default function CalendarContent() {
   const getPhaseColor = (phase?: string) => {
     switch (phase) {
       case "menstrual":
-        return "bg-red-50/80 border-red-200 hover:bg-red-100";
+        return "bg-red-50 border-red-200 hover:border-red-300";
       case "follicular":
-        return "bg-green-50/80 border-green-200 hover:bg-green-100";
+        return "bg-green-50 border-green-200 hover:border-green-300";
       case "ovulation":
-        return "bg-purple-50/80 border-purple-200 hover:bg-purple-100";
+        return "bg-purple-50 border-purple-200 hover:border-purple-300";
       case "luteal":
-        return "bg-blue-50/80 border-blue-200 hover:bg-blue-100";
+        return "bg-blue-50 border-blue-200 hover:border-blue-300";
       default:
-        return "hover:bg-gray-50 border-transparent";
+        return "hover:bg-muted border-border";
     }
   };
 
-  const getPhaseIcon = (phase?: string) => {
+  const PhaseIcon = ({ phase }: { phase?: string }) => {
     switch (phase) {
       case "menstrual":
-        return "🩸";
+        return <Droplet className="h-4 w-4 text-red-600" />;
       case "follicular":
-        return "🌱";
+        return <Sprout className="h-4 w-4 text-green-600" />;
       case "ovulation":
-        return "🌸";
+        return <Flower2 className="h-4 w-4 text-purple-600" />;
       case "luteal":
-        return "🌙";
+        return <Moon className="h-4 w-4 text-blue-600" />;
       default:
         return null;
     }
@@ -223,240 +224,242 @@ export default function CalendarContent() {
 
   if (isDataLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-        <Navbar />
-        <main className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
-          <CalendarSkeleton />
-        </main>
-      </div>
+      <main className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
+        <CalendarSkeleton />
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      <Navbar />
+    <main className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
+      {/* Month Navigation - Clean */}
+      <Card className="mb-8">
+        <CardHeader className="border-b">
+          <div className="flex items-center justify-between">
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => navigateMonth(-1)}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
 
-      <main className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 md:py-8">
-        {/* Month Navigation */}
-        <Card className="mb-6 md:mb-8 border-0 shadow-lg overflow-hidden glass-card">
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4 md:p-6">
-            <div className="flex items-center justify-between">
-              <Button
-                variant="outline"
-                onClick={() => navigateMonth(-1)}
-                className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white transition-all duration-200 p-2 md:p-3 h-auto"
+            <Heading level={2} size="heading-lg">
+              {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+            </Heading>
+
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => navigateMonth(1)}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
+
+      {/* Calendar Grid */}
+      <Card className="mb-8">
+        <CardContent className="p-6">
+          {/* Week day headers */}
+          <div className="grid grid-cols-7 gap-1 mb-4">
+            {weekDays.map((day) => (
+              <div
+                key={day}
+                className="text-center text-xs font-bold text-muted-foreground uppercase tracking-wide py-2"
               >
-                <ChevronLeft className="h-5 w-5 md:h-6 md:w-6" />
-              </Button>
+                {day}
+              </div>
+            ))}
+          </div>
 
-              <CardTitle className="text-xl md:text-2xl lg:text-3xl font-bold text-white text-center px-2">
-                {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-              </CardTitle>
-
-              <Button
-                variant="outline"
-                onClick={() => navigateMonth(1)}
-                className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white transition-all duration-200 p-2 md:p-3 h-auto"
+          {/* Calendar days */}
+          <div className="grid grid-cols-7 gap-2">
+            {calendarDays.map((day, index) => (
+              <button
+                key={index}
+                onClick={() => handleDateClick(day)}
+                className={`
+                  relative p-2 rounded-lg border transition-colors min-h-16 lg:min-h-20 flex flex-col items-center justify-start cursor-pointer
+                  ${
+                    day.isCurrentMonth
+                      ? "bg-background"
+                      : "bg-muted/20 opacity-40"
+                  }
+                  ${
+                    day.isToday
+                      ? "ring-2 ring-primary"
+                      : ""
+                  }
+                  ${getPhaseColor(day.phase)}
+                  ${day.hasData ? "font-semibold" : ""}
+                `}
               >
-                <ChevronRight className="h-5 w-5 md:h-6 md:w-6" />
-              </Button>
+                <div
+                  className={`text-xs font-bold w-full text-left pl-1 ${
+                    day.isToday ? "text-primary" : "text-foreground"
+                  }`}
+                >
+                  {day.date.getDate()}
+                </div>
+
+                <div className="flex-1 flex flex-col items-center justify-center w-full">
+                  {day.phase && (
+                    <div className="my-1">
+                      <PhaseIcon phase={day.phase} />
+                    </div>
+                  )}
+
+                  {day.cycleDay && (
+                    <div className="mt-1 text-[10px] text-muted-foreground font-medium bg-background px-1.5 py-0.5 rounded-full border">
+                      Hari {day.cycleDay}
+                    </div>
+                  )}
+                </div>
+
+                {day.hasData && (
+                  <div className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></div>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Instructions */}
+          <div className="mt-6 pt-6 border-t">
+            <div className="flex items-start gap-3 mb-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
+              <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+              <div>
+                <Text variant="body-sm" weight="semibold" className="text-blue-900 mb-1">
+                  Klik Tanggal untuk Catat Gejala
+                </Text>
+                <Text variant="label-sm" className="text-muted-foreground">
+                  Klik pada tanggal mana saja di kalender untuk membuka
+                  halaman pencatatan gejala harian pada tanggal tersebut.
+                </Text>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-4 bg-primary rounded-full"></div>
+                <Text variant="body-sm" weight="medium" className="text-foreground">
+                  Memiliki data catatan
+                </Text>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 border-2 border-primary rounded-lg bg-background"></div>
+                <Text variant="body-sm" weight="medium" className="text-foreground">
+                  Hari ini
+                </Text>
+              </div>
             </div>
           </div>
-        </Card>
+        </CardContent>
+      </Card>
 
-        {/* Calendar Grid */}
-        <Card className="mb-6 md:mb-8 border-0 shadow-lg glass-card">
-          <CardContent className="p-2 md:p-4 lg:p-6">
-            {/* Week day headers */}
-            <div className="grid grid-cols-7 gap-0.5 md:gap-1 mb-2 md:mb-4">
-              {weekDays.map((day) => (
-                <div
-                  key={day}
-                  className="text-center text-[10px] md:text-xs lg:text-sm font-bold text-gray-600 uppercase tracking-wide py-1 md:py-2"
-                >
-                  {day}
-                </div>
-              ))}
+      {/* Legend */}
+      <Card>
+        <CardHeader className="border-b">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <CalendarIcon className="h-5 w-5 text-primary" />
             </div>
-
-            {/* Calendar days */}
-            <div className="grid grid-cols-7 gap-1 md:gap-2">
-              {calendarDays.map((day, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleDateClick(day)}
-                  className={`
-                    relative p-1 md:p-2 rounded-lg md:rounded-xl border transition-all hover:scale-105 hover:shadow-md min-h-12 md:min-h-16 lg:min-h-20 flex flex-col items-center justify-start cursor-pointer
-                    ${
-                      day.isCurrentMonth
-                        ? "bg-white/60 backdrop-blur-sm"
-                        : "bg-gray-50/30 opacity-40"
-                    }
-                    ${
-                      day.isToday
-                        ? "ring-2 ring-pink-400 ring-offset-2"
-                        : ""
-                    }
-                    ${getPhaseColor(day.phase)}
-                    ${day.hasData ? "font-bold shadow-sm" : ""}
-                  `}
-                >
-                  <div
-                    className={`text-xs md:text-sm font-bold w-full text-left pl-1 ${
-                      day.isToday ? "text-pink-600" : "text-gray-700"
-                    }`}
-                  >
-                    {day.date.getDate()}
-                  </div>
-
-                  <div className="flex-1 flex flex-col items-center justify-center w-full">
-                    {day.phase && (
-                      <div className="text-sm md:text-lg lg:text-xl animate-in zoom-in duration-300">
-                        {getPhaseIcon(day.phase)}
-                      </div>
-                    )}
-
-                    {day.cycleDay && (
-                      <div className="mt-1 text-[8px] md:text-[10px] text-gray-600 font-medium bg-white/80 px-1.5 py-0.5 rounded-full shadow-sm">
-                        Hari {day.cycleDay}
-                      </div>
-                    )}
-                  </div>
-
-                  {day.hasData && (
-                    <div className="absolute top-1 right-1 w-2 h-2 md:w-2.5 md:h-2.5 bg-pink-500 rounded-full shadow-sm ring-1 ring-white"></div>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* Instructions */}
-            <div className="mt-6 pt-6 border-t border-gray-100">
-              <div className="flex items-start space-x-3 mb-4 bg-blue-50/50 p-3 rounded-lg border border-blue-100">
-                <div className="w-5 h-5 text-blue-600 mt-0.5">👆</div>
-                <div>
-                  <p className="text-sm font-semibold text-blue-800 mb-1">
-                    Klik Tanggal untuk Catat Gejala
-                  </p>
-                  <p className="text-xs text-blue-700">
-                    Klik pada tanggal mana saja di kalender untuk membuka
-                    halaman pencatatan gejala harian pada tanggal tersebut.
-                  </p>
-                </div>
+            <CardTitle>Legenda Fase Siklus</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg border border-red-100 hover:border-red-200 transition-colors">
+              <div className="w-8 h-8 bg-red-100 border border-red-200 rounded-lg flex items-center justify-center">
+                <Droplet className="h-4 w-4 text-red-600" />
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 md:gap-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-4 h-4 bg-pink-500 rounded-full shadow-sm ring-1 ring-pink-200"></div>
-                  <span className="text-sm font-medium text-gray-700">
-                    Memiliki data catatan
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-6 h-6 border-2 border-pink-400 rounded-lg bg-white"></div>
-                  <span className="text-sm font-medium text-gray-700">
-                    Hari ini
-                  </span>
-                </div>
-              </div>
+              <Text variant="body-sm" weight="semibold">
+                Sedang Menstruasi
+              </Text>
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-100 hover:border-green-200 transition-colors">
+              <div className="w-8 h-8 bg-green-100 border border-green-200 rounded-lg flex items-center justify-center">
+                <Sprout className="h-4 w-4 text-green-600" />
+              </div>
+              <Text variant="body-sm" weight="semibold">
+                Setelah Menstruasi
+              </Text>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border border-purple-100 hover:border-purple-200 transition-colors">
+              <div className="w-8 h-8 bg-purple-100 border border-purple-200 rounded-lg flex items-center justify-center">
+                <Flower2 className="h-4 w-4 text-purple-600" />
+              </div>
+              <Text variant="body-sm" weight="semibold">
+                Masa Subur
+              </Text>
+            </div>
+            <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors">
+              <div className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-lg flex items-center justify-center">
+                <Moon className="h-4 w-4 text-blue-600" />
+              </div>
+              <Text variant="body-sm" weight="semibold">
+                Menjelang Menstruasi
+              </Text>
+            </div>
+          </div>
 
-        {/* Legend */}
-        <Card className="border-0 shadow-lg glass-card">
-          <CardHeader className="bg-gray-50/50 px-4 py-4 md:px-6 md:py-6 border-b border-gray-100">
-            <CardTitle className="text-lg md:text-xl flex items-center">
-              <span className="mr-2">🎨</span> Legenda Fase Siklus
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 md:p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-              <div className="flex items-center space-x-3 p-3 bg-red-50/50 rounded-xl border border-red-100 hover:bg-red-50 transition-colors">
-                <div className="w-8 h-8 bg-red-100 border border-red-200 rounded-lg flex items-center justify-center text-lg shadow-sm">
-                  🩸
-                </div>
-                <span className="text-sm font-semibold text-gray-700">
+          {/* Phase Explanations */}
+          <div className="space-y-4">
+            <Heading level={3} size="heading-sm" className="mb-4">
+              Penjelasan Fase Siklus
+            </Heading>
+
+            <div className="p-4 bg-red-50 rounded-lg border border-red-100 hover:border-red-200 transition-colors">
+              <div className="flex items-center gap-2 mb-2">
+                <Droplet className="h-5 w-5 text-red-600" />
+                <Text variant="body-md" weight="bold" className="text-red-900">
                   Sedang Menstruasi
-                </span>
+                </Text>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-green-50/50 rounded-xl border border-green-100 hover:bg-green-50 transition-colors">
-                <div className="w-8 h-8 bg-green-100 border border-green-200 rounded-lg flex items-center justify-center text-lg shadow-sm">
-                  🌱
-                </div>
-                <span className="text-sm font-semibold text-gray-700">
+              <Text variant="body-sm" className="text-muted-foreground">
+                Anda sedang dalam periode haid. Tubuh mengeluarkan lapisan dinding rahim. Biasanya berlangsung 3-7 hari.
+              </Text>
+            </div>
+
+            <div className="p-4 bg-green-50 rounded-lg border border-green-100 hover:border-green-200 transition-colors">
+              <div className="flex items-center gap-2 mb-2">
+                <Sprout className="h-5 w-5 text-green-600" />
+                <Text variant="body-md" weight="bold" className="text-green-900">
                   Setelah Menstruasi
-                </span>
+                </Text>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-purple-50/50 rounded-xl border border-purple-100 hover:bg-purple-50 transition-colors">
-                <div className="w-8 h-8 bg-purple-100 border border-purple-200 rounded-lg flex items-center justify-center text-lg shadow-sm">
-                  🌸
-                </div>
-                <span className="text-sm font-semibold text-gray-700">
+              <Text variant="body-sm" className="text-muted-foreground">
+                Tubuh Anda pulih setelah haid. Energi mulai meningkat dan suasana hati membaik. Ini waktu yang baik untuk aktivitas fisik.
+              </Text>
+            </div>
+
+            <div className="p-4 bg-purple-50 rounded-lg border border-purple-100 hover:border-purple-200 transition-colors">
+              <div className="flex items-center gap-2 mb-2">
+                <Flower2 className="h-5 w-5 text-purple-600" />
+                <Text variant="body-md" weight="bold" className="text-purple-900">
                   Masa Subur
-                </span>
+                </Text>
               </div>
-              <div className="flex items-center space-x-3 p-3 bg-blue-50/50 rounded-xl border border-blue-100 hover:bg-blue-50 transition-colors">
-                <div className="w-8 h-8 bg-blue-100 border border-blue-200 rounded-lg flex items-center justify-center text-lg shadow-sm">
-                  🌙
-                </div>
-                <span className="text-sm font-semibold text-gray-700">
+              <Text variant="body-sm" className="text-muted-foreground">
+                Ini adalah waktu paling subur untuk kehamilan. Jika sedang merencanakan kehamilan, ini waktu yang tepat.
+              </Text>
+            </div>
+
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors">
+              <div className="flex items-center gap-2 mb-2">
+                <Moon className="h-5 w-5 text-blue-600" />
+                <Text variant="body-md" weight="bold" className="text-blue-900">
                   Menjelang Menstruasi
-                </span>
+                </Text>
               </div>
+              <Text variant="body-sm" className="text-muted-foreground">
+                Menunggu haid berikutnya. Anda mungkin mengalami gejala PMS seperti mood swing, kembung, atau sensitif.
+              </Text>
             </div>
-
-            {/* Phase Explanations */}
-            <div className="mt-6 space-y-4">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                Penjelasan Fase Siklus
-              </h3>
-
-              <div className="space-y-3">
-                <div className="p-4 bg-red-50/30 rounded-xl border border-red-100 hover:shadow-sm transition-all">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-xl">🩸</span>
-                    <h4 className="font-bold text-red-800">Sedang Menstruasi</h4>
-                  </div>
-                  <p className="text-sm text-red-700/80 leading-relaxed">
-                    Anda sedang dalam periode haid. Tubuh mengeluarkan lapisan dinding rahim. Biasanya berlangsung 3-7 hari.
-                  </p>
-                </div>
-
-                <div className="p-4 bg-green-50/30 rounded-xl border border-green-100 hover:shadow-sm transition-all">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-xl">🌱</span>
-                    <h4 className="font-bold text-green-800">Setelah Menstruasi</h4>
-                  </div>
-                  <p className="text-sm text-green-700/80 leading-relaxed">
-                    Tubuh Anda pulih setelah haid. Energi mulai meningkat dan suasana hati membaik. Ini waktu yang baik untuk aktivitas fisik.
-                  </p>
-                </div>
-
-                <div className="p-4 bg-purple-50/30 rounded-xl border border-purple-100 hover:shadow-sm transition-all">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-xl">🌸</span>
-                    <h4 className="font-bold text-purple-800">Masa Subur</h4>
-                  </div>
-                  <p className="text-sm text-purple-700/80 leading-relaxed">
-                    Ini adalah waktu paling subur untuk kehamilan. Jika sedang merencanakan kehamilan, ini waktu yang tepat.
-                  </p>
-                </div>
-
-                <div className="p-4 bg-blue-50/30 rounded-xl border border-blue-100 hover:shadow-sm transition-all">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <span className="text-xl">🌙</span>
-                    <h4 className="font-bold text-blue-800">Menjelang Menstruasi</h4>
-                  </div>
-                  <p className="text-sm text-blue-700/80 leading-relaxed">
-                    Menunggu haid berikutnya. Anda mungkin mengalami gejala PMS seperti mood swing, kembung, atau sensitif.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
-    </div>
+          </div>
+        </CardContent>
+      </Card>
+    </main>
   );
 }

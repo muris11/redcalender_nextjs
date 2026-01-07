@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { requireUserAccess, refreshSession } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -44,6 +45,12 @@ export async function POST(request: NextRequest) {
         { error: "User ID is required" },
         { status: 400 }
       );
+    }
+
+    // Verify user can only update their own data
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     // Update user with onboarding data
@@ -115,6 +122,9 @@ export async function POST(request: NextRequest) {
 
     // Store onboarding data for analysis (you might want to create a separate table for this)
     // For now, we'll just acknowledge the data was received
+
+    // Refresh session cookie with updated isOnboarded status
+    await refreshSession(userId);
 
     // Remove password from response
     const { password: _, ...userWithoutPassword } = updatedUser;

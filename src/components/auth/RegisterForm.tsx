@@ -9,6 +9,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loading } from "@/components/ui/loading";
@@ -16,12 +17,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuthStore } from "@/store/authStore";
 import { Eye, EyeOff, Lock, Mail, Phone, User } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 export default function RegisterForm() {
-  const router = useRouter();
   const { register, isLoading } = useAuthStore();
 
   const [formData, setFormData] = useState({
@@ -50,7 +49,6 @@ export default function RegisterForm() {
     e.preventDefault();
     setError("");
 
-    // Validasi password
     if (formData.password !== formData.confirmPassword) {
       setError("Password tidak cocok");
       return;
@@ -72,14 +70,15 @@ export default function RegisterForm() {
     });
 
     if (result.success) {
-      // Immediately show loading state and redirect to onboarding
       setRedirectText("Memuat onboarding...");
       setIsRedirectLoading(true);
       toast.success(
         "Registrasi berhasil! Mengalihkan ke halaman onboarding..."
       );
-      // Use replace so the back button doesn't return to registration
-      router.replace("/onboarding");
+      
+      // Small delay to ensure cookie is set before redirect
+      await new Promise(resolve => setTimeout(resolve, 100));
+      window.location.href = "/onboarding";
     } else {
       setError(result.error || "Registrasi gagal");
     }
@@ -90,52 +89,43 @@ export default function RegisterForm() {
       {isRedirectLoading ? (
         <PageLoading text={redirectText} />
       ) : (
-        <div className="min-h-screen bg-linear-to-br from-pink-50 via-purple-50 to-pink-50 flex items-center justify-center p-4 relative overflow-hidden">
-          {/* Background Decorations */}
-          <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-pink-300/20 rounded-full blur-[100px]"></div>
-            <div className="absolute bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-purple-300/20 rounded-full blur-[100px]"></div>
-          </div>
+        <div className="min-h-screen bg-linear-to-br from-rose-50 via-white to-pink-50/60 flex items-start justify-center pt-24 sm:pt-28 pb-10 px-4 relative overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(236,72,153,0.12),transparent_45%),radial-gradient(circle_at_80%_0%,rgba(168,85,247,0.08),transparent_40%),radial-gradient(circle_at_50%_100%,rgba(236,72,153,0.08),transparent_45%)]"></div>
+          <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ec4899_1px,transparent_1px)] bg-size-[16px_16px]"></div>
 
-          <Card className="w-full max-w-2xl border-0 shadow-2xl overflow-hidden bg-white/80 backdrop-blur-xl relative z-10">
-            <div className="h-2 bg-linear-to-r from-pink-500 via-purple-500 to-pink-500 animate-gradient bg-300%"></div>
-            <CardHeader className="text-center space-y-3 pb-8 pt-8">
-              <Link href="/" className="inline-block mx-auto hover:scale-105 transition-transform">
+          <Card className="w-full max-w-2xl shadow-xl border border-gray-100/70 bg-white/95 backdrop-blur-xl rounded-2xl relative z-10">
+            <CardHeader className="text-center space-y-3 pb-6 pt-8">
+              <Link href="/" className="inline-block mx-auto hover:scale-105 transition-transform duration-300">
                 <img
                   src="/logo.png"
                   alt="Red Calender Logo"
-                  className="h-20 w-20 object-contain drop-shadow-md"
+                  className="h-14 w-14 object-contain drop-shadow-md"
                 />
               </Link>
-              <CardTitle className="text-3xl font-bold bg-linear-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+              <CardTitle className="text-2xl sm:text-3xl font-semibold text-gray-900">
                 Buat Akun Baru
               </CardTitle>
-              <CardDescription className="text-base text-gray-600 font-medium">
+              <CardDescription className="text-sm sm:text-base text-gray-500">
                 Bergabunglah dengan komunitas kami untuk hidup lebih sehat
               </CardDescription>
             </CardHeader>
 
-            <CardContent className="px-8 pb-8">
-              <form onSubmit={handleSubmit} className="space-y-8">
+            <CardContent className="px-6 sm:px-8 pb-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Informasi Pribadi */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 pb-2 border-b-2 border-pink-100">
-                    <div className="h-8 w-8 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">1</div>
-                    <h3 className="font-bold text-gray-800 text-lg">
+                <div className="space-y-4 rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+                  <div className="flex items-center gap-3 pb-3 border-b border-gray-200/70">
+                    <div className="h-8 w-8 rounded-full bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-600 font-bold">1</div>
+                    <Heading size="heading-sm" className="text-gray-900 font-semibold">
                       Informasi Pribadi
-                    </h3>
+                    </Heading>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3 md:col-span-2">
-                      <Label
-                        htmlFor="name"
-                        className="text-base font-semibold text-gray-700"
-                      >
-                        Nama Lengkap
-                      </Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2 md:col-span-2">
+                      <Label htmlFor="name" className="text-gray-700 font-medium">Nama Lengkap</Label>
                       <div className="relative group">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-600 transition-colors" />
                         <Input
                           id="name"
                           type="text"
@@ -145,20 +135,15 @@ export default function RegisterForm() {
                           }
                           required
                           placeholder="Masukkan nama lengkap"
-                          className="h-12 pl-12 border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-pink-500 transition-all rounded-xl"
+                          className="pl-10 h-12 border-gray-200 bg-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all rounded-xl shadow-sm"
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor="email"
-                        className="text-base font-semibold text-gray-700"
-                      >
-                        Email
-                      </Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
                       <div className="relative group">
-                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-600 transition-colors" />
                         <Input
                           id="email"
                           type="email"
@@ -168,20 +153,15 @@ export default function RegisterForm() {
                           }
                           required
                           placeholder="nama@email.com"
-                          className="h-12 pl-12 border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-pink-500 transition-all rounded-xl"
+                          className="pl-10 h-12 border-gray-200 bg-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all rounded-xl shadow-sm"
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor="phone"
-                        className="text-base font-semibold text-gray-700"
-                      >
-                        Nomor Telepon
-                      </Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-gray-700 font-medium">Nomor Telepon</Label>
                       <div className="relative group">
-                        <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-600 transition-colors" />
                         <Input
                           id="phone"
                           type="tel"
@@ -190,7 +170,7 @@ export default function RegisterForm() {
                             handleInputChange("phone", e.target.value)
                           }
                           placeholder="0812..."
-                          className="h-12 pl-12 border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-pink-500 transition-all rounded-xl"
+                          className="pl-10 h-12 border-gray-200 bg-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all rounded-xl shadow-sm"
                         />
                       </div>
                     </div>
@@ -198,24 +178,19 @@ export default function RegisterForm() {
                 </div>
 
                 {/* Password */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 pb-2 border-b-2 border-pink-100">
-                    <div className="h-8 w-8 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">2</div>
-                    <h3 className="font-bold text-gray-800 text-lg">
+                <div className="space-y-4 rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+                  <div className="flex items-center gap-3 pb-3 border-b border-gray-200/70">
+                    <div className="h-8 w-8 rounded-full bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-600 font-bold">2</div>
+                    <Heading size="heading-sm" className="text-gray-900 font-semibold">
                       Keamanan Akun
-                    </h3>
+                    </Heading>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor="password"
-                        className="text-base font-semibold text-gray-700"
-                      >
-                        Password
-                      </Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
                       <div className="relative group">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-600 transition-colors" />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
@@ -225,13 +200,13 @@ export default function RegisterForm() {
                           }
                           required
                           placeholder="Minimal 6 karakter"
-                          className="h-12 pl-12 pr-12 border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-pink-500 transition-all rounded-xl"
+                          className="pl-10 pr-10 h-12 border-gray-200 bg-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all rounded-xl shadow-sm"
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent text-gray-400 hover:text-gray-600"
+                          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent text-gray-400 hover:text-gray-600"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -243,15 +218,10 @@ export default function RegisterForm() {
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label
-                        htmlFor="confirmPassword"
-                        className="text-base font-semibold text-gray-700"
-                      >
-                        Konfirmasi Password
-                      </Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="confirmPassword" className="text-gray-700 font-medium">Konfirmasi Password</Label>
                       <div className="relative group">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-500 transition-colors" />
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-pink-600 transition-colors" />
                         <Input
                           id="confirmPassword"
                           type={showConfirmPassword ? "text" : "password"}
@@ -261,13 +231,13 @@ export default function RegisterForm() {
                           }
                           required
                           placeholder="Ulangi password"
-                          className="h-12 pl-12 pr-12 border-2 border-gray-100 bg-gray-50/50 focus:bg-white focus:border-pink-500 transition-all rounded-xl"
+                          className="pl-10 pr-10 h-12 border-gray-200 bg-white focus:border-pink-500 focus:ring-2 focus:ring-pink-500/20 transition-all rounded-xl shadow-sm"
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent text-gray-400 hover:text-gray-600"
+                          className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0 hover:bg-transparent text-gray-400 hover:text-gray-600"
                           onClick={() =>
                             setShowConfirmPassword(!showConfirmPassword)
                           }
@@ -284,17 +254,15 @@ export default function RegisterForm() {
                 </div>
 
                 {/* Personalisasi Tema */}
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3 pb-2 border-b-2 border-pink-100">
-                    <div className="h-8 w-8 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 font-bold">3</div>
-                    <h3 className="font-bold text-gray-800 text-lg">
+                <div className="space-y-4 rounded-2xl border border-gray-100 bg-gray-50/60 p-5">
+                  <div className="flex items-center gap-3 pb-3 border-b border-gray-200/70">
+                    <div className="h-8 w-8 rounded-full bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-600 font-bold">3</div>
+                    <Heading size="heading-sm" className="text-gray-900 font-semibold">
                       Personalisasi Tema
-                    </h3>
+                    </Heading>
                   </div>
                   <div className="space-y-3">
-                    <Label className="text-base font-semibold text-gray-700">
-                      Pilih Tema Favorit Anda
-                    </Label>
+                    <Label className="text-gray-700 font-medium">Pilih Tema Favorit Anda</Label>
                     <RadioGroup
                       value={formData.theme}
                       onValueChange={(value) =>
@@ -303,11 +271,11 @@ export default function RegisterForm() {
                       className="grid grid-cols-1 sm:grid-cols-3 gap-4"
                     >
                       {[
-                        { id: "kucing", label: "Kucing", icon: "🐱", color: "border-orange-200 bg-orange-50" },
-                        { id: "gajah", label: "Gajah", icon: "🐘", color: "border-blue-200 bg-blue-50" },
-                        { id: "unicorn", label: "Unicorn", icon: "🦄", color: "border-purple-200 bg-purple-50" },
+                        { id: "kucing", label: "Kucing", icon: "🐱", description: "Pink Lembut", color: "border-pink-200 bg-pink-50/50" },
+                        { id: "gajah", label: "Gajah", icon: "🐘", description: "Biru Tenang", color: "border-blue-200 bg-blue-50/50" },
+                        { id: "unicorn", label: "Unicorn", icon: "🦄", description: "Ungu Ajaib", color: "border-purple-200 bg-purple-50/50" },
                       ].map((theme) => (
-                        <div key={theme.id} className={`relative flex items-center space-x-3 p-4 border-2 rounded-xl cursor-pointer transition-all hover:scale-105 ${formData.theme === theme.id ? `border-pink-500 bg-pink-50 shadow-md` : `border-gray-100 hover:border-pink-200`}`}>
+                        <div key={theme.id} className={`relative flex flex-col items-center justify-center p-4 border rounded-xl cursor-pointer transition-all duration-200 h-32 ${formData.theme === theme.id ? `border-transparent ring-2 ring-pink-500 ${theme.color} shadow-sm` : `border-gray-200 bg-white hover:border-pink-300 hover:shadow-sm`}`}>
                           <RadioGroupItem
                             value={theme.id}
                             id={`theme-${theme.id}`}
@@ -317,11 +285,14 @@ export default function RegisterForm() {
                             htmlFor={`theme-${theme.id}`}
                             className="flex flex-col items-center justify-center w-full cursor-pointer gap-2"
                           >
-                            <span className="text-4xl">{theme.icon}</span>
-                            <span className="font-bold text-gray-700">{theme.label}</span>
-                          </Label>
+                          <span className="text-4xl filter drop-shadow-sm">{theme.icon}</span>
+                          <div className="text-center">
+                            <span className="block font-bold text-gray-800">{theme.label}</span>
+                            <span className="block text-xs text-gray-500 font-medium mt-0.5">{theme.description}</span>
+                          </div>
+                        </Label>
                           {formData.theme === theme.id && (
-                            <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-pink-500"></div>
+                            <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-pink-500 ring-2 ring-white"></div>
                           )}
                         </div>
                       ))}
@@ -330,15 +301,15 @@ export default function RegisterForm() {
                 </div>
 
                 {error && (
-                  <div className="bg-red-50 border border-red-200 text-red-600 p-4 rounded-xl text-sm font-medium flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-                    <div className="h-2 w-2 rounded-full bg-red-500 shrink-0"></div>
+                  <div className="bg-pink-50 border border-pink-200 text-pink-700 p-4 rounded-xl text-sm font-medium flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                    <div className="h-2 w-2 rounded-full bg-pink-500 shrink-0"></div>
                     {error}
                   </div>
                 )}
 
                 <Button
                   type="submit"
-                  className="w-full bg-linear-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white shadow-lg hover:shadow-pink-200/50 transition-all font-bold py-6 rounded-xl border-0 text-base"
+                  className="w-full h-14 rounded-full bg-linear-to-r from-pink-600 to-pink-500 hover:from-pink-700 hover:to-pink-600 text-white shadow-md hover:shadow-lg hover:shadow-pink-200 transition-all duration-300 font-semibold text-lg"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -358,7 +329,7 @@ export default function RegisterForm() {
                     <div className="w-full border-t border-gray-200"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-white/80 backdrop-blur-xl text-gray-500 font-medium">
+                    <span className="px-4 bg-white/80 backdrop-blur-sm text-gray-500 font-medium">
                       Sudah punya akun?
                     </span>
                   </div>
@@ -366,7 +337,7 @@ export default function RegisterForm() {
                 <Link href="/login">
                   <Button
                     variant="outline"
-                    className="w-full border-2 border-pink-200 text-pink-600 hover:bg-pink-50 hover:border-pink-300 hover:text-pink-700 font-bold py-6 rounded-xl transition-all"
+                    className="w-full h-12 rounded-full border-2 border-pink-200 text-pink-600 hover:bg-pink-50 hover:border-pink-300 hover:text-pink-700 font-semibold transition-all"
                   >
                     Masuk ke Akun Saya
                   </Button>

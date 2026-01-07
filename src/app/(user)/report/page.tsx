@@ -1,10 +1,11 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartSkeleton, UnifiedPageLoading } from "@/components/ui/loading-skeletons";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
 import {
     Select,
     SelectContent,
@@ -182,12 +183,9 @@ export default function ReportContent() {
 
   if (isDataLoading || !analysis) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-pink-50">
-        <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-          <ChartSkeleton />
-        </main>
-      </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <ChartSkeleton />
+      </main>
     );
   }
 
@@ -207,26 +205,24 @@ export default function ReportContent() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-indigo-50 via-white to-pink-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Page Header */}
-        <div className="mb-8 sm:mb-10 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-linear-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-3 sm:mb-4">
-            Laporan Kesehatan
-          </h1>
-          <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4">
-            Ringkasan kesehatan reproduksi Anda
-          </p>
-        </div>
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      {/* Page Header */}
+      <div className="mb-6 sm:mb-8">
+        <Heading level="1" size="heading-xl" className="mb-2">
+          Laporan Kesehatan
+        </Heading>
+        <Text variant="body-md" className="text-muted-foreground">
+          Ringkasan kesehatan reproduksi Anda
+        </Text>
+      </div>
 
-        {/* Header Actions */}
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-end items-center mb-6 sm:mb-8 lg:mb-10 gap-4">
-          <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-            <SelectTrigger className="w-full sm:w-48 h-10 sm:h-12 border-2 border-gray-200 hover:border-indigo-300 rounded-lg sm:rounded-xl">
-              <SelectValue placeholder="Pilih periode" />
-            </SelectTrigger>
-            <SelectContent>
+      {/* Header Actions */}
+      <div className="flex justify-end mb-6">
+        <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue placeholder="Pilih periode" />
+          </SelectTrigger>
+          <SelectContent>
               <SelectItem value="3months">3 Bulan Terakhir</SelectItem>
               <SelectItem value="6months">6 Bulan Terakhir</SelectItem>
               <SelectItem value="12months">12 Bulan Terakhir</SelectItem>
@@ -234,99 +230,73 @@ export default function ReportContent() {
           </Select>
         </div>
 
-        {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8 lg:mb-10">
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1 sm:h-2 bg-linear-to-r from-blue-400 to-blue-600"></div>
-            <CardHeader className="pb-2 sm:pb-3">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-blue-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                </div>
-                <span className="text-sm sm:text-base">Siklus Saat Ini</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-2xl sm:text-3xl font-bold text-blue-600 mb-1 sm:mb-2">
-                Hari ke-{analysis.cycleDay}
+        {/* Summary Cards - 2 columns on mobile */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
               </div>
-              <Badge
-                className={`${getPhaseColor(
-                  analysis.currentPhase
-                )} px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold`}
-              >
+              <Text variant="display-sm" className="font-bold text-primary mb-1">
+                Hari {analysis.cycleDay}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Siklus Saat Ini
+              </Text>
+              <Badge className={`${getPhaseColor(analysis.currentPhase)} text-xs`}>
                 {getPhaseName(analysis.currentPhase)}
               </Badge>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1 sm:h-2 bg-linear-to-r from-green-400 to-green-600"></div>
-            <CardHeader className="pb-2 sm:pb-3">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-green-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
-                </div>
-                <span className="text-sm sm:text-base">Rata-rata Siklus</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600 mb-1 sm:mb-2">
-                {analysis.avgCycleLength} hari
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-3">
+                <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
               </div>
-              <div className="flex items-center space-x-2">
-                <span
-                  className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold ${regularityStatus.color}`}
-                >
-                  {regularityStatus.icon} {regularityStatus.text}
-                </span>
-              </div>
+              <Text variant="display-sm" className="font-bold text-green-600 mb-1">
+                {analysis.avgCycleLength}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Rata-rata Siklus
+              </Text>
+              <Text variant="label-xs" className={regularityStatus.color}>
+                {regularityStatus.text}
+              </Text>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1 sm:h-2 bg-linear-to-r from-red-400 to-red-600"></div>
-            <CardHeader className="pb-2 sm:pb-3">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-red-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <Activity className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
-                </div>
-                <span className="text-sm sm:text-base">Rata-rata Haid</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-2xl sm:text-3xl font-bold text-red-600 mb-1 sm:mb-2">
-                {analysis.avgPeriodLength} hari
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
               </div>
-              <p className="text-xs sm:text-sm font-medium text-green-600">
-                ✓ Normal (3-7 hari)
-              </p>
+              <Text variant="display-sm" className="font-bold text-red-600 mb-1">
+                {analysis.avgPeriodLength}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Rata-rata Haid
+              </Text>
+              <Text variant="label-xs" className="text-green-600">
+                Normal
+              </Text>
             </CardContent>
           </Card>
 
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden glass-card">
-            <div className="h-1 sm:h-2 bg-linear-to-r from-purple-400 to-purple-600"></div>
-            <CardHeader className="pb-2 sm:pb-3">
-              <CardTitle className="flex items-center text-base sm:text-lg text-gray-800">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-purple-100 flex items-center justify-center mr-2 sm:mr-3 shrink-0">
-                  <Moon className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
-                </div>
-                <span className="text-sm sm:text-base">Masa Subur</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div
-                className={`text-lg sm:text-2xl lg:text-3xl font-bold mb-1 sm:mb-2 ${
-                  analysis.fertileWindow.isActive
-                    ? "text-purple-600"
-                    : "text-gray-400"
-                }`}
-              >
-                {analysis.fertileWindow.isActive ? "Aktif" : "Tidak Aktif"}
+          <Card className="text-center">
+            <CardContent className="pt-5 pb-4">
+              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-purple-100 flex items-center justify-center mx-auto mb-3">
+                <Moon className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
               </div>
-              <p className="text-xs sm:text-sm font-medium text-gray-600">
+              <Text variant="display-sm" className={`font-bold mb-1 ${analysis.fertileWindow.isActive ? "text-purple-600" : "text-muted-foreground"}`}>
+                {analysis.fertileWindow.isActive ? "Aktif" : "Tidak"}
+              </Text>
+              <Text variant="body-xs" className="text-muted-foreground mb-1">
+                Masa Subur
+              </Text>
+              <Text variant="label-xs" className="text-muted-foreground">
                 Hari {analysis.fertileWindow.start}-{analysis.fertileWindow.end}
-              </p>
+              </Text>
             </CardContent>
           </Card>
         </div>
@@ -444,7 +414,7 @@ export default function ReportContent() {
               </div>
               {cycles.length >= 2 && (
                 <p className="text-center text-xs text-gray-500 mt-2">
-                  Rata-rata: <span className="font-semibold text-pink-600">{analysis?.avgCycleLength || 28} hari</span>
+                  Rata-rata: <span className="font-semibold text-theme">{analysis?.avgCycleLength || 28} hari</span>
                 </p>
               )}
             </CardContent>
@@ -461,7 +431,7 @@ export default function ReportContent() {
               <div className="h-64 sm:h-72 lg:h-80 xl:h-96">
                 {!analysis.symptomFrequency || analysis.symptomFrequency.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-gray-500">
-                    <Activity className="h-12 w-12 mb-4 text-purple-300" />
+                    <Activity className="h-12 w-12 mb-4 text-gray-300" />
                     <p className="text-center text-sm sm:text-base font-medium">
                       Belum ada data gejala
                     </p>
@@ -515,7 +485,7 @@ export default function ReportContent() {
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 glass-card">
             <CardHeader className="pb-3 sm:pb-4">
               <CardTitle className="text-lg sm:text-xl text-gray-800 flex items-center">
-                <Activity className="h-5 w-5 mr-2 text-pink-600" />
+                <Activity className="h-5 w-5 mr-2 text-theme" />
                 Gejala Paling Umum
               </CardTitle>
             </CardHeader>
@@ -560,7 +530,7 @@ export default function ReportContent() {
           <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 glass-card">
             <CardHeader className="pb-3 sm:pb-4">
               <CardTitle className="text-lg sm:text-xl text-gray-800 flex items-center">
-                <Heart className="h-5 w-5 mr-2 text-purple-600" />
+                <Heart className="h-5 w-5 mr-2 text-theme" />
                 Analisis Mood
               </CardTitle>
             </CardHeader>
@@ -577,7 +547,7 @@ export default function ReportContent() {
                     <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 shrink-0">
                       <div className="w-16 sm:w-20 lg:w-24 bg-gray-200 rounded-full h-2">
                         <div
-                          className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                          className="bg-gradient-theme h-2 rounded-full transition-all duration-500"
                           style={{
                             width: `${
                               (mood.count /
@@ -604,7 +574,7 @@ export default function ReportContent() {
         <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 glass-card mb-6 sm:mb-8 lg:mb-10">
           <CardHeader className="pb-3 sm:pb-4">
             <CardTitle className="text-lg sm:text-xl text-gray-800 flex items-center">
-              <Heart className="h-5 w-5 mr-2 text-pink-600" />
+              <Heart className="h-5 w-5 mr-2 text-theme" />
               Rekomendasi Kesehatan Personal
             </CardTitle>
           </CardHeader>
@@ -718,7 +688,6 @@ export default function ReportContent() {
             </div>
           </CardContent>
         </Card>
-      </main>
-    </div>
+    </main>
   );
 }

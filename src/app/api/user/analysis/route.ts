@@ -1,5 +1,6 @@
 import { calculateCyclePhase } from "@/lib/cycle-utils";
 import { db } from "@/lib/db";
+import { requireUserAccess } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -12,6 +13,12 @@ export async function GET(request: NextRequest) {
         { error: "User ID is required" },
         { status: 400 }
       );
+    }
+
+    // Verify user can only access their own data
+    const auth = await requireUserAccess(userId);
+    if (!auth.user) {
+      return NextResponse.json({ error: auth.error }, { status: 401 });
     }
 
     // Get user data

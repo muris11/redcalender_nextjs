@@ -1,6 +1,5 @@
 "use client";
 
-import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,8 +8,10 @@ import { Label } from "@/components/ui/label";
 import { LogSkeleton, UnifiedPageLoading } from "@/components/ui/loading-skeletons";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Text } from "@/components/ui/text";
+import { Heading } from "@/components/ui/heading";
 import { useAuthStore } from "@/store/authStore";
-import { Calendar, Heart, Save } from "lucide-react";
+import { Calendar, Heart, Save, Ban, Activity, FileText, Droplet, TestTube, Stethoscope } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -36,7 +37,6 @@ export default function LogContent() {
     sexualActivity: "",
     orgasm: false,
     cervixMucus: "",
-    cervixPosition: "",
     ovulationTestResult: "",
     pregnancyTestResult: "",
     sadariResult: "",
@@ -80,7 +80,6 @@ export default function LogContent() {
           sexualActivity: log.sexualActivity || "",
           orgasm: log.orgasm || false,
           cervixMucus: log.cervixMucus || "",
-          cervixPosition: log.cervixPosition || "",
           ovulationTestResult: log.ovulationTestResult || "",
           pregnancyTestResult: log.pregnancyTestResult || "",
           sadariResult: log.sadariResult || "",
@@ -98,7 +97,6 @@ export default function LogContent() {
           sexualActivity: "",
           orgasm: false,
           cervixMucus: "",
-          cervixPosition: "",
           ovulationTestResult: "",
           pregnancyTestResult: "",
           sadariResult: "",
@@ -245,8 +243,7 @@ export default function LogContent() {
     // Validation: Check if all required fields are filled
     const requiredFields = [
       { field: "sexualActivity", name: "Aktivitas Seksual" },
-      { field: "cervixMucus", name: "Mukus Serviks" },
-      { field: "cervixPosition", name: "Posisi Serviks" },
+      { field: "cervixMucus", name: "Cairan Keputihan" },
       { field: "ovulationTestResult", name: "Tes Ovulasi" },
       { field: "pregnancyTestResult", name: "Tes Kehamilan" },
       { field: "sadariResult", name: "SADARI" },
@@ -295,7 +292,6 @@ export default function LogContent() {
           sexualActivity: formData.sexualActivity || null,
           orgasm: formData.orgasm || null,
           cervixMucus: formData.cervixMucus || null,
-          cervixPosition: formData.cervixPosition || null,
           ovulationTestResult: formData.ovulationTestResult || null,
           pregnancyTestResult: formData.pregnancyTestResult || null,
           sadariResult: formData.sadariResult || null,
@@ -332,66 +328,59 @@ export default function LogContent() {
 
   if (isDataLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-        <Navbar />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-          <LogSkeleton />
-        </main>
-      </div>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <LogSkeleton />
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
-      <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Page Header */}
-        <div className="mb-8 sm:mb-10 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent mb-3 sm:mb-4">
-            Log Harian Kesehatan
-          </h1>
-          <p className="text-gray-600 text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4">
-            Catat aktivitas dan kondisi kesehatan Anda setiap hari untuk
-            pemantauan yang lebih baik
-          </p>
-        </div>
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      {/* Page Header */}
+      <div className="mb-8 text-center">
+        <Heading level={1} size="display-lg" className="mb-3">
+          Log Harian Kesehatan
+        </Heading>
+        <Text variant="body-lg" className="text-muted-foreground max-w-2xl mx-auto">
+          Catat aktivitas dan kondisi kesehatan Anda setiap hari untuk pemantauan yang lebih baik
+        </Text>
+      </div>
 
         {/* Date Selection & Physical Measurements */}
-        <Card className="mb-6 sm:mb-8 lg:mb-10 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-          <div className="bg-gradient-to-r from-rose-500 via-pink-500 to-blue-500 p-4 sm:p-6 rounded-t-lg">
-            <CardTitle className="flex items-center justify-center sm:justify-start text-white text-lg sm:text-xl">
-              <Calendar className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-              Data Dasar & Pengukuran Fisik
-            </CardTitle>
-          </div>
-          <CardContent className="p-4 sm:p-6 space-y-6 sm:space-y-8">
+        <Card className="mb-8">
+          <CardHeader className="border-b">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Calendar className="h-5 w-5 text-primary" />
+              </div>
+              <CardTitle>Data Dasar & Pengukuran Fisik</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent className="p-6 space-y-6">
             {/* Date Selection Section */}
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4 text-center">
+            <div className="border-b pb-6">
+              <Heading level={3} size="heading-sm" className="mb-4 text-center">
                 Pilih Tanggal
-              </h3>
+              </Heading>
               <div className="flex justify-center">
                 <Input
                   type="date"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
                   max={new Date().toISOString().split("T")[0]}
-                  className="text-lg h-14 border-2 border-gray-200 focus:border-pink-400 rounded-lg w-full max-w-xs text-center"
+                  className="text-lg h-14 w-full max-w-xs text-center"
                 />
               </div>
             </div>
 
             {/* Physical Measurements Section */}
             <div>
-              <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-4 text-center">
+              <Heading level={3} size="heading-sm" className="mb-4 text-center">
                 Pengukuran Fisik
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                <div className="space-y-2 sm:space-y-3">
-                  <Label
-                    htmlFor="weight"
-                    className="text-sm sm:text-base font-semibold text-gray-700 flex items-center justify-center"
-                  >
+              </Heading>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="weight" className="text-sm font-semibold flex items-center justify-center">
                     Berat Badan (kg)
                   </Label>
                   <Input
@@ -400,18 +389,13 @@ export default function LogContent() {
                     step="0.1"
                     placeholder="55.5"
                     value={formData.weight}
-                    onChange={(e) =>
-                      handleInputChange("weight", e.target.value)
-                    }
-                    className="h-12 sm:h-14 border-2 border-gray-200 focus:border-blue-400 text-base sm:text-lg text-center rounded-lg transition-colors duration-200"
+                    onChange={(e) => handleInputChange("weight", e.target.value)}
+                    className="h-14 text-lg text-center"
                   />
                 </div>
 
-                <div className="space-y-2 sm:space-y-3">
-                  <Label
-                    htmlFor="temperature"
-                    className="text-sm sm:text-base font-semibold text-gray-700 flex items-center justify-center"
-                  >
+                <div className="space-y-2">
+                  <Label htmlFor="temperature" className="text-sm font-semibold flex items-center justify-center">
                     Suhu Tubuh (°C)
                   </Label>
                   <Input
@@ -420,18 +404,13 @@ export default function LogContent() {
                     step="0.1"
                     placeholder="36.5"
                     value={formData.temperature}
-                    onChange={(e) =>
-                      handleInputChange("temperature", e.target.value)
-                    }
-                    className="h-12 sm:h-14 border-2 border-gray-200 focus:border-blue-400 text-base sm:text-lg text-center rounded-lg transition-colors duration-200"
+                    onChange={(e) => handleInputChange("temperature", e.target.value)}
+                    className="h-14 text-lg text-center"
                   />
                 </div>
 
-                <div className="space-y-2 sm:space-y-3">
-                  <Label
-                    htmlFor="waterIntake"
-                    className="text-sm sm:text-base font-semibold text-gray-700 flex items-center justify-center"
-                  >
+                <div className="space-y-2">
+                  <Label htmlFor="waterIntake" className="text-sm font-semibold flex items-center justify-center">
                     Asupan Air (ml)
                   </Label>
                   <Input
@@ -439,18 +418,13 @@ export default function LogContent() {
                     type="number"
                     placeholder="2000"
                     value={formData.waterIntake}
-                    onChange={(e) =>
-                      handleInputChange("waterIntake", e.target.value)
-                    }
-                    className="h-12 sm:h-14 border-2 border-gray-200 focus:border-blue-400 text-base sm:text-lg text-center rounded-lg transition-colors duration-200"
+                    onChange={(e) => handleInputChange("waterIntake", e.target.value)}
+                    className="h-14 text-lg text-center"
                   />
                 </div>
 
-                <div className="space-y-2 sm:space-y-3">
-                  <Label
-                    htmlFor="sleepHours"
-                    className="text-sm sm:text-base font-semibold text-gray-700 flex items-center justify-center"
-                  >
+                <div className="space-y-2">
+                  <Label htmlFor="sleepHours" className="text-sm font-semibold flex items-center justify-center">
                     Durasi Tidur (jam)
                   </Label>
                   <Input
@@ -459,10 +433,8 @@ export default function LogContent() {
                     step="0.5"
                     placeholder="8"
                     value={formData.sleepHours}
-                    onChange={(e) =>
-                      handleInputChange("sleepHours", e.target.value)
-                    }
-                    className="h-12 sm:h-14 border-2 border-gray-200 focus:border-blue-400 text-base sm:text-lg text-center rounded-lg transition-colors duration-200"
+                    onChange={(e) => handleInputChange("sleepHours", e.target.value)}
+                    className="h-14 text-lg text-center"
                   />
                 </div>
               </div>
@@ -471,18 +443,21 @@ export default function LogContent() {
         </Card>
 
         {/* Symptoms */}
-        <Card className="mb-6 sm:mb-8 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-          <CardHeader className="bg-gradient-to-r from-orange-500 to-red-500 p-4 sm:p-6 rounded-t-lg">
-            <CardTitle className="text-white text-lg sm:text-xl text-center">
-              Gejala Fisik
-            </CardTitle>
+        <Card className="mb-8">
+          <CardHeader className="border-b">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-orange-100 flex items-center justify-center">
+                <Activity className="h-5 w-5 text-orange-600" />
+              </div>
+              <CardTitle>Gejala Fisik</CardTitle>
+            </div>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4">
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {symptoms.map((symptom) => (
                 <div
                   key={symptom.id}
-                  className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() =>
                     handleSymptomToggle(
                       symptom.name,
@@ -496,17 +471,17 @@ export default function LogContent() {
                     onCheckedChange={(checked) =>
                       handleSymptomToggle(symptom.name, checked as boolean)
                     }
-                    className="h-5 w-5 sm:h-6 sm:w-6"
+                    className="h-6 w-6"
                   />
                   <img
                     src={symptom.image}
                     alt={symptom.name}
-                    className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
+                    className="w-16 h-16 object-contain"
                     loading="lazy"
                   />
                   <Label
                     htmlFor={symptom.id}
-                    className="text-xs sm:text-sm font-medium text-center cursor-pointer leading-tight"
+                    className="text-sm font-medium text-center cursor-pointer"
                   >
                     {symptom.name}
                   </Label>
@@ -517,19 +492,21 @@ export default function LogContent() {
         </Card>
 
         {/* Moods */}
-        <Card className="mb-6 sm:mb-8 lg:mb-10 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-          <CardHeader className="bg-gradient-to-r from-pink-500 to-rose-500 p-4 sm:p-6 rounded-t-lg">
-            <CardTitle className="flex items-center text-white text-lg sm:text-xl justify-center">
-              <Heart className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-              Suasana Hati
-            </CardTitle>
+        <Card className="mb-8">
+          <CardHeader className="border-b">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-pink-100 flex items-center justify-center">
+                <Heart className="h-5 w-5 text-pink-600" />
+              </div>
+              <CardTitle>Suasana Hati</CardTitle>
+            </div>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 sm:gap-4">
+          <CardContent className="p-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {moods.map((mood) => (
                 <div
                   key={mood.id}
-                  className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-pink-400 hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() =>
                     handleMoodToggle(
                       mood.name,
@@ -543,17 +520,17 @@ export default function LogContent() {
                     onCheckedChange={(checked) =>
                       handleMoodToggle(mood.name, checked as boolean)
                     }
-                    className="h-5 w-5 sm:h-6 sm:w-6"
+                    className="h-6 w-6"
                   />
                   <img
                     src={mood.image}
                     alt={mood.name}
-                    className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
+                    className="w-16 h-16 object-contain"
                     loading="lazy"
                   />
                   <Label
                     htmlFor={mood.id}
-                    className="text-xs sm:text-sm font-medium text-center cursor-pointer leading-tight"
+                    className="text-sm font-medium text-center cursor-pointer"
                   >
                     {mood.name}
                   </Label>
@@ -564,36 +541,38 @@ export default function LogContent() {
         </Card>
 
         {/* Sexual & Reproductive Health */}
-        <div className="mb-8 sm:mb-10 lg:mb-12 space-y-6 sm:space-y-8">
-          <div className="text-center px-4">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-green-900 mb-2">
+        <div className="mb-8 space-y-6">
+          <div className="text-center">
+            <Heading level={2} size="heading-xl" className="mb-2">
               Kesehatan Seksual & Reproduksi
-            </h2>
-            <p className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-3xl mx-auto">
+            </Heading>
+            <Text variant="body-md" className="text-muted-foreground max-w-3xl mx-auto">
               Informasi penting untuk pemantauan kesehatan reproduksi Anda
-            </p>
+            </Text>
           </div>
 
           {/* Sexual Activity */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 sm:p-6 rounded-t-lg">
-              <CardTitle className="flex items-center text-white text-lg sm:text-xl justify-center">
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-                Aktivitas Seksual
-              </CardTitle>
+          <Card>
+            <CardHeader className="border-b">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-green-100 flex items-center justify-center">
+                  <Heart className="h-5 w-5 text-green-600" />
+                </div>
+                <CardTitle>Aktivitas Seksual</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-6">
               <RadioGroup
                 value={formData.sexualActivity}
                 onValueChange={(value) =>
                   handleInputChange("sexualActivity", value)
                 }
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
               >
                 {sexualActivities.map((activity) => (
                   <div
                     key={activity.id}
-                    className="flex flex-col items-center space-y-2 sm:space-y-3 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-400 hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105"
+                    className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                     onClick={() =>
                       handleInputChange("sexualActivity", activity.id)
                     }
@@ -606,12 +585,12 @@ export default function LogContent() {
                     <img
                       src={activity.image}
                       alt={activity.name}
-                      className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
+                      className="w-16 h-16 object-contain"
                       loading="lazy"
                     />
                     <Label
                       htmlFor={`sexual-${activity.id}`}
-                      className="text-xs sm:text-sm font-medium text-center cursor-pointer leading-tight"
+                      className="text-sm font-medium text-center cursor-pointer"
                     >
                       {activity.name}
                     </Label>
@@ -622,23 +601,25 @@ export default function LogContent() {
           </Card>
 
           {/* Cervix Mucus */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 sm:p-6 rounded-t-lg">
-              <CardTitle className="flex items-center text-white text-lg sm:text-xl justify-center">
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-                Mukus Serviks
-              </CardTitle>
+          <Card>
+            <CardHeader className="border-b">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                  <Droplet className="h-5 w-5 text-blue-600" />
+                </div>
+                <CardTitle>Cairan Keputihan</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-6">
               <RadioGroup
                 value={formData.cervixMucus}
                 onValueChange={(value) =>
                   handleInputChange("cervixMucus", value)
                 }
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4"
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4"
               >
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() => handleInputChange("cervixMucus", "dry")}
                 >
                   <RadioGroupItem
@@ -660,7 +641,7 @@ export default function LogContent() {
                   </Label>
                 </div>
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() => handleInputChange("cervixMucus", "sticky")}
                 >
                   <RadioGroupItem
@@ -682,7 +663,7 @@ export default function LogContent() {
                   </Label>
                 </div>
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() => handleInputChange("cervixMucus", "creamy")}
                 >
                   <RadioGroupItem
@@ -704,7 +685,7 @@ export default function LogContent() {
                   </Label>
                 </div>
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() => handleInputChange("cervixMucus", "watery")}
                 >
                   <RadioGroupItem
@@ -726,7 +707,7 @@ export default function LogContent() {
                   </Label>
                 </div>
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() => handleInputChange("cervixMucus", "egg_white")}
                 >
                   <RadioGroupItem
@@ -751,101 +732,17 @@ export default function LogContent() {
             </CardContent>
           </Card>
 
-          {/* Cervix Position */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 sm:p-6 rounded-t-lg">
-              <CardTitle className="flex items-center text-white text-lg sm:text-xl justify-center">
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-                Posisi Serviks
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <RadioGroup
-                value={formData.cervixPosition}
-                onValueChange={(value) =>
-                  handleInputChange("cervixPosition", value)
-                }
-                className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
-              >
-                <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
-                  onClick={() => handleInputChange("cervixPosition", "low")}
-                >
-                  <RadioGroupItem
-                    value="low"
-                    id="position-low"
-                    className="text-green-600"
-                  />
-                  <img
-                    src="/ps/rendah.webp"
-                    alt="Rendah"
-                    className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
-                    loading="lazy"
-                  />
-                  <Label
-                    htmlFor="position-low"
-                    className="text-xs sm:text-sm font-medium text-center cursor-pointer"
-                  >
-                    Rendah
-                  </Label>
-                </div>
-                <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
-                  onClick={() => handleInputChange("cervixPosition", "medium")}
-                >
-                  <RadioGroupItem
-                    value="medium"
-                    id="position-medium"
-                    className="text-green-600"
-                  />
-                  <img
-                    src="/ps/sedang.webp"
-                    alt="Sedang"
-                    className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
-                    loading="lazy"
-                  />
-                  <Label
-                    htmlFor="position-medium"
-                    className="text-xs sm:text-sm font-medium text-center cursor-pointer"
-                  >
-                    Sedang
-                  </Label>
-                </div>
-                <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
-                  onClick={() => handleInputChange("cervixPosition", "high")}
-                >
-                  <RadioGroupItem
-                    value="high"
-                    id="position-high"
-                    className="text-green-600"
-                  />
-                  <img
-                    src="/ps/tinggi.webp"
-                    alt="Tinggi"
-                    className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
-                    loading="lazy"
-                  />
-                  <Label
-                    htmlFor="position-high"
-                    className="text-xs sm:text-sm font-medium text-center cursor-pointer"
-                  >
-                    Tinggi
-                  </Label>
-                </div>
-              </RadioGroup>
-            </CardContent>
-          </Card>
-
           {/* Ovulation Test */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 sm:p-6 rounded-t-lg">
-              <CardTitle className="flex items-center text-white text-lg sm:text-xl justify-center">
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-                Tes Ovulasi
-              </CardTitle>
+          <Card>
+            <CardHeader className="border-b">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                  <TestTube className="h-5 w-5 text-purple-600" />
+                </div>
+                <CardTitle>Tes Ovulasi</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-6">
               <RadioGroup
                 value={formData.ovulationTestResult}
                 onValueChange={(value) =>
@@ -854,7 +751,7 @@ export default function LogContent() {
                 className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4"
               >
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() =>
                     handleInputChange("ovulationTestResult", "negative")
                   }
@@ -878,7 +775,7 @@ export default function LogContent() {
                   </Label>
                 </div>
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() =>
                     handleInputChange("ovulationTestResult", "positive")
                   }
@@ -901,28 +798,51 @@ export default function LogContent() {
                     Positif
                   </Label>
                 </div>
+                <div
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-border transition-colors cursor-pointer"
+                  onClick={() =>
+                    handleInputChange("ovulationTestResult", "not_done")
+                  }
+                >
+                  <RadioGroupItem
+                    value="not_done"
+                    id="ovulation-not_done"
+                    className="text-gray-600"
+                  />
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-gray-400">
+                    <Ban className="h-10 w-10 sm:h-12 sm:w-12" />
+                  </div>
+                  <Label
+                    htmlFor="ovulation-not_done"
+                    className="text-xs sm:text-sm font-medium text-center cursor-pointer leading-tight"
+                  >
+                    Tidak Dilakukan
+                  </Label>
+                </div>
               </RadioGroup>
             </CardContent>
           </Card>
 
           {/* Pregnancy Test */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 sm:p-6 rounded-t-lg">
-              <CardTitle className="flex items-center text-white text-lg sm:text-xl justify-center">
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-                Tes Kehamilan
-              </CardTitle>
+          <Card>
+            <CardHeader className="border-b">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-pink-100 flex items-center justify-center">
+                  <TestTube className="h-5 w-5 text-pink-600" />
+                </div>
+                <CardTitle>Tes Kehamilan</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-6">
               <RadioGroup
                 value={formData.pregnancyTestResult}
                 onValueChange={(value) =>
                   handleInputChange("pregnancyTestResult", value)
                 }
-                className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4"
+                className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4"
               >
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() =>
                     handleInputChange("pregnancyTestResult", "positive")
                   }
@@ -946,7 +866,7 @@ export default function LogContent() {
                   </Label>
                 </div>
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                   onClick={() =>
                     handleInputChange("pregnancyTestResult", "negative")
                   }
@@ -970,7 +890,7 @@ export default function LogContent() {
                   </Label>
                 </div>
                 <div
-                  className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-yellow-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-yellow-500 transition-colors cursor-pointer"
                   onClick={() =>
                     handleInputChange("pregnancyTestResult", "faint_line")
                   }
@@ -993,19 +913,42 @@ export default function LogContent() {
                     Garis Samar
                   </Label>
                 </div>
+                <div
+                  className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-border transition-colors cursor-pointer"
+                  onClick={() =>
+                    handleInputChange("pregnancyTestResult", "not_done")
+                  }
+                >
+                  <RadioGroupItem
+                    value="not_done"
+                    id="pregnancy-not_done"
+                    className="text-gray-600"
+                  />
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center text-gray-400">
+                    <Ban className="h-10 w-10 sm:h-12 sm:w-12" />
+                  </div>
+                  <Label
+                    htmlFor="pregnancy-not_done"
+                    className="text-xs sm:text-sm font-medium text-center cursor-pointer leading-tight"
+                  >
+                    Tidak Dilakukan
+                  </Label>
+                </div>
               </RadioGroup>
             </CardContent>
           </Card>
 
           {/* SADARI */}
-          <Card className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 sm:p-6 rounded-t-lg">
-              <CardTitle className="flex items-center text-white text-lg sm:text-xl justify-center">
-                <Heart className="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" />
-                SADARI (Periksa Payudara Sendiri)
-              </CardTitle>
+          <Card>
+            <CardHeader className="border-b">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-lg bg-rose-100 flex items-center justify-center">
+                  <Stethoscope className="h-5 w-5 text-rose-600" />
+                </div>
+                <CardTitle>SADARI (Periksa Payudara Sendiri)</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-6">
               <RadioGroup
                 value={formData.sadariResult}
                 onValueChange={(value) =>
@@ -1025,7 +968,7 @@ export default function LogContent() {
                 ].map((item) => (
                   <div
                     key={item.id}
-                    className="flex flex-col items-center space-y-2 p-3 sm:p-4 bg-white/50 rounded-xl border-2 border-gray-200 hover:border-green-300 hover:shadow-md transition-all duration-200 cursor-pointer hover:scale-105"
+                    className="flex flex-col items-center gap-2 p-4 bg-background rounded-lg border-2 border-border hover:border-primary transition-colors cursor-pointer"
                     onClick={() => handleInputChange("sadariResult", item.id)}
                   >
                     <RadioGroupItem
@@ -1053,27 +996,30 @@ export default function LogContent() {
         </div>
 
         {/* Notes */}
-        <Card className="mb-8 sm:mb-10 lg:mb-12 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300 glass-card">
-          <CardHeader className="bg-gradient-to-r from-gray-700 to-gray-800 p-4 sm:p-6 rounded-t-lg">
-            <CardTitle className="text-white text-lg sm:text-xl text-center">
-              Catatan Tambahan
-            </CardTitle>
+        <Card className="mb-8">
+          <CardHeader className="border-b">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-lg bg-gray-100 flex items-center justify-center">
+                <FileText className="h-5 w-5 text-gray-600" />
+              </div>
+              <CardTitle>Catatan Tambahan</CardTitle>
+            </div>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6">
+          <CardContent className="p-6">
             <Textarea
               placeholder="Tuliskan catatan tambahan mengenai kondisi kesehatan Anda hari ini..."
               value={formData.notes}
               onChange={(e) => handleInputChange("notes", e.target.value)}
-              className="min-h-[120px] sm:min-h-[150px] text-base sm:text-lg p-4 border-2 border-gray-200 focus:border-gray-400 rounded-xl resize-none"
+              className="min-h-[150px] text-lg resize-none"
             />
           </CardContent>
         </Card>
 
         {/* Save Button */}
-        <div className="flex flex-col items-center space-y-4 pb-8 sm:pb-12">
+        <div className="flex flex-col items-center gap-4 pb-8">
           {saveMessage && (
             <div
-              className={`text-center p-4 rounded-xl w-full max-w-md animate-in fade-in slide-in-from-bottom-2 ${
+              className={`text-center p-4 rounded-lg w-full max-w-md ${
                 saveMessage.includes("Error") || saveMessage.includes("Harap")
                   ? "bg-red-100 text-red-700 border border-red-200"
                   : "bg-green-100 text-green-700 border border-green-200"
@@ -1086,7 +1032,8 @@ export default function LogContent() {
           <Button
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full max-w-md h-12 sm:h-14 text-base sm:text-lg font-bold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-700 hover:to-rose-700"
+            size="lg"
+            className="w-full max-w-md text-white"
           >
             {isSaving ? (
               <>
@@ -1095,13 +1042,12 @@ export default function LogContent() {
               </>
             ) : (
               <>
-                <Save className="mr-2 h-5 w-5 sm:h-6 sm:w-6" />
+                <Save className="mr-2 h-5 w-5" />
                 Simpan Log Harian
               </>
             )}
           </Button>
         </div>
-      </main>
-    </div>
+    </main>
   );
 }

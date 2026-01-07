@@ -20,19 +20,37 @@ const decodeBase64 = (value: string) => {
 
 // Simple token verification for middleware (Edge runtime safe)
 function verifyTokenFromCookie(token: string): { id: string; role: string } | null {
+  // Early return for empty or invalid tokens
+  if (!token || token.length < 10) {
+    return null;
+  }
+  
   try {
     const secret =
       process.env.AUTH_SECRET ||
       process.env.NEXTAUTH_SECRET ||
       "redcalendar-secret-key-change-in-production";
     const decoded = JSON.parse(decodeBase64(token));
+    
+    // Validate decoded structure
+    if (!decoded || !decoded.data || !decoded.signature) {
+      return null;
+    }
+    
     const expectedSignature = encodeBase64(`${decoded.data}:${secret}`);
 
     if (decoded.signature !== expectedSignature) {
       return null;
     }
 
-    return JSON.parse(decoded.data);
+    const userData = JSON.parse(decoded.data);
+    
+    // Validate user data structure
+    if (!userData || !userData.id || !userData.role) {
+      return null;
+    }
+    
+    return userData;
   } catch {
     return null;
   }

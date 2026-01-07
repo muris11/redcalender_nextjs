@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const AUTH_COOKIE_NAME = "redcalendar_session";
 
 // Use the same decoding as middleware (Edge-compatible)

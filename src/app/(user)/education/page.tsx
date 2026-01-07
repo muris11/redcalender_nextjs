@@ -120,7 +120,7 @@ export default function EducationContent() {
       setIsDataLoading(true);
       setError(null);
 
-      const response = await fetch("/api/admin/articles");
+      const response = await fetch("/api/articles");
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -176,7 +176,7 @@ export default function EducationContent() {
     const fetches = toFetch.map(async (article) => {
       try {
         const res = await fetch(
-          `/api/admin/upload/signed?path=${encodeURIComponent(
+          `/api/upload/signed?path=${encodeURIComponent(
             article.thumbnail as string
           )}`
         );
@@ -197,7 +197,7 @@ export default function EducationContent() {
 
   const loadCategories = async () => {
     try {
-      const response = await fetch("/api/admin/categories");
+      const response = await fetch("/api/categories");
       if (response.ok) {
         const data = await response.json();
         setCategories(data.categories);
@@ -287,6 +287,7 @@ export default function EducationContent() {
           <p className="text-gray-600 mb-4">{error}</p>
           <Button
             onClick={loadArticles}
+            className="text-white"
           >
             Coba Lagi
           </Button>

@@ -17,22 +17,22 @@ export default function HelpCenterPage() {
   return (
     <div className="min-h-screen bg-white pb-20">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-pink-600 to-pink-500 text-white pt-40 pb-24 px-4 text-center relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('/pattern.png')] opacity-10"></div>
+      <section className="bg-gradient-to-r from-slate-50 via-blue-50 to-emerald-50 text-gray-900 pt-40 pb-24 px-4 text-center relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[url('/pattern.png')] opacity-[0.06]"></div>
         <div className="max-w-4xl mx-auto relative z-10">
-          <Heading variant="h1" className="text-white mb-6 font-bold tracking-tight">
+          <Heading variant="h1" className="text-gray-900 mb-6 font-bold tracking-tight">
             Pusat Bantuan
           </Heading>
-          <Text variant="body-xl" className="text-white/90 mb-10 max-w-2xl mx-auto">
+          <Text variant="body-xl" className="text-gray-600 mb-10 max-w-2xl mx-auto">
             Temukan jawaban atas pertanyaan Anda seputar Red Calender dan pelajari cara memaksimalkan fitur kami.
           </Text>
           <div className="max-w-xl mx-auto relative group">
-            <div className="absolute inset-0 bg-white/20 rounded-full blur-md group-hover:bg-white/30 transition-all duration-300"></div>
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-pink-600 z-20" />
+            <div className="absolute inset-0 bg-white/70 rounded-full blur-md group-hover:bg-white/90 transition-all duration-300"></div>
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 z-20" />
             <Input
               type="text"
               placeholder="Cari topik bantuan..."
-              className="h-14 pl-14 bg-white/95 backdrop-blur-sm border-0 focus:ring-4 focus:ring-pink-300/50 rounded-full shadow-lg text-gray-800 placeholder:text-gray-400 relative z-10 transition-all duration-300"
+              className="h-14 pl-14 bg-white/95 backdrop-blur-sm border border-white/70 focus:ring-4 focus:ring-blue-200/60 rounded-full shadow-lg text-gray-800 placeholder:text-gray-400 relative z-10 transition-all duration-300"
             />
           </div>
         </div>
